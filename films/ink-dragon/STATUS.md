@@ -20,3 +20,4 @@ SwiftShader (software), 4 cores. Sample libraries vsco2ce + vcsl fetched. Music 
 | 10:03 | producer notes folded in | coverage broken into 41 shots (close-ups at every beat), paper-white eyes, lamp-lit night and warm dawn, side-view painter, the sacrifice beat (look back, breath, nod, one guqin note) and the body unravelling into rain threads; render 2 restarted |
 | 11:07 | review pass 2 | render 2 reviewed (stills/r2_sheet*.jpg): coverage and close-ups read; readcheck OK (7/7), −14.0 LUFS / −3.3 dBTP, no black frames; fix round: pupil size, painter's back; final render next |
 | 11:18 | final render | frames 540 / 3168 |
+| 11:28 | final render | frames 1140 / 3168 |
