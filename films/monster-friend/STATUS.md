@@ -35,3 +35,4 @@ Sample libraries: vsco2ce, vcsl (fetched earlier), freepats (ukulele, nylon guit
 | 17:33 | final render | frames 1080 / 3360 |
 | 17:43 | final render | frames 1500 / 3360 |
 | 17:53 | final render | frames 1920 / 3360 |
+| 18:03 | final render | frames 2340 / 3360 |
