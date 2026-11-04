@@ -1,7 +1,7 @@
 // Shot by shot: cameras, blocking and acting, from the timeline. Returns compositor options per frame and the sound events.
 import { SHOT, HIT, SUBS, DUR, SILENCE, shotAt, beatT, WRITE } from './timeline.js';
 import { mk, draw, mass, blot, TONE } from './ink.js';
-import { dragon, EXPR, mixExpr, splatter } from './dragon.js';
+import { dragon, dragonCU, eyeOf, EXPR, mixExpr, splatter } from './dragon.js';
 import { cloud, CEXPR, mixC } from './cloud.js';
 import * as ST from './studio.js';
 import * as WD from './world.js';
@@ -54,7 +54,15 @@ function titleColumn(A, p, xf, am = 1) {
   chars.forEach((ch, i) => { const pp = clamp(p * 4 - i); if (pp <= 0) return; const box = [WD.TITLE.x - cell / 2, WD.TITLE.y + i * cell * 1.02, cell]; const S = writeChar(A, TMP2, ch, box, pp, xf, { am, seed: 71 + i, dry: .22, wet: .4 }); if (pp < 1) tip = tipAt(S, pp, box); });
   return tip;
 }
-const nightWash = (A, k, cam) => { if (k <= 0) return; const c = A.cw; c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = `rgba(0,0,0,${.09 * k})`; c.fillRect(0, 0, W, H); c.restore(); };
+// night: a 清 wash over the whole frame, lifted in a pool of light around the lamp (screen position [x, y, radius]); dawn lifts the wash
+const nightWash = (A, k, lampAt) => {
+  if (k <= 0) return; const c = A.cw; c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = `rgba(0,0,0,${.15 * k})`; c.fillRect(0, 0, W, H);
+  if (lampAt) { c.globalCompositeOperation = 'destination-out'; const g = c.createRadialGradient(lampAt[0], lampAt[1], 0, lampAt[0], lampAt[1], lampAt[2]); g.addColorStop(0, `rgba(0,0,0,${.9 * k})`); g.addColorStop(.5, `rgba(0,0,0,${.5 * k})`); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(0, 0, W, H); }
+  c.restore();
+};
+const LAMP = [1720, 650];
+const NIGHT = { paperCol: [.905, .875, .81], warm: .75, vig: .5 }, DAWN = { paperCol: [.97, .955, .905], warm: .25, vig: .12 };
+const lampScreen = (cam, r = 900) => { const p = toScreen(cam, LAMP[0] + 18, LAMP[1] - 8); return [p[0], p[1], r * cam.z]; };
 const studioStatic = (A, t, o = {}) => {
   const L = A.ink;
   ST.desk(L);
@@ -62,6 +70,7 @@ const studioStatic = (A, t, o = {}) => {
   ST.brushRest(L, 230, 500, 1);
   ST.sealBox(L, A.cc, ST.SEALBOX.x, ST.SEALBOX.y, 1);
   if (!o.noBrush) ST.brush(L, 300, 790, -.35, 1);
+  if (o.lamp !== false) ST.lamp(L, LAMP[0], LAMP[1], 1, { flicker: Math.sin(t * 13) * .5 + .5, am: o.lampAm ?? 1 });
 };
 const snorePhase = t => t / 4.2;   // one slow snore every 4.2 s
 const breathOf = t => Math.sin(snorePhase(t) * Math.PI * 2);
@@ -88,7 +97,7 @@ function s01(A, t) {
   if (fall < 1) draw(L, mk([[960 + trem, 246], [960 + trem * .5, yD - r * .4]], { w: 12 * (1 - fall) + 2, tone: .9, dry: .2, wet: .6, prof: 'rise', seed: 25 }), 1, 1 - fall * .5);
   // the shine: paper left in the drop
   for (const c of [L.wet, L.dry]) { c.save(); c.globalCompositeOperation = 'destination-out'; c.globalAlpha = .85; c.beginPath(); c.ellipse(960 + trem - r * .3, yD - r * .25, r * .22, r * .14, -.5, 0, 7); c.fill(); c.restore(); }
-  return { paper: paperOf(cam), bleed: 7, rim: 1.1, vig: .42, warm: .6, night: 1 };
+  return { paper: paperOf(cam), bleed: 7, rim: 1.1, ...NIGHT, night: 1 };
 }
 
 // ---- S02 top-down: the drop lands, blooms, becomes the dragon; the eye opens ----
@@ -105,7 +114,7 @@ function s02(A, t) {
   const [dx, dy] = ST.DROP_AT;
   if (t < HIT.dropLand) {   // the falling drop seen from above: a dot shrinking as it goes down to the desk
     const u = sg(t, SHOT.s02, HIT.dropLand); blot(L.wet, dx, dy, 14 - 5 * u, .9, 0, 1, 3);
-    return { paper: paperOf(cam), bleed: 5 * 3.4, rim: 1.1, vig: .4, night: 1 };
+    return { paper: paperOf(cam), bleed: 5 * 3.4, rim: 1.1, ...NIGHT, night: 1 };
   }
   // landing: a splash of splatter and the blot spreading with a tide-line (ink pooling at its edge comes from the compositor)
   const ul = sg(t, HIT.dropLand, HIT.dropLand + .5);
@@ -115,7 +124,7 @@ function s02(A, t) {
   dragon(A, TMP, st.S, { x: dx + 22 * (1 - st.S.blotR) - 10, y: dy, s: scale, dir: 1, t, p: 1, eye: st.eye, seed: 3, boil: t * 12 });
   // a few rings of thin wet ink around the blot as it spreads
   if (ul < 1) { const c = L.wet; c.save(); c.globalAlpha = .25 * (1 - ul); c.strokeStyle = '#000'; c.lineWidth = 2; c.beginPath(); c.ellipse(dx + 12, dy, 40 + 50 * ul, 30 + 36 * ul, 0, 0, 7); c.stroke(); c.restore(); }
-  return { paper: paperOf(cam), bleed: 5 * 3.4 * (1 + .6 * (1 - sg(t, HIT.dropLand, HIT.eyeOpen))), rim: 1.3, vig: .4, night: 1, flash: HIT.eyeOpen <= t && t < HIT.eyeOpen + .08 ? .25 : 0 };
+  return { paper: paperOf(cam), bleed: 5 * 3.4 * (1 + .6 * (1 - sg(t, HIT.dropLand, HIT.eyeOpen))), rim: 1.3, ...NIGHT, night: 1, flash: HIT.eyeOpen <= t && t < HIT.eyeOpen + .08 ? .25 : 0 };
 }
 
 // ---- S03 desk-level low angle: shake, stretch, sneeze, look around ----
@@ -148,7 +157,7 @@ function s03(A, t) {
   if (t >= HIT.lookAround) { const u = t - HIT.lookAround; S.expr = { ...EXPR.curious, pupil: [Math.sin(u * 2.5), -.4 + Math.cos(u * 1.7) * .5] }; S.headTilt = -.2 + Math.sin(u * 2.2) * .25; }
   const d = dragon(A, TMP, S, X);
   if (sn > 0) { const R = mulberry(41); for (let i = 0; i < 9; i++) { const a = Math.PI + (R() - .5) * 1.2, dd = (30 + R() * 120) * (1 - sn) * 2 + 20; blot(L.wet, d.snout[0] + Math.cos(a) * dd, d.snout[1] + Math.sin(a) * dd * .6, (4 + R() * 9) * (.4 + sn), .5 * sn, R() * 3, .7, 50 + i); } }
-  return { paper: paperOf(cam), bleed: 5, rim: 1, vig: .4, night: 1 };
+  return { paper: paperOf(cam), bleed: 5, rim: 1, ...NIGHT, night: 1 };
 }
 
 // ---- S04 studio wide: pull-back; tiptoe past the painter; the snort ----
@@ -156,32 +165,66 @@ function s03(A, t) {
 const PATH4 = [[478, 712], [515, 600], [545, 420], [585, 300], [650, 258], [780, 256], [900, 257], [1000, 262], [1060, 292]];
 function pathAt(P, u) { const n = P.length - 1, i = Math.min(n - 1, Math.floor(u * n)), f = u * n - i; const a = P[i], b = P[i + 1]; return [lerp(a[0], b[0], f), lerp(a[1], b[1], f), Math.atan2(b[1] - a[1], b[0] - a[0])]; }
 function walkU(t) {   // progress along the path: starts at 13.6, freezes at the snort (16.5–17.5), arrives at 19.0
-  if (t < 13.6) return 0; if (t < HIT.snort) return lerp(0, .8, (t - 13.6) / (HIT.snort - 13.6)); if (t < HIT.snort + 1.0) return .8; return lerp(.8, 1, sg(t, HIT.snort + 1.0, 19.0));
+  if (t < 13.4) return 0; if (t < SHOT.s04b) return lerp(0, .5, (t - 13.4) / (SHOT.s04b - 13.4)); if (t < SHOT.s04c) return .8; return lerp(.8, 1, sg(t, SHOT.s04c, 19.0));
 }
-function s04(A, t) {
-  const L = A.ink, u = eio(sg(t, SHOT.s04, 16.0)), u2 = ss(sg(t, 17.4, 19.0));
-  const cam = { x: lerp(lerp(600, 880, u), 960, u2), y: lerp(lerp(620, 420, u), 560, u2), z: lerp(lerp(1.7, 1.35, u), 1.0, u2) };
-  const X = camXf(cam); A.xf(X.s, X.tx, X.ty); A.cc.setTransform(X.s, 0, 0, X.s, X.tx, X.ty);
+function studioNight(A, t, cam, o = {}) {   // the top-down studio at night with everything in it
+  const L = A.ink, X = camXf(cam); A.xf(X.s, X.tx, X.ty); A.cc.setTransform(X.s, 0, 0, X.s, X.tx, X.ty);
   studioStatic(A, t);
-  const pc = paintingLayers(A, cam); setXf(A, paintXf(cam));
+  paintingLayers(A, cam); setXf(A, paintXf(cam));
   paintingLife(A, t, { cloud: { breath: breathOf(t + 2), bubble: .5 + .5 * breathOf(t + 2), expr: CEXPR.asleep } });
   colophon(A, 1, 0);
   A.xf(X.s, X.tx, X.ty); A.cc.setTransform(X.s, 0, 0, X.s, X.tx, X.ty);
-  const snort = pulse(t, HIT.snort - .1, HIT.snort + .5, .4);
   ST.incense(L, A.cc, ST.INCENSE.x, ST.INCENSE.y, 1, { burn: .12 + .006 * (t - 13), t });
-  ST.painter(L, PAINTER[0], PAINTER[1], 1, { breath: breathOf(t) + snort * 1.5 });
-  // the dragon walking on twos along the path; frozen at the snort with a startled expression
-  const wu = walkU(twos(t)), [px, py, ang] = pathAt(PATH4, wu), moving = (walkU(twos(t) + 1 / 12) - wu) > 0;
-  const frozen = t >= HIT.snort && t < HIT.snort + 1.0;
-  const S = { a: 0, amp: 4, k: 1, ph: twos(t) * 4, legs: 1, ground: 13, gait: moving ? twos(t) * 22 : 0, stride: 6, expr: frozen ? EXPR.shocked : EXPR.curious, headTilt: frozen ? -.3 : -.15 + .1 * Math.sin(t * 3), vel: moving ? [12, 0] : [0, 0], curl: frozen ? .1 : -.04, stretch: frozen ? .9 : 1 };
-  const dir = Math.cos(ang) >= 0 ? 1 : -1;
-  // heading: along the path; the body follows the heading (the dragon walks "up" the margin then right)
-  S.a = dir > 0 ? ang : ang - Math.PI;
-  if (frozen) { S.squash = 1 - .1 * pulse(t, HIT.snort, HIT.snort + .25); }
-  dragon(A, TMP, S, { x: px, y: py, s: DS, dir, t, seed: 3, boil: t * 12 });
-  return { paper: paperOf(cam), bleed: 5 * cam.z, rim: 1, vig: .4, night: 1 };
+  ST.painter(L, PAINTER[0], PAINTER[1], 1, { breath: breathOf(t) + (o.snort || 0) * 1.5 });
+  return X;
 }
-
+function s04(A, t) {   // wide at night: the dragon sets off up the left margin of the sheet
+  const u = eio(sg(t, SHOT.s04, SHOT.s04b)), cam = { x: lerp(640, 760, u), y: lerp(600, 470, u), z: lerp(1.55, 1.3, u) };
+  studioNight(A, t, cam);
+  const wu = walkU(twos(t)), [px, py, ang] = pathAt(PATH4, wu), moving = (walkU(twos(t) + 1 / 12) - wu) > 0, dir = Math.cos(ang) >= 0 ? 1 : -1;
+  const S = { a: dir > 0 ? ang : ang - Math.PI, amp: 4, k: 1, ph: twos(t) * 4, legs: 1, ground: 13, gait: moving ? twos(t) * 22 : 0, stride: 6, expr: EXPR.curious, headTilt: -.15 + .1 * Math.sin(t * 3), vel: moving ? [12, 0] : [0, 0], curl: -.04 };
+  dragon(A, TMP, S, { x: px, y: py, s: DS, dir, t, seed: 3, boil: t * 12 });
+  return { paper: paperOf(cam), bleed: 5 * cam.z, rim: 1, ...NIGHT, night: 1, lampAt: lampScreen(cam) };
+}
+function s04b(A, t) {   // side view two-shot: the sleeping face at the right, the dragon tiptoes along the desk toward it, steps on the fingers, the snort
+  const L = A.ink, cam = { x: 960, y: 560, z: 1 };
+  A.xf(1, 0, 0); A.cc.setTransform(1, 0, 0, 1, 0, 0);
+  // the desk edge as the horizon, the far edge behind; the sheet lying on the desk as a thin line
+  draw(L, mk([[-50, 742], [600, 738], [1300, 741], [1970, 736]], { w: 8, tone: .62, dry: .6, wet: .2, prof: 'even', seed: 31, gapLen: 800 }));
+  mass(L.wet, [[-50, 1080], [1970, 1080], [1970, 745], [-50, 745]], .06, 0, 35);
+  draw(L, mk([[-50, 727], [900, 725]], { w: 3, tone: .35, dry: .55, prof: 'even', seed: 36 }));
+  // the painter, mirrored to face left-of-frame... drawn facing the dragon (to the left), seated at the right
+  const snort = pulse(t, HIT.snort - .1, HIT.snort + .5, .4);
+  for (const c of [L.wet, L.dry]) { c.save(); c.translate(1300, 0); c.scale(-1, 1); c.translate(-1300, 0); }
+  const pf = ST.painterSide(L, 1340, 700, 2.3, { breath: breathOf(t) + snort * 2.5 });
+  for (const c of [L.wet, L.dry]) c.restore();
+  // the snort: a puff from the nose (dry ticks), 16.5
+  if (snort > 0) { const R = mulberry(47); for (let i = 0; i < 6; i++) { const dd = 20 + 120 * snort; blot(L.dry, 1300 - (pf.nose[0] - 1300) * -1 - 80 - dd * (R() * .8 + .2), pf.nose[1] - 10 + (R() - .5) * 60, (3 + 5 * R()) * (1 - snort * .5), .4 * (1 - snort), 0, .7, 300 + i); } }
+  // the dragon walks left to right toward the face on twos; the fingers lie on the desk in front of the face (x ≈ 1120–1160)
+  const tt = twos(t), frozen = t >= HIT.snort && t < HIT.snort + 1.0;
+  const wx = keys([[15.0, 150], [HIT.snort - .2, 1080], [HIT.snort, 1090], [HIT.snort + 1.0, 1090], [SHOT.s04c, 1400]], tt);
+  const moving = !frozen && t > 15.0 && t < SHOT.s04c;
+  const S = { a: 0, amp: 5, k: 1, ph: tt * 4, legs: 1, ground: 13, gait: moving ? tt * 22 : 0, stride: 7, expr: frozen ? EXPR.shocked : { ...EXPR.curious, pupil: [.6, -.4] }, headTilt: frozen ? -.35 : -.15 + .1 * Math.sin(t * 3), vel: moving ? [14, 0] : [0, 0], curl: frozen ? .12 : -.04, stretch: frozen ? .88 : 1, squash: frozen ? 1 - .1 * pulse(t, HIT.snort, HIT.snort + .25) : 1 };
+  dragon(A, TMP, S, { x: wx, y: 735 - 13 * 2.4, s: 2.4, dir: 1, t, seed: 3, boil: t * 12 });
+  return { paper: paperOf(cam), bleed: 5, rim: 1, ...NIGHT, night: 1, lampAt: [1700, 300, 900] };
+}
+function s04c(A, t) {   // wide again: it hurries on along the top of the sheet to the village side
+  const u = ss(sg(t, SHOT.s04c, 19.0)), cam = { x: lerp(880, 960, u), y: lerp(420, 560, u), z: lerp(1.35, 1.0, u) };
+  studioNight(A, t, cam);
+  const wu = walkU(twos(t)), [px, py, ang] = pathAt(PATH4, wu), moving = (walkU(twos(t) + 1 / 12) - wu) > 0, dir = Math.cos(ang) >= 0 ? 1 : -1;
+  const S = { a: dir > 0 ? ang : ang - Math.PI, amp: 4, k: 1, ph: twos(t) * 4, legs: 1, ground: 13, gait: moving ? twos(t) * 26 : 0, stride: 7, expr: EXPR.determined, headTilt: -.1, vel: moving ? [16, 0] : [0, 0], curl: -.04 };
+  dragon(A, TMP, S, { x: px, y: py, s: DS, dir, t, seed: 3, boil: t * 12 });
+  return { paper: paperOf(cam), bleed: 5 * cam.z, rim: 1, ...NIGHT, night: 1, lampAt: lampScreen(cam) };
+}
+// ---- S05a close-up: the dragon looks down at the village ----
+function s05a(A, t) {
+  const S = { a: .2, amp: 3, k: 1, ph: 0, legs: 1, ground: 13, expr: { ...EXPR.worried, pupil: [.5, .9], lid: .15 }, headTilt: .4 + .1 * Math.sin(t * 1.5) };
+  const X0 = { x: 1000, y: 290, s: DS, dir: 1, t, seed: 3, boil: t * 12 }, e = eyeOf(S, X0);
+  const cam = { x: e[0] + 30, y: e[1] + 40, z: 2.4 };
+  studioNight(A, t, cam);
+  dragonCU(A, TMP, S, X0, 4.2);
+  return { paper: paperOf(cam), bleed: 5 * 1.6, rim: 1, ...NIGHT, night: 1, lampAt: lampScreen(cam) };
+}
 // ---- S05 push into the painting: the drought, the colophon ----
 function s05(A, t) {
   const L = A.ink, u = eio(sg(t, SHOT.s05, 22.6));
@@ -196,7 +239,7 @@ function s05(A, t) {
   // the dragon at the sheet's top edge looking down at the village (it leaves the frame as the camera pushes in)
   const S = { a: .25, amp: 3, k: 1, ph: 0, legs: 1, ground: 13, expr: { ...EXPR.worried, pupil: [.4, .8] }, headTilt: .45 };
   dragon(A, TMP, S, { x: 1000, y: 290, s: DS, dir: 1, t, seed: 3, boil: t * 12 });
-  return { paper: paperOf(cam), bleed: 5 * cam.z, rim: 1, vig: .38, night: 1 };
+  return { paper: paperOf(cam), bleed: 5 * cam.z, rim: 1, ...NIGHT, night: 1, lampAt: lampScreen(cam) };
 }
 
 // ---- incense insert (ECU, side view): the stick vertical, the ember ring, the ash flake, the smoke ----
@@ -222,29 +265,29 @@ function incenseInsert(A, t, burn, flakeT) {
   if (fl > 0 && fl < 1) { const fy = yTop - ashH + fl * fl * 1100, fx = x + 40 * fl + Math.sin(fl * 9) * 16; draw(L, mk([[fx - 10, fy], [fx + 10, fy + 3]], { w: 15, tone: .36, dry: .7, wet: .3, prof: 'lens', seed: 69 }), 1, 1 - fl * .3); }
   // smoke: two thin dry lines wandering up and curling, on ones
   for (const [sd, k] of [[70, 1], [71, .6]]) { const sm = []; for (let i = 0; i <= 28; i++) { const uu = i / 28; sm.push([x + 6 * k + Math.sin(uu * 5.5 - t * 1.1 + sd) * 46 * uu + (vnoise(uu * 4 + t * .3 + sd) - .5) * 120 * uu * uu, yTop - 10 - uu * (yTop + 60), .95 - uu * .85]); } draw(L, mk(sm, { w: 5 * k, tone: .55, dry: .7, wet: .2, prof: 'tip', rough: .25, seed: sd }), 1, .9 * k); }
-  return { paper: paperOf(cam), bleed: 6, rim: 1.1, vig: .45, night: 1 };
+  return { paper: paperOf(cam), bleed: 6, rim: 1.1, ...NIGHT, night: 1 };
 }
 
 // ---- S06: incense insert, then the dragon decides and dives; the paper takes it like water ----
 function s06(A, t) {
   if (t < 27.0) return incenseInsert(A, t, .22, HIT.ashFlake1);
-  const L = A.ink, cam = { x: 1030, y: 330, z: 3.4 };
+  const L = A.ink;
+  const look = sg(t, HIT.eyeToVillage, HIT.eyeToVillage + .5), inh = sg(t, HIT.inhale, HIT.dive);
+  const dive = t >= HIT.dive ? sg(t, HIT.dive, HIT.dive + .3) : 0;
+  const S = { a: lerp(-.35, .4, look) + .5 * ei(dive) * 2, amp: 3 + 6 * inh, k: 1, ph: inh * 3, legs: 1 - clamp(dive * 3), ground: 13, headTilt: lerp(-.35, .4, look) - .4 * ei(inh) + 1.2 * dive, expr: inh < 1 ? mixExpr({ ...EXPR.worried, pupil: [.6, -.6] }, { ...EXPR.determined, pupil: [.5, .6], puff: .8 }, inh) : EXPR.determined, stretch: 1 - .15 * ei(inh) * (1 - dive) + .4 * dive, curl: .12 * inh * (1 - dive) - .1 * dive, vel: [60 * dive, 40 * dive] };
+  if (inh > 0 && inh < 1) S.expr.puff = Math.sin(inh * Math.PI * .5) * 1.2;
+  const sc = DS * (1 - .85 * ei(dive)), x = 1000 + 40 * dive, y = 300 + 60 * dive;
+  const X0 = { x, y, s: sc, dir: 1, t, seed: 3, boil: t * 12, am: 1 - dive * .8 }, e = eyeOf({ ...S, headTilt: 0 }, { ...X0, s: DS });
+  const cam = { x: e[0] + 60, y: e[1] + 40, z: lerp(3.2, 2.4, dive) };
   const X = camXf(cam); A.xf(X.s, X.tx, X.ty); A.cc.setTransform(X.s, 0, 0, X.s, X.tx, X.ty);
   paintingLayers(A, cam); setXf(A, paintXf(cam));
   paintingLife(A, t, { cloud: { breath: breathOf(t + 2), bubble: .5 + .5 * breathOf(t + 2), expr: CEXPR.asleep } });
   A.xf(X.s, X.tx, X.ty); A.cc.setTransform(X.s, 0, 0, X.s, X.tx, X.ty);
   ST.painter(L, PAINTER[0], PAINTER[1], 1, { breath: breathOf(t) });
-  // eye from the incense (up-right) to the village (down-right); inhale; the dive: the body plunges into the sheet, rings spread
-  const look = sg(t, HIT.eyeToVillage, HIT.eyeToVillage + .5), inh = sg(t, HIT.inhale, HIT.dive);
-  const dive = t >= HIT.dive ? sg(t, HIT.dive, HIT.dive + .3) : 0;
-  const S = { a: lerp(-.35, .4, look) + .5 * ei(dive) * 2, amp: 3 + 6 * inh, k: 1, ph: inh * 3, legs: 1 - clamp(dive * 3), ground: 13, headTilt: lerp(-.35, .4, look) - .4 * ei(inh) + 1.2 * dive, expr: inh < 1 ? mixExpr({ ...EXPR.worried, pupil: [.6, -.6] }, { ...EXPR.determined, pupil: [.5, .6], puff: .8 }, inh) : EXPR.determined, stretch: 1 - .15 * ei(inh) * (1 - dive) + .4 * dive, curl: .12 * inh * (1 - dive) - .1 * dive, vel: [60 * dive, 40 * dive] };
-  if (inh > 0 && inh < 1) S.expr.puff = Math.sin(inh * Math.PI * .5) * 1.2;
-  const sc = DS * (1 - .85 * ei(dive));
-  const x = 1000 + 40 * dive, y = 300 + 60 * dive;
-  if (dive < 1) dragon(A, TMP, S, { x, y, s: sc, dir: 1, t, seed: 3, boil: t * 12, am: 1 - dive * .8 });
+  if (dive < 1) dragonCU(A, TMP, S, X0, lerp(3.2, 1, ei(dive)));
   // ink rings on the sheet from the dive point (the paper is water)
   if (t >= HIT.dive + .1) { for (let i = 0; i < 4; i++) { const age = t - (HIT.dive + .1) - i * .14; if (age < 0) continue; ripple(L, 1040, 350, 10 + age * 160, clamp(1 - age / 1.2) * .9, 80 + i, .45, 2.4 / cam.z); } }
-  return { paper: paperOf(cam), bleed: 5 * cam.z, rim: 1, vig: .38, night: 1 };
+  return { paper: paperOf(cam), bleed: 5 * cam.z, rim: 1, ...NIGHT, night: 1, lampAt: lampScreen(cam) };
 }
 
 // ---- inside the painting: camera helpers ----
@@ -265,15 +308,35 @@ function mist(A, cam, bands) {
 function streaks(A, pts, k, seed = 1, w = 3) { if (k <= 0) return; pts.forEach((p, i) => draw(A.ink, mk([[p[0], p[1]], [p[0] + 60 + i * 30, p[1] + 4 + i * 3]], { w, tone: .5 * k, dry: .75, wet: .05, prof: 'tip', nb: 4, seed: seed + i }), 1, k)); }
 
 // ---- S07 handscroll pan over mist; the dragon leads ----
-function s07(A, t) {
-  const u = sg(t, SHOT.s07, SHOT.s08), ue = u;   // linear pan (a scroll unrolls evenly)
-  const cam = { x: lerp(2620, 1750, ue), y: lerp(640, 700, ue), z: .86 };
-  // the dragon enters from the ripple (bloom) and flies left, with lead room
-  const dx = lerp(2850, 1500, ue) + Math.sin(t * 1.1) * 10, dy = lerp(520, 640, ue) + Math.sin(t * 2.3) * 14;
+function s07(A, t) {   // travelling along the scroll with foreground pines passing (parallax), the dragon leading
+  const u = sg(t, SHOT.s07, SHOT.s07b), cam = { x: lerp(2700, 2050, u), y: 720, z: 1.05 };
+  paintCam(A, cam);
+  mist(A, cam, [[840, 1060, .85], [1200, 1320, .5]]);
+  const dx = lerp(2900, 1950, u) + Math.sin(t * 1.1) * 10, dy = 620 + Math.sin(t * 2.3) * 14;
+  const S = { a: -.08 + Math.sin(t * 2.3) * .06, amp: 11, k: 1.1, ph: -t * 7, legs: 0, expr: { ...EXPR.curious, pupil: [-.5, .3] }, headTilt: -.05, wind: [6, 0], vel: [45, 0], curl: -.03, stretch: 1.05 };
+  dragon(A, TMP, S, { x: dx, y: dy, s: 3.4, dir: -1, t, seed: 3, boil: t * 12 });
+  // foreground: two big pines slide past faster than the world (they are nearer the viewer)
+  const X = camXf(cam); A.xf(X.s, X.tx, X.ty);
+  const fg = (cam.x - 2300) * .7;
+  WD.pineFG(A.ink, 2500 + fg, 1720, 3.2, 21, t, .3, 1); WD.pineFG(A.ink, 3300 + fg, 1760, 2.6, 22, t, .3, -1);
+  return { paper: paperOf(cam), bleed: 5 * cam.z, rim: .9, vig: .2, warm: .5, night: 0 };
+}
+function s07b(A, t) {   // close-up in flight: wind in the whiskers and mane, eyes ahead
+  const u = sg(t, SHOT.s07b, SHOT.s07c);
+  const S = { a: -.08 + Math.sin(t * 2.3) * .05, amp: 11, k: 1.1, ph: -t * 7, legs: 0, expr: { ...EXPR.determined, pupil: [-.6, .1], lid: .25 }, headTilt: -.05 + .04 * Math.sin(t * 3), wind: [10, 0], vel: [60, 0], curl: -.03, stretch: 1.06 };
+  const X0 = { x: lerp(2000, 1800, u), y: 640 + Math.sin(t * 2.3) * 10, s: 3.4, dir: -1, t, seed: 3, boil: t * 12 }, e = eyeOf(S, X0);
+  const cam = { x: e[0] - 120, y: e[1] + 30, z: 2.2 };
+  paintCam(A, cam); mist(A, cam, [[840, 1060, .85]]);
+  dragonCU(A, TMP, S, X0, 2.6);
+  return { paper: paperOf(cam), bleed: 5 * cam.z, rim: .9, vig: .2, warm: .5, night: 0 };
+}
+function s07c(A, t) {   // the handscroll pan, high and wide: a small dragon over the mist, the far ranges passing
+  const u = sg(t, SHOT.s07c, SHOT.s08), cam = { x: lerp(2200, 1700, u), y: lerp(640, 700, u), z: .86 };
+  const dx = lerp(2350, 1500, u) + Math.sin(t * 1.1) * 10, dy = lerp(560, 640, u) + Math.sin(t * 2.3) * 14;
   paintCam(A, cam);
   mist(A, cam, [[840, 1060, .85], [1200, 1320, .5]]);
   const S = { a: -.08 + Math.sin(t * 2.3) * .06, amp: 11, k: 1.1, ph: -t * 7, legs: 0, expr: { ...EXPR.curious, pupil: [-.5, .3] }, headTilt: -.05, wind: [6, 0], vel: [45, 0], curl: -.03, stretch: 1.05 };
-  dragon(A, TMP, S, { x: dx, y: dy, s: 3.4, dir: -1, t, seed: 3, boil: t * 12 });
+  dragon(A, TMP, S, { x: dx, y: dy, s: 2.8, dir: -1, t, seed: 3, boil: t * 12 });
   return { paper: paperOf(cam), bleed: 5 * cam.z, rim: .9, vig: .2, warm: .5, night: 0 };
 }
 // ---- S08 the dry river: low tracking, the boat ----
@@ -312,13 +375,7 @@ function s09(A, t) {
 function s10(A, t) { return incenseInsert(A, t, .52, HIT.ashFlake2); }
 
 // ---- S11 the summit: the argument ----
-function s11(A, t) {
-  const cam = { x: 740, y: 300, z: 1.45 };
-  // small reframes: push in a little for the roar, follow the flung dragon
-  const flungK = pulse(t, HIT.flung, HIT.landHead + .6, .5), blownK = sg(t, HIT.blownOff, HIT.blownOff + .8);
-  cam.x += 120 * flungK + 160 * blownK * (1 - sg(t, HIT.climbBack, HIT.climbBack + 1)); cam.z = 1.45 - .1 * flungK + .08 * pulse(t, HIT.inhale2, HIT.roar + .6, .5);
-  paintCam(A, cam);
-  mist(A, cam, [[1150, 1330, .4]]);
+function summitState(t) {
   // ---- the cloud's state ----
   let C = { breath: breathOf(t + 2), bubble: .5 + .5 * breathOf(t + 2), expr: CEXPR.asleep, lean: 0, squash: 1, tug: null, gust: 0, look: [0, 0] };
   const mum = pulse(t, HIT.mumble - .05, HIT.roll + .6, .5);
@@ -332,39 +389,38 @@ function s11(A, t) {
   if (eye > 0) { C.expr = mixC(CEXPR.asleep, CEXPR.peek, eye); C.look = [1, .2]; C.bubble = 0; }
   if (t >= HIT.gust) { C.expr = mixC(CEXPR.peek, CEXPR.blow, blow); C.gust = blow * (1 - done); C.expr = mixC(C.expr, CEXPR.asleep, done); }
   // ---- the dragon ----
-  const L = A.ink;
   let S = { a: 0, amp: 4, k: 1, ph: 0, legs: 1, ground: 13, expr: EXPR.neutral, headTilt: -.2, wind: [0, 0] };
-  let x = 940, y = 455 - 13 * 1.75, dir = -1, sc = 1.75, am = 1, show = true;
+  let x = 940, y = 455 - 13 * 1.75, dir = -1, sc = 1.75, squeak = 0, streak = 0;
   const tt = twos(t);
-  if (t < HIT.land) {           // arriving from the right, descending
-    const u = sg(t, SHOT.s11, HIT.land); x = lerp(1500, 940, eo(u)); y = lerp(250, 432, ss(u)); S.legs = sg(t, HIT.land - .3, HIT.land); S.a = -.1; S.amp = 9; S.ph = -t * 8; S.expr = EXPR.curious;
-  } else if (t < HIT.throat) {  // landing squash, two steps closer, looks up at the big thing
+  if (t < HIT.land) {
+    const u = sg(t, SHOT.s11, HIT.land); x = lerp(1500, 940, eo(u)); y = lerp(250, 432, ss(u)); S.legs = sg(t, HIT.land - .3, HIT.land); S.a = -.1; S.amp = 9; S.ph = -t * 8; S.expr = EXPR.curious; S.vel = [30 * (1 - u), 0];
+  } else if (t < HIT.throat) {
     const u = sg(t, HIT.land, HIT.land + .3); S.squash = 1 - .18 * Math.sin(u * Math.PI);
     const w = sg(t, HIT.land + .35, HIT.throat - .2); x = lerp(940, 880, w); S.gait = w > 0 && w < 1 ? tt * 22 : 0; S.headTilt = lerp(-.2, -.55, w); S.expr = { ...EXPR.curious, pupil: [-.4, -.7] };
-  } else if (t < HIT.tap + .5) { // clears its throat (a small bob), then taps: lean in, snout touches the cloud, recoil
+  } else if (t < HIT.tap + .5) {
     const th = pulse(t, HIT.throat, HIT.throat + .35, .5); S.headTilt = -.45 + .25 * th; S.squash = 1 - .05 * th; S.expr = { ...EXPR.neutral, mouth: .3 * th, pupil: [-.4, -.6] };
     const ant = pulse(t, HIT.tap - .35, HIT.tap, 1), tp = t >= HIT.tap ? 1 - sg(t, HIT.tap, HIT.tap + .3) : 0;
-    x = 880 + 10 * ant - 26 * tp; S.a = -.15 * tp; S.headTilt = -.45 - .1 * tp; if (tp > 0) S.expr = { ...EXPR.neutral, lid: .4, pupil: [-.4, -.5] };
-  } else if (t < HIT.bite) {   // watches the cloud mumble and roll over: a puzzled tilt
-    const u = sg(t, HIT.mumble, HIT.roll + .5); S.headTilt = -.4 + .3 * Math.sin(u * Math.PI); S.expr = { ...EXPR.worried, pupil: [-.4, -.5] }; x = 880;
-  } else if (t < HIT.yank) {   // bites the wisp and tugs: rears up, head at the wisp, then pulls back with effort, feet skidding
+    x = 880 + 10 * ant - 26 * tp; S.a = -.15 * tp; S.headTilt = -.45 - .1 * tp; S.stretch = 1 - .06 * ant + .08 * tp; if (tp > 0) S.expr = { ...EXPR.neutral, lid: .4, pupil: [-.4, -.5] };
+  } else if (t < HIT.bite) {
+    const u = sg(t, HIT.mumble, HIT.roll + .5); S.headTilt = -.4 + .3 * Math.sin(u * Math.PI); S.expr = { ...EXPR.worried, pupil: [-.4, -.5], browY: .5 }; x = 880;
+  } else if (t < HIT.yank) {
     const r = sg(t, HIT.bite, HIT.tug0), pull = sg(t, HIT.tug0, HIT.yank);
     x = lerp(880, 870, r) + 70 * pull + Math.sin(tt * 30) * 2 * pull; y = 432 - 30 * r + 20 * pull; S.a = lerp(0, -.95, r) + .4 * pull; S.headTilt = lerp(-.4, -.3, r) + .5 * pull; S.legs = 1; S.gait = pull > 0 ? tt * 26 : 0; S.stride = 9; S.stretch = 1 + .14 * pull; S.curl = -.14 * pull;
     S.expr = pull > 0 ? { ...EXPR.effort, mouth: 0 } : { ...EXPR.determined, mouth: .6 * r }; S.amp = 4 + 6 * pull; S.ph = pull * 3;
-  } else if (t < HIT.puff) {   // flung: a parabola to the right with a spin, lands on its head, wobbles upright
+  } else if (t < HIT.puff) {
     const u = sg(t, HIT.flung - .15, HIT.landHead);
     if (u < 1) { x = lerp(940, 1300, u); y = 452 - 260 * Math.sin(u * Math.PI) + 10; S.a = -1 - u * 5.2; S.legs = 0; S.amp = 12; S.k = 1.4; S.expr = EXPR.dizzy; S.headTilt = .3; S.curl = .25; S.stretch = 1.15; S.vel = [40, 0]; }
-    else { const v = t - HIT.landHead; const sp = spring(v, 6, .3); x = 1300; y = 452 + 10 - 30 * (1 - sp); S.a = -Math.PI * .95 * (1 - sp) + .0; S.squash = 1 - .22 * Math.exp(-v * 9); S.legs = sp; S.expr = mixExpr(EXPR.dizzy, EXPR.angry, sg(v, .3, .7)); S.headTilt = .2 * (1 - sp); }
-  } else if (t < HIT.blownOff) {   // walks back, puffs up, inhales, roars a squeak; the cloud blows
+    else { const v = t - HIT.landHead; const sp = spring(v, 6, .3); x = 1300; y = 452 + 10 - 30 * (1 - sp); S.a = -Math.PI * .95 * (1 - sp); S.squash = 1 - .22 * Math.exp(-v * 9); S.legs = sp; S.expr = mixExpr(EXPR.dizzy, EXPR.angry, sg(v, .3, .7)); S.headTilt = .2 * (1 - sp); }
+  } else if (t < HIT.blownOff) {
     const w = sg(t, HIT.puff, HIT.inhale2 - .2); x = lerp(1300, 920, ss(w)); S.gait = w > 0 && w < 1 ? tt * 22 : 0; S.stride = 8;
     const pf = sg(t, HIT.inhale2 - .2, HIT.roar), rr = t >= HIT.roar ? 1 - sg(t, HIT.roar + .35, HIT.roar + .7) : 0;
     S.expr = mixExpr({ ...EXPR.angry, puff: .3 }, { ...EXPR.puffed, puff: 1.3 }, pf); if (rr > 0) S.expr = { ...EXPR.roar, puff: .5 * rr }; S.headTilt = -.5 - .3 * pf + .8 * rr; S.a = -.15 * pf + .1 * rr; S.squash = 1 + .06 * pf - .08 * rr; S.stretch = 1 - .1 * pf + .25 * rr; S.curl = .12 * pf - .1 * rr;
-    if (rr > 0) { for (let i = 0; i < 3; i++) draw(L, mk([[x - 70 - i * 6, 395 + (i - 1) * 22], [x - 100 - i * 14, 390 + (i - 1) * 34]], { w: 2.4, tone: .6 * rr, dry: .6, prof: 'tip', nb: 3, seed: 120 + i }), 1, rr); }
+    squeak = rr;
     if (t >= HIT.gust) { const g = sg(t, HIT.gust, HIT.blownOff); S.wind = [60 * g, 0]; S.expr = mixExpr(S.expr, EXPR.shocked, g); x += 20 * g; S.a = .2 * g; }
-  } else if (t < HIT.climbBack) {  // blown off: swept right in a diagonal flying-white streak, tumbling, out of frame
+  } else if (t < HIT.climbBack) {
     const u = sg(t, HIT.blownOff, HIT.blownOff + .8); x = lerp(940, 2200, ei(u) * .6 + u * .4); y = lerp(432, 160, u) + Math.sin(u * 7) * 20; S.a = -.3 + u * 7; S.legs = 0; S.amp = 12; S.k = 1.5; S.expr = EXPR.shocked; S.wind = [30, 0]; S.stretch = 1.3; S.vel = [70, 0];
-    draw(L, mk([[1000, 420], [1400, 320], [1900, 190], [2300, 110]], { w: 30, tone: .5, dry: .8, wet: .05, prof: 'tip', nb: 40, seed: 130, gapLen: 900 }), 1, .8 * (1 - sg(t, HIT.blownOff + .5, HIT.blownOff + 1.2)));
-  } else {                         // climbs back: hovers in the air, panting; eye down (to the village), then up to the cloud; brow settles; rises
+    streak = .8 * (1 - sg(t, HIT.blownOff + .5, HIT.blownOff + 1.2));
+  } else {
     const u = sg(t, HIT.climbBack, HIT.climbBack + 1.0); x = lerp(1700, 1120, eo(u)); y = lerp(150, 330, eo(u)) + Math.sin(t * 2.4) * 8; S.legs = 0; S.a = -.1; S.amp = 8; S.ph = -t * 5; S.vel = [25 * (1 - u), 0]; S.curl = -.03;
     const pant = Math.max(0, Math.sin(t * 7)) * (1 - sg(t, HIT.eyeUp, HIT.browSettle)), down = pulse(t, HIT.climbBack + .8, HIT.eyeUp + .2, .6);
     S.expr = { ...EXPR.worried, mouth: .35 * pant, pupil: [-.5 + .3 * down, lerp(-.3, 1, down)] }; S.headTilt = .35 * down - .2 * (1 - down);
@@ -372,10 +428,33 @@ function s11(A, t) {
     const rise = sg(t, HIT.rise, SHOT.s12); y -= 700 * ei(rise); x -= 60 * rise; S.a = -.1 - .6 * rise; S.headTilt = -.2 - .3 * rise; S.ph = -t * (5 + 3 * rise); S.stretch = 1 + .15 * rise; S.vel = [50 * rise, 0];
   }
   if (C.tug) { const sn = [x + dir * Math.cos(S.a) * 44, y + Math.sin(S.a) * 44 + 6], wp = [CLOUD.x + 1.1 * CLOUD.r, CLOUD.y + .25 * CLOUD.r]; C.tug = [sn[0] - wp[0], sn[1] - wp[1], C.tug[2]]; }
-  cloud(A, { ...CLOUD, ...C }, { t });
-  if (show) dragon(A, TMP, S, { x, y, s: sc, dir, t, seed: 3, boil: t * 12, am });
+  return { C, S, x, y, dir, sc, squeak, streak };
+}
+// draw the summit through a camera; cuK > 1 draws the dragon that much bigger around its eye (a close-up)
+function summitDraw(A, t, cam, st, cuK = 1) {
+  const L = A.ink;
+  paintCam(A, cam); mist(A, cam, [[1150, 1330, .4]]);
+  cloud(A, { ...CLOUD, ...st.C }, { t });
+  const X0 = { x: st.x, y: st.y, s: st.sc, dir: st.dir, t, seed: 3, boil: t * 12 };
+  if (st.streak > 0) draw(L, mk([[1000, 420], [1400, 320], [1900, 190], [2300, 110]], { w: 30, tone: .5, dry: .8, wet: .05, prof: 'tip', nb: 40, seed: 130, gapLen: 900 }), 1, st.streak);
+  const d = cuK > 1 ? dragonCU(A, TMP, st.S, X0, cuK) : dragon(A, TMP, st.S, X0);
+  if (st.squeak > 0) { const sn = d.snout, k = st.sc * cuK; for (let i = 0; i < 3; i++) draw(L, mk([[sn[0] - 10 * k - i * 3 * k, sn[1] + (i - 1) * 12 * k], [sn[0] - 28 * k - i * 8 * k, sn[1] + (i - 1) * 20 * k]], { w: 1.4 * k, tone: .6 * st.squeak, dry: .6, prof: 'tip', nb: 3, seed: 120 + i }), 1, st.squeak); }
   return { paper: paperOf(cam), bleed: 5 * cam.z, rim: .95, vig: .25, night: 0 };
 }
+const eyeCam = (st, cuK, z, ox = 0, oy = 0) => { const e = eyeOf(st.S, { x: st.x, y: st.y, s: st.sc, dir: st.dir }); return { x: e[0] + ox, y: e[1] + oy, z }; };
+const FACE = [CLOUD.x + .55 * CLOUD.r, CLOUD.y - .12 * CLOUD.r];
+function s11(A, t) { const st = summitState(t); return summitDraw(A, t, { x: 900, y: 330, z: 1.2 }, st); }
+function s11l(A, t) { const st = summitState(t); const u = sg(t, SHOT.s11l, SHOT.s11m); return summitDraw(A, t, { x: lerp(820, 790, u), y: 380, z: lerp(2.0, 2.2, u) }, st); }
+function s11m(A, t) { const st = summitState(t); return summitDraw(A, t, { x: FACE[0] + 40, y: FACE[1] + 50, z: 2.4 }, st); }
+function s11n(A, t) { const st = summitState(t); return summitDraw(A, t, eyeCam(st, 3.5, 2.4, -60, 40), st, 3.5); }
+function s11o(A, t) { const st = summitState(t); return summitDraw(A, t, { x: 860, y: 400, z: 1.9 }, st); }
+function s11p(A, t) { const st = summitState(t); return summitDraw(A, t, { x: 1020, y: 330, z: 1.2 }, st); }
+function s11q(A, t) { const st = summitState(t); return summitDraw(A, t, { x: st.x - 40, y: 400, z: 2.0 }, st); }
+function s11r(A, t) { const st = summitState(t); return summitDraw(A, t, eyeCam(st, 3.5, 2.3, -80, 50), st, 3.5); }
+function s11s(A, t) { const st = summitState(t); return summitDraw(A, t, { x: FACE[0] + 20, y: FACE[1] + 20, z: 2.8 }, st); }
+function s11t(A, t) { const st = summitState(t); return summitDraw(A, t, { x: 1000, y: 330, z: 1.15 }, st); }
+function s11u(A, t) { const st = summitState(t); return summitDraw(A, t, { x: 1150, y: 300, z: 2.0 }, st); }
+function s11c(A, t) { const st = summitState(t); const cam = eyeCam(st, 3, 2.2, -40, 60); if (t >= HIT.rise) { const e0 = eyeOf(st.S, { x: st.x, y: st.y, s: st.sc, dir: st.dir }); cam.y = Math.max(cam.y, e0[1] + 60 + 700 * ei(sg(t, HIT.rise, SHOT.s12)) * .9); } return summitDraw(A, t, cam, st, 3); }
 // ---- S11b cut-in: the child's empty bowl ----
 function s11b(A, t) {
   const u = sg(t, SHOT.s11b, SHOT.s11c), cam = { x: 2255, y: 1455, z: lerp(2.7, 2.95, u) };
@@ -383,13 +462,31 @@ function s11b(A, t) {
   return { paper: paperOf(cam), bleed: 5 * cam.z, rim: .95, vig: .3, night: 0 };
 }
 // ---- S12 silence above the cloud; the curl ----
-function s12(A, t) {
+function s12State(t) {
+  const curl = sg(t, HIT.curl, HIT.curl + 1.2), open = sg(t, 81.6, 82.0);
+  const back = pulse(t, HIT.lookBack, HIT.breath + .4, .5), breath = pulse(t, HIT.breath, HIT.breath + .9, .5), nod = pulse(t, HIT.nod, HIT.nod + .55, .5);
+  const S = { a: -.7 + .6 * curl, amp: 3, k: .8, ph: 0, legs: 0, curl: .95 * ss(curl), taper: 1, stretch: 1 - .1 * ss(curl) + .05 * breath,
+    expr: mixExpr({ ...EXPR.determined, pupil: [lerp(0, .9, back), lerp(.6, .9, back)], lid: .3, puff: .9 * breath, mouth: .15 * breath }, curl > 0 ? EXPR.closed : EXPR.determined, ss(curl) * (1 - open)),
+    headTilt: .2 * curl + .55 * back + .35 * nod - .1 * breath };
+  return { S, X: { x: 700 - 30 * curl, y: -430 + Math.sin(t * 1.4) * 6, s: 1.4, dir: 1, t, seed: 3, boil: t * 12 } };
+}
+function s12(A, t) {   // silence: high wide, the dragon very small above the cloud
   const cam = { x: 700, y: -260, z: .55 };
   paintCam(A, cam);
   cloud(A, { ...CLOUD, breath: breathOf(t + 2), bubble: .5 + .5 * breathOf(t + 2), expr: CEXPR.asleep }, { t });
-  const curl = sg(t, HIT.curl, HIT.curl + 1.2), open = sg(t, 81.6, 82.0);
-  const S = { a: -.7 + .6 * curl, amp: 3, k: .8, ph: 0, legs: 0, curl: .95 * ss(curl), expr: mixExpr({ ...EXPR.determined, pupil: [0, .6] }, curl > 0 ? EXPR.closed : EXPR.determined, ss(curl) * (1 - open)), headTilt: .2 * curl, taper: 1, stretch: 1 - .1 * ss(curl) };
-  dragon(A, TMP, S, { x: 700 - 30 * curl, y: -430 + Math.sin(t * 1.4) * 6, s: 1.4, dir: 1, t, seed: 3, boil: t * 12 });
+  const st = s12State(t); dragon(A, TMP, st.S, st.X);
+  return { paper: paperOf(cam), bleed: 5 * cam.z, rim: .9, vig: .15, warm: .4, night: 0 };
+}
+function s12b(A, t) {   // close-up: it looks back at the village, breathes, nods
+  const st = s12State(t), e = eyeOf(st.S, st.X), cam = { x: e[0] + 70, y: e[1] + 50, z: 2.3 };
+  paintCam(A, cam);
+  dragonCU(A, TMP, st.S, st.X, 3.6);
+  return { paper: paperOf(cam), bleed: 5 * cam.z, rim: .9, vig: .15, warm: .4, night: 0 };
+}
+function s12c(A, t) {   // medium: curls into the drop it was born from
+  const st = s12State(t), e = eyeOf(st.S, st.X), cam = { x: e[0] - 20, y: e[1] + 40, z: 1.5 };
+  paintCam(A, cam);
+  dragonCU(A, TMP, st.S, st.X, 1.6);
   return { paper: paperOf(cam), bleed: 5 * cam.z, rim: .9, vig: .15, warm: .4, night: 0 };
 }
 // ---- S13 the dive stroke; S14 the bloom in the cloud ----
@@ -416,6 +513,26 @@ function s13(A, t) {
     const R = mulberry(43); for (let i = 0; i < 10; i++) { const a = R() * Math.PI * 2, dd = (20 + R() * 120) * clamp(v / .4); blot(L.wet, 660 + Math.cos(a) * dd, 200 + Math.sin(a) * dd * .6, (6 + R() * 14) * (1 - clamp(v / 1.2)), .25 * (1 - clamp(v / 1.2)), R() * 3, .7, 150 + i); }
   }
   return { paper: paperOf(cam), bleed: 5 * cam.z, rim: 1, vig: .2, night: 0 };
+}
+function s13b(A, t) {   // inside the cloud: the dragon's body unravels into threads of ink that fall as the first drops
+  const u = sg(t, SHOT.s13b, SHOT.s14), cam = { x: 600, y: 300, z: lerp(1.5, 1.75, ss(u)) };
+  paintCam(A, cam);
+  const L = A.ink, v = t - HIT.diveStroke - 3 * F;
+  const C = { breath: 0, bubble: 0, expr: mixC(CEXPR.asleep, CEXPR.mumble, pulse(t, SHOT.s13b, SHOT.s14, .5)), squash: 1 + .12 * Math.exp(-v * 7) * Math.cos(v * 18), ink: .35 * sg(t, SHOT.s13b - .4, SHOT.s14), inkAt: [-.15, -.3] };
+  cloud(A, { ...CLOUD, ...C }, { t });
+  // the dragon inside, pale, undulating slowly, dissolving: its ink fades as the threads take it
+  const S = { a: -.2 + .15 * Math.sin(t * .8), amp: 10, k: 1, ph: t * 2.5, legs: 0, expr: { ...EXPR.closed, smile: .6, whisk: .4 }, headTilt: -.1, taper: 1 + .8 * u, stretch: 1 + .2 * u };
+  const d = dragon(A, TMP, S, { x: 540, y: 300, s: 2.2, dir: 1, t, seed: 3, boil: t * 12, am: .62 * (1 - ss(u)) + .05, eye: 0 });
+  // threads: from points along its spine, thin wavy lines of ink run down through the cloud to its underside and on into drops
+  const under = CLOUD.y + .72 * CLOUD.r;
+  for (let i = 0; i < 12; i++) {
+    const start = sg(t, SHOT.s13b + i * .22, SHOT.s13b + i * .22 + 1.6); if (start <= 0) continue;
+    const p = d.spine[2 + Math.floor(i * 1.1)], len = (under - p[1]) * ss(start) + 160 * clamp(start - .6) / .4 * (1 + i % 3 * .3);
+    const pts = []; for (let k = 0; k <= 8; k++) { const w = k / 8; pts.push([p[0] + Math.sin(w * 6 + i * 1.7 + t * 1.5) * 14 * (1 - w * .5) + (i - 6) * 8 * w, p[1] + w * len, 1 - w * .6]); }
+    draw(L, mk(pts, { w: 4.5, tone: .6 * clamp(start * 2), dry: .5, wet: .4, prof: 'tip', nb: 5, seed: 500 + i, gapLen: 300 }), 1, 1);
+    const ey = p[1] + len; if (ey > under + 20) { const dropY = ey + (ey - under) * .3; blot(L.wet, pts[8][0], dropY, 6, .65, 0, 1.3, 520 + i); blot(L.dry, pts[8][0], dropY, 3.6, .5, 0, 1.3, 540 + i); }
+  }
+  return { paper: paperOf(cam), bleed: 7 * cam.z, rim: 1.2, vig: .22, night: 0, warm: .4 };
 }
 function s14(A, t) {
   const cam = { x: 600, y: 290, z: 1.9 }, sh = pulse(t, HIT.thunder, HIT.thunder + .3, .3) * 9;
@@ -444,23 +561,54 @@ function s15(A, t) {
   return { paper: paperOf(cam), bleed: 6 * cam.z, rim: 1.15, vig: .25 - .1 * drain, night: 0, warm: .45 };
 }
 // ---- S16 dawn: the studio wide again; the red drop lands in the inkstone; the painter wakes ----
-function s16(A, t) {
-  const L = A.ink, cam = { x: 960, y: 560, z: 1 };
-  const X = camXf(cam); A.xf(X.s, X.tx, X.ty); A.cc.setTransform(X.s, 0, 0, X.s, X.tx, X.ty);
-  const dawn = sg(t, HIT.brighten, HIT.brighten + 4);
-  studioStatic(A, t, { shine: 1 });
-  // the red drop's landing: rings in the pool (paper-white arcs) and the vermilion dot sinking
-  const v = t - HIT.plip; if (v >= 0 && v < 1.6) { for (let i = 0; i < 3; i++) { const age = v - i * .2; if (age < 0) continue; for (const c of [L.wet, L.dry]) { c.save(); c.globalCompositeOperation = 'destination-out'; c.globalAlpha = .5 * clamp(1 - age / 1.2); c.lineWidth = 2; c.strokeStyle = '#000'; c.beginPath(); c.ellipse(ST.INKSTONE.x + 10, ST.INKSTONE.y + 4, 6 + age * 40, (6 + age * 40) * .7, 0, 0, 7); c.stroke(); c.restore(); } } }
-  if (v >= 0) { const c = A.cc; c.save(); c.globalAlpha = .95 * clamp(1 - v / 1.0); c.fillStyle = `rgb(${VERM.join(',')})`; c.beginPath(); c.arc(ST.INKSTONE.x + 10, ST.INKSTONE.y + 4, 5, 0, 7); c.fill(); c.restore(); }
+function dawnStudio(A, t, cam, o = {}) {   // the top-down studio at dawn
+  const L = A.ink, X = camXf(cam); A.xf(X.s, X.tx, X.ty); A.cc.setTransform(X.s, 0, 0, X.s, X.tx, X.ty);
+  studioStatic(A, t, { shine: 1, lampAm: .6 });
   paintingLayers(A, cam, { cracks: 0 }); setXf(A, paintXf(cam));
   WD.water(A.ink, t, 1, 1);
   paintingLife(A, t, { float: 1, leaf: 1, bowl: 1, drink: 0, cloud: { breath: breathOf(t + 2) * .5, bubble: 0, expr: { ...CEXPR.asleep, mouth: .15 }, ink: .15, inkAt: [-.15, -.3] } });
   colophon(A, 1, .8);
   A.xf(X.s, X.tx, X.ty); A.cc.setTransform(X.s, 0, 0, X.s, X.tx, X.ty);
   ST.incense(L, A.cc, ST.INCENSE.x, ST.INCENSE.y, 1, { burn: 1, t });
-  const stir = pulse(t, HIT.stir, HIT.stir + 1.2, .5), lift = ss(sg(twos(t), HIT.headUp, HIT.lookPainting)), eyes = sg(t, HIT.lookPainting, HIT.lookPainting + .4);
-  ST.painter(L, PAINTER[0], PAINTER[1], 1, { breath: breathOf(t) * (1 - lift) + stir * 2, lift, eyes });
-  return { paper: paperOf(cam), bleed: 5, rim: 1, vig: lerp(.4, .14, dawn), night: 1 - dawn, warm: lerp(.6, .25, dawn), paperCol: [lerp(.95, .965, dawn), lerp(.925, .945, dawn), lerp(.87, .895, dawn)] };
+  ST.painter(L, PAINTER[0], PAINTER[1], 1, { breath: breathOf(t) * (1 - (o.lift || 0)) + (o.stir || 0) * 2, lift: o.lift || 0, eyes: o.eyes || 0 });
+  return X;
+}
+const dawnK = t => sg(t, HIT.brighten, HIT.brighten + 4);
+const dawnTone = t => { const d = dawnK(t); return { vig: lerp(NIGHT.vig, DAWN.vig, d), warm: lerp(NIGHT.warm, DAWN.warm, d), paperCol: NIGHT.paperCol.map((v, i) => lerp(v, DAWN.paperCol[i], d)), night: 1 - d }; };
+function s16(A, t) {   // insert: the red drop lands in the inkstone's pool
+  const L = A.ink, cam = { x: ST.INKSTONE.x + 10, y: ST.INKSTONE.y, z: 3.0 };
+  const X = camXf(cam); A.xf(X.s, X.tx, X.ty); A.cc.setTransform(X.s, 0, 0, X.s, X.tx, X.ty);
+  ST.desk(L); ST.inkstone(L, ST.INKSTONE.x, ST.INKSTONE.y, 1, { shine: 1, pool: .85 });
+  const v = t - HIT.plip;
+  if (v >= 0) { for (let i = 0; i < 4; i++) { const age = v - i * .18; if (age < 0) continue; for (const c of [L.wet, L.dry]) { c.save(); c.globalCompositeOperation = 'destination-out'; c.globalAlpha = .55 * clamp(1 - age / 1.3); c.lineWidth = 2.2; c.strokeStyle = '#000'; c.beginPath(); c.ellipse(ST.INKSTONE.x + 10, ST.INKSTONE.y + 4, 4 + age * 44, (4 + age * 44) * .7, 0, 0, 7); c.stroke(); c.restore(); } } }
+  const c = A.cc; c.save(); c.globalAlpha = .96 * (v < 0 ? 1 : clamp(1 - v / 1.1)); c.fillStyle = `rgb(${VERM.join(',')})`; c.beginPath(); c.ellipse(ST.INKSTONE.x + 10, ST.INKSTONE.y + 4 - (v < 0 ? 400 : 0), 5, 5 + (v < 0 ? 3 : 0), 0, 0, 7); c.fill(); c.restore();
+  return { paper: paperOf(cam), bleed: 5, rim: 1.1, ...NIGHT, night: 1, lampAt: lampScreen(cam, 1400) };
+}
+function s16b(A, t) {   // dawn wide: the room pales, the lamp is out, the incense is ash
+  const cam = { x: 960, y: 560, z: 1 };
+  dawnStudio(A, t, cam, {});
+  return { paper: paperOf(cam), bleed: 5, rim: 1, ...dawnTone(t), lampAt: lampScreen(cam, 900 * (1 - dawnK(t))) };
+}
+function s16c(A, t) {   // side view: the painter stirs and lifts the head
+  const L = A.ink, cam = { x: 960, y: 560, z: 1 };
+  A.xf(1, 0, 0); A.cc.setTransform(1, 0, 0, 1, 0, 0);
+  draw(L, mk([[-50, 742], [600, 738], [1300, 741], [1970, 736]], { w: 8, tone: .62, dry: .6, wet: .2, prof: 'even', seed: 31, gapLen: 800 }));
+  mass(L.wet, [[-50, 1080], [1970, 1080], [1970, 745], [-50, 745]], .06, 0, 35);
+  draw(L, mk([[-50, 727], [900, 725]], { w: 3, tone: .35, dry: .55, prof: 'even', seed: 36 }));
+  const stir = pulse(t, HIT.stir, HIT.stir + 1.2, .5), lift = ss(sg(twos(t), HIT.headUp, SHOT.s16d + .6));
+  for (const c of [L.wet, L.dry]) { c.save(); c.translate(1300, 0); c.scale(-1, 1); c.translate(-1300, 0); }
+  ST.painterSide(L, 1340, 700, 2.3, { breath: breathOf(t) * (1 - lift) + stir * 2.5, lift });
+  for (const c of [L.wet, L.dry]) c.restore();
+  return { paper: paperOf(cam), bleed: 5, rim: 1, ...dawnTone(t) };
+}
+function s16d(A, t) {   // close: the face wakes, the eyes open, the gaze goes to the painting
+  const L = A.ink, lift = ss(sg(twos(t), HIT.headUp, SHOT.s16d + .6)), eyes = sg(t, HIT.lookPainting, HIT.lookPainting + .4);
+  const cam = { x: 960, y: 560, z: 1 };
+  A.xf(1, 0, 0); A.cc.setTransform(1, 0, 0, 1, 0, 0);
+  for (const c of [L.wet, L.dry]) { c.save(); c.translate(1300, 0); c.scale(-1, 1); c.translate(-1300, 0); }
+  ST.painterSide(L, 1300 + 120, 900, 3.0, { breath: 0, lift, eyes });
+  for (const c of [L.wet, L.dry]) c.restore();
+  return { paper: paperOf(cam), bleed: 5, rim: 1, ...dawnTone(t) };
 }
 // ---- S17 insert: the wet painting; the fingertip ----
 function s17(A, t) {
@@ -534,7 +682,7 @@ function s19(A, t) {
 }
 
 // ---- dispatcher, transitions, inscriptions, night wash ----
-const SHOTS = { s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11, s11b, s11c: s11, s12, s13, s14, s15, s16, s17, s18, s19 };
+const SHOTS = { s01, s02, s03, s04, s04b, s04c, s05a, s05, s06, s07, s07b, s07c, s08, s09, s10, s11, s11l, s11m, s11n, s11o, s11p, s11q, s11r, s11s, s11t, s11u, s11b, s11c, s12, s12b, s12c, s13, s13b, s14, s15, s16, s16b, s16c, s16d, s17, s18, s19 };
 export function frame(t, A, B, T1, T2) {
   TMP = T1; TMP2 = T2;
   const k = shotAt(t);
@@ -545,11 +693,11 @@ export function frame(t, A, B, T1, T2) {
     const u = sg(t, HIT.dive + .15, SHOT.s07 + .7);
     A.clear(); B.clear();
     const oa = s06(A, Math.min(SHOT.s07 - .001, t)) || {}, ob = s07(B, Math.max(SHOT.s07, t)) || {};
-    const X6 = camXf({ x: 1030, y: 330, z: 3.4 });
+    const e6 = eyeOf({ a: 1.4, headTilt: 1.6 }, { x: 1040, y: 360, s: DS, dir: 1 }), cam6 = { x: e6[0] + 60, y: e6[1] + 40, z: 2.4 }, X6 = camXf(cam6);
     o = { ...oa, paperB: ob.paper, bleedB: ob.bleed, rimB: ob.rim, trans: [1040 * X6.s + X6.tx, 350 * X6.s + X6.ty, 20 + 2600 * ss(u), 1] };
   }
   // night: the studio at night is a thin 清 wash over everything plus a heavier vignette
-  if (o.night > 0) nightWash(A, o.night);
+  if (o.night > 0) nightWash(A, o.night, o.lampAt);
   // inscriptions
   const boxes = [];
   if (!window.NOSUB) for (const s of SUBS) {
@@ -558,7 +706,7 @@ export function frame(t, A, B, T1, T2) {
     const b = inscription(A, s.text, pos[0], pos[1], a, { size: pos[2] || 52, vertical: pos[3] ?? true }); if (b) boxes.push({ id: s.id, box: b });
   }
   if (window.POSTER) posterTitle(A);
-  delete o.night;
+  delete o.night; delete o.lampAt;
   return o;
 }
 // each inscription's place in the shot's blank paper: [x, y, size, vertical]
@@ -566,7 +714,7 @@ export function subPos(id, t) {
   switch (id) {
     case 'L2': return [1000, 985, 50, false];
     case 'L3': return [1760, 110, 54, true];
-    case 'L4': return [1560, 120, 56, true];
+    case 'L4': return [200, 120, 56, true];
     case 'L5': return [1760, 110, 56, true];
     case 'L7': return [1560, 150, 54, true];
   }
@@ -637,7 +785,7 @@ export function events() {
   at(HIT.cloudEye, 'lid', { gain: .7 }); at(HIT.gust, 'gust', { gain: 1 }); at(HIT.blownOff, 'leaf', { gain: .9 }); at(HIT.blownOff + .3, 'flap', { gain: .3 });
   at(HIT.climbBack, 'flap', { gain: .6 }); at(HIT.climbBack + .4, 'flap', { gain: .5 }); at(HIT.climbBack + 1.0, 'pant', { gain: .8, dur: 2.2 });
   at(HIT.rise, 'riseAir', { gain: .6 });
-  at(HIT.drip2, 'drip', { gain: .9 });
+  at(HIT.drip2, 'drip', { gain: .9 }); at(HIT.breath, 'inhale', { gain: .5 }); at(HIT.nod, 'wetMove', { gain: .25 });
   at(HIT.curl, 'wetMove', { gain: .4 });
   at(HIT.diveStroke, 'diveStroke', { gain: 1 }); at(HIT.diveStroke + 3 / 24, 'cloudHit', { gain: 1 }); at(HIT.diveStroke + .3, 'inkSpread', { gain: .9, dur: 8 });
   at(HIT.wake, 'gasp', { gain: 1 }); at(HIT.lookBelly, 'sag', { gain: .8 }); at(HIT.thunder, 'thunder', { gain: 1 }); at(HIT.firstDrops, 'firstDrops', { gain: .9 });
@@ -651,7 +799,7 @@ export function events() {
   at(HIT.plip, 'plip', { gain: 1 });
   at(0, 'amb', { kind: 'rainTail', t0: 104.0, t1: 109.0 });
   at(0, 'amb', { kind: 'morning', t0: 106.0, t1: DUR });
-  at(HIT.stir, 'cloth', { gain: .8 }); at(HIT.headUp, 'cloth', { gain: .7 }); at(HIT.headUp + .3, 'creakChair', { gain: .6 });
+  at(HIT.stir, 'cloth', { gain: .8 }); at(SHOT.s16d, 'cloth', { gain: .4 }); at(HIT.headUp, 'cloth', { gain: .7 }); at(HIT.headUp + .3, 'creakChair', { gain: .6 });
   at(SHOT.s17, 'cloth', { gain: .4 }); at(HIT.touch, 'touchPaper', { gain: 1 }); at(HIT.touch + 1.0, 'touchPaper', { gain: .5 });
   at(HIT.brushUp, 'brushUp', { gain: .9 }); at(HIT.dip, 'dip', { gain: .9 });
   // writing: one stroke event per stroke (times filled in by the glyph timing: 14 + 5 + 10 + 8 strokes over 119.5–123.5, one character per second)

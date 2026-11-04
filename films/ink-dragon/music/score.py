@@ -134,6 +134,7 @@ mark('inscription3', 71.0); G(71.0, 'A2', 3.0, .55, 0, .9)
 mark('browSettle', HIT['browSettle']); H(HIT['browSettle'], 'E5', .5, .1, .9, dur=1.8, release=1.0)
 mark('rise', HIT['rise']); H(HIT['rise'], 'A5', .45, .2, .8, dur=1.6, release=1.2)
 
+mark('lastNote', HIT['lastNote']); G(HIT['lastNote'], 'A2', .7, .62, 0, 1.0, pos=.11)   # the one note before the dive
 # ================= 化雨 the dive 82–92 @120 =================
 b = .5
 mark('diveStroke', HIT['diveStroke'])

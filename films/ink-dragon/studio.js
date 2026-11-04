@@ -181,3 +181,55 @@ export function hand(L, x, y, a, s = 1, o = {}) {
   sleeve(86);
   return [x, y];
 }
+
+// The painter in side view (for the two-shot with the dragon and the waking): seated at the desk, slumped forward, the head resting cheek-down on the
+// crossed forearms, facing the camera-left end of the desk. (x, y) = where the cheek meets the arms (the face's chin point); s scale; o: {breath, lift (0..1 sits up), eyes (0..1 open)}
+export function painterSide(L, x, y, s = 1, o = {}) {
+  const am = o.am ?? 1, br = (o.breath ?? 0) * 4 * s, lift = clamp(o.lift ?? 0), eyes = clamp(o.eyes ?? 0);
+  // the forearms crossed on the desk: a long pale mass with one loaded stroke, cuffs at both ends
+  mass(L.wet, [[x - 90 * s, y - 34 * s], [x + 300 * s, y - 40 * s], [x + 310 * s, y + 10 * s], [x - 100 * s, y + 10 * s]], .16 * am, 3 * s, 91);
+  draw(L, mk([[x - 96 * s, y + 8 * s], [x + 100 * s, y + 12 * s], [x + 310 * s, y + 6 * s]], { w: 16 * s, tone: .62, darkDir: [0, 1], side: .85, brWet: true, body: .22, dry: .42, wet: .9, prof: 'robe', seed: 911, gapLen: 500 }), 1, am);
+  draw(L, mk([[x - 96 * s, y - 34 * s], [x - 102 * s, y - 12 * s], [x - 94 * s, y + 10 * s]], { w: 6 * s, tone: .78, dry: .45, prof: 'tip', seed: 912 }), 1, am);   // the near cuff
+  for (let i = 0; i < 3; i++) draw(L, mk([[x - 100 * s, y - 24 * s + i * 11 * s], [x - 134 * s, y - 20 * s + i * 12 * s]], { w: 4.2 * s, tone: .72, dry: .4, wet: .2, prof: 'nail', seed: 913 + i }), 1, am);   // the fingers, over the desk's edge
+  // the head: rises and turns up as the painter wakes (lift). Asleep: the cheek on the arms, the face toward the left; the bun on top, the back of the head to the right
+  const hx = x + 70 * s + 40 * s * lift, hy = y - 54 * s - 120 * s * lift, R0 = 58 * s, tilt = -.55 * (1 - lift);
+  const T = p => rot([hx + p[0] * s, hy + p[1] * s], [hx, hy], tilt);
+  const face = []; for (let i = 0; i < 24; i++) { const a = i / 24 * Math.PI * 2; face.push(T([Math.cos(a) * 54 * (1 + .06 * Math.cos(a * 2)), Math.sin(a) * 60])); }
+  mass(L.wet, face, .1 * am, 2 * s, 92);
+  // hair: the back half of the head and the top, with the bun
+  const hair = []; for (let i = 0; i <= 14; i++) { const a = -Math.PI * .95 + i / 14 * Math.PI * 1.05; hair.push(T([Math.cos(a) * 58, Math.sin(a) * 62 - 2])); } hair.push(T([-4, -20]), T([-22, 8]));
+  mass(L.wet, hair, .8 * am, 2.4 * s, 93);
+  draw(L, mk([T([-40, -42]), T([0, -64]), T([44, -42]), T([58, 0])], { w: 12 * s, tone: .92, darkDir: [0, -1], side: .85, brWet: true, body: .3, dry: .4, wet: .9, prof: 'robe', seed: 916, gapLen: 200 }), 1, am);   // hair contour
+  draw(L, mk([T([-30, -48]), T([-24, -10]), T([-32, 30])], { w: 4.5 * s, tone: .82, dry: .45, prof: 'tip', seed: 917 }), 1, am);   // hairline at the temple
+  const bun = []; for (let i = 0; i < 16; i++) { const a = i / 16 * Math.PI * 2; bun.push(T([10 + Math.cos(a) * 19, -78 + Math.sin(a) * 16])); }
+  mass(L.wet, bun, .95 * am, 1.2 * s, 94);
+  draw(L, mk([T([-26, -84]), T([44, -78])], { w: 3.4 * s, tone: .9, dry: .4, prof: 'tip', seed: 918 }), 1, am);   // hairpin
+  // the face in profile: brow, closed eye (opens with `eyes`), nose, mouth, ear
+  draw(L, mk([T([-46, -22]), T([-30, -27]), T([-16, -22])], { w: 3.2 * s, tone: .8, dry: .45, prof: 'tip', seed: 919 }), 1, am);   // brow
+  draw(L, mk([T([-44, -6]), T([-34, -1 - 7 * eyes]), T([-24, -6])], { w: 2.6 * s, tone: .86, dry: .4, prof: 'tip', seed: 920 }), 1, am);   // the eye: an arc, opening into a dot
+  if (eyes > .5) blot(L.dry, T([-34, -5])[0], T([-34, -5])[1], 3.2 * s, .9 * am, 0, 1, 921);
+  draw(L, mk([T([-50, -4]), T([-60, 14]), T([-50, 20])], { w: 2.8 * s, tone: .78, dry: .45, prof: 'tip', seed: 922 }), 1, am);   // nose
+  draw(L, mk([T([-46, 32]), T([-36, 34])], { w: 2.4 * s, tone: .7, dry: .5, prof: 'tip', seed: 923 }), 1, am);                 // mouth
+  draw(L, mk([T([10, -6]), T([20, 6]), T([10, 18])], { w: 2.6 * s, tone: .72, dry: .45, prof: 'tip', seed: 924 }), 1, am);     // ear
+  // the back and shoulders behind, rising and breathing; sits up with lift
+  const bx = x + 150 * s + 20 * s * lift, by0 = y - 40 * s;
+  mass(L.wet, [[bx - 60 * s, by0], [bx + 20 * s, by0 - 150 * s - br - 90 * s * lift], [bx + 110 * s, by0 - 170 * s - br - 90 * s * lift], [bx + 190 * s, by0 - 80 * s - 60 * s * lift], [bx + 210 * s, by0 + 10 * s]], .2 * am, 3 * s, 95, [bx, by0 - 170 * s, bx, by0 + 10 * s, 1.1, .5]);
+  draw(L, mk([[bx + 200 * s, by0 + 10 * s], [bx + 190 * s, by0 - 90 * s - 60 * s * lift], [bx + 110 * s, by0 - 172 * s - br - 90 * s * lift]], { w: 24 * s, tone: .66, darkDir: [1, 0], side: .85, brWet: true, body: .22, dry: .42, wet: .9, prof: 'robe', seed: 925 }), 1, am);   // the back
+  draw(L, mk([[bx - 50 * s, by0 - 4 * s], [bx + 10 * s, by0 - 140 * s - br - 80 * s * lift], [bx + 100 * s, by0 - 168 * s - br - 90 * s * lift]], { w: 14 * s, tone: .5, darkDir: [-1, 0], side: .8, brWet: true, body: .15, dry: .5, wet: .8, prof: 'robe', seed: 926 }), 1, am);   // the chest side / collar
+  return { face: T([-40, 0]), nose: T([-58, 14]) };
+}
+
+// An oil lamp on the desk: a small stand, a dish, and the flame left as paper-white with a dark wick; `k` = flicker 0..1. (top-down desk view)
+export function lamp(L, x, y, s = 1, o = {}) {
+  const am = o.am ?? 1, fl = o.flicker ?? 0;
+  const dish = []; for (let i = 0; i < 24; i++) { const a = i / 24 * Math.PI * 2; dish.push([x + Math.cos(a) * 46 * s, y + Math.sin(a) * 30 * s]); }
+  mass(L.wet, dish, .5 * am, 1.5 * s, 96);
+  const rim = []; for (let i = 0; i <= 30; i++) { const a = i / 30 * Math.PI * 2 + .3; rim.push([x + Math.cos(a) * 47 * s, y + Math.sin(a) * 31 * s]); }
+  draw(L, mk(rim, { w: 5 * s, tone: .85, dry: .4, wet: .3, prof: 'even', seed: 961 }), 1, am);
+  draw(L, mk([[x - 30 * s, y + 44 * s], [x, y + 52 * s], [x + 30 * s, y + 44 * s]], { w: 4 * s, tone: .7, dry: .5, prof: 'tip', seed: 962 }), 1, am);   // the foot
+  // the flame: a teardrop of paper left blank with a dark halo and the wick
+  blot(L.wet, x + 18 * s, y - 8 * s, 22 * s, .6 * am, 0, .8, 963); blot(L.dry, x + 18 * s, y - 8 * s, 14 * s, .5 * am, 0, .8, 964);
+  for (const c of [L.wet, L.dry]) { c.save(); c.globalCompositeOperation = 'destination-out'; c.globalAlpha = .97; c.beginPath(); c.ellipse(x + 18 * s + fl * 2, y - 8 * s, 9 * s * (1 + .15 * fl), 13 * s, .2 * fl, 0, 7); c.fill(); c.restore(); }
+  draw(L, mk([[x + 10 * s, y + 6 * s], [x + 18 * s, y - 2 * s]], { w: 3 * s, tone: .9, dry: .3, prof: 'tip', seed: 965 }), 1, am);   // wick
+  return [x + 18 * s, y - 8 * s];
+}

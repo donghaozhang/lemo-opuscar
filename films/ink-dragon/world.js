@@ -195,3 +195,6 @@ export function water(L, t, fill, seed = 1) {
     for (let j = 0; j < 3; j++) { const yy = c[1] + side * (w * .75 - j * 12), x0 = c[0] - 30 + j * 6; draw(L, mk([[x0, yy], [x0 + 30, yy + 2 * side], [x0 + 60, yy]], { w: 1.8, tone: .5 * fill * (1 - j * .25), dry: .55, wet: .2, prof: 'tip', nb: 3, seed: 950 + i * 3 + j }), 1, fill); }
   }
 }
+
+// a foreground pine drawn per frame (for parallax passes): the library's pine at a large scale, darker
+export function pineFG(L, x, y, s, seed, t, wind, flip) { pine(L, x, y, s, seed, t, wind, flip); }

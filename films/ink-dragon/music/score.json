@@ -33,6 +33,7 @@
   "inscription3": 71.0,
   "browSettle": 72.5,
   "rise": 73.125,
+  "lastNote": 81.3,
   "diveStroke": 82.0,
   "bloomCut": 86.0,
   "wake": 87.5,
@@ -66,14 +67,14 @@
    "night": -30.4,
    "into": -26.6,
    "cloud": -31.2,
-   "hush": -240.0,
+   "hush": -36.8,
    "dive": -21.7,
    "rain": -22.6,
    "dawn": -31.3,
    "seal": -30.1
   },
   "silence_max_abs": {
-   "75-82": 0.0,
+   "75-81.2": 0.0,
    "130-132": 0.0
   },
   "onsets": {
@@ -110,7 +111,8 @@
    "inscription3": 71.0,
    "browSettle": 72.5,
    "rise": 73.125,
-   "diveStroke": 82.0186,
+   "lastNote": 81.3,
+   "diveStroke": 82.0185,
    "bloomCut": 86.0073,
    "wake": 87.5001,
    "lookBelly": 89.0111,
@@ -133,7 +135,7 @@
    "char1": 120.5082,
    "char2": 121.5,
    "char3": 122.5,
-   "seal": 125.0289,
+   "seal": 125.029,
    "eyeOpen2": 128.0
   }
  }

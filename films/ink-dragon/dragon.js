@@ -204,10 +204,10 @@ export function dragon(A, T, S0, X = {}) {
         if (lid > .02) { const hw = Math.sqrt(Math.max(0, 1 - (ly / rl) * (ly / rl))) * r; Td.beginPath(); Td.moveTo(-hw, ly); Td.lineTo(hw, ly); Td.stroke(); }
         if (lidB > .02) { const hw = Math.sqrt(Math.max(0, 1 - (lyB / rl) * (lyB / rl))) * r; Td.beginPath(); Td.moveTo(-hw, lyB); Td.lineTo(hw, lyB); Td.stroke(); }
         Td.restore();
-        if (eyeK > 0 && lid < .92) {   // the vermilion pupil (colour layer of A, same transform)
-          const pr = Math.max(r * .4 * e.pr, 1.6), c = A.cc; c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = clamp(eyeK * am * .96);
-          const lx = sx + (e.pupil[0] * r * .32 * dir), lyy = sy + (e.pupil[1] * rl * .32), pt = new DOMPoint(lx, lyy).matrixTransform(xf), prs = pr * xf.a;
-          c.fillStyle = `rgb(${VERM.join(',')})`; c.beginPath(); c.ellipse(pt.x, pt.y, prs, prs * .92, 0, 0, 7); c.fill(); c.restore();
+        if (lid < .92) {   // a black pupil in the paper-white eye; the vermilion is a small fleck in it (画龙点睛), drawn last on the colour layer
+          const pr = Math.max(r * .42 * e.pr, 1.6), px = sx + e.pupil[0] * r * .3 * dir, py = sy + e.pupil[1] * rl * .3;
+          Td.save(); Td.globalAlpha = .95 * pi * e.k * clamp(eyeK * 1.5); Td.fillStyle = '#000'; Td.beginPath(); Td.ellipse(px, py, pr, pr * .95, 0, 0, 7); Td.fill(); Td.restore();
+          if (eyeK > 0) { const c = A.cc; c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = clamp(eyeK * am * .96); const pt = new DOMPoint(px - pr * .3 * dir, py - pr * .25).matrixTransform(xf), prs = Math.max(pr * .38 * xf.a, 1.2); c.fillStyle = `rgb(${VERM.join(',')})`; c.beginPath(); c.ellipse(pt.x, pt.y, prs, prs, 0, 0, 7); c.fill(); c.restore(); }
         }
       } else {   // happy: a closed eye drawn as one upward arc
         Td.save(); Td.translate(sx, sy); Td.rotate(rotA); Td.strokeStyle = '#000'; Td.globalAlpha = .9 * pi * e.k; Td.lineWidth = Math.max(1.2, r * .22); Td.lineCap = 'round'; Td.beginPath(); Td.arc(0, rl * .5, r * .95, Math.PI * 1.12, Math.PI * 1.88); Td.stroke(); Td.restore();
@@ -218,6 +218,18 @@ export function dragon(A, T, S0, X = {}) {
   Tw.setTransform(1, 0, 0, 1, 0, 0); Td.setTransform(1, 0, 0, 1, 0, 0);
   const snout = T2(rot([38 * hs, -2 * hs], [0, 0], S.headTilt)), tail = T2(P[n - 1]), eye = T2(rot([13 * hs, -6 * hs], [0, 0], S.headTilt));
   return { neck: T2([0, 0]), snout, tail, eye, spine: P.map(T2) };
+}
+
+// where the eye lands in world coordinates for a state S placed by X (no drawing)
+export function eyeOf(S0, X = {}) {
+  const S = { ...DEF, ...S0 }, sc = X.s ?? 1, dir = X.dir ?? 1, ca = Math.cos(S.a), sa = Math.sin(S.a), st = S.stretch, hs0 = S.len / 100 * .72;
+  const q = rot([13 * hs0, -6 * hs0], [0, 0], S.headTilt), lx = q[0] * st, ly = q[1] * S.squash / st;
+  return [(X.x ?? 0) + (lx * ca - ly * sa) * sc * dir, (X.y ?? 0) + (lx * sa + ly * ca) * sc];
+}
+// draw the dragon k times bigger with its eye kept at the same world point (for close-ups through a moderate camera zoom)
+export function dragonCU(A, T, S, X, k) {
+  const e0 = eyeOf(S, X), X2 = { ...X, s: (X.s ?? 1) * k }, e1 = eyeOf(S, X2);
+  return dragon(A, T, S, { ...X2, x: (X.x ?? 0) + e0[0] - e1[0], y: (X.y ?? 0) + e0[1] - e1[1] });
 }
 
 // splatter: a ball of wet ticks around a point
