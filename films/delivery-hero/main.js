@@ -113,7 +113,7 @@ ev(at('s14', 5.0), 'shake');
 // s15–s18 bus stop
 ev(at('s15', .2), 'motor', { d: .8, g: .6 }); ev(at('s15', 1.0), 'skid'); hit('skid', at('s15', 1.0), 'kid', 2);
 D('s16', .1, 3.8, 'kid', '公交停了……我走过去。', { expr: 'sadWet', wet: 1 });
-MENU('s17', .02, 3.6, { x: 8, y: 26, w: 100, items: [{ label: '雨衣', icon: ICON.coat }, { label: '充电宝', icon: ICON.bank }, { label: '备用雨伞', icon: ICON.umbrella, dimAt: at('s17', 1.6) }], cur: (t) => t < at('s17', .6) ? 0 : t < at('s17', .9) ? ss(seg(t, at('s17', .6), at('s17', .7))) : 1 + ss(seg(t, at('s17', .9), at('s17', 1.0))), sel: at('s17', 1.6) });
+MENU('s17', .02, 3.6, { x: 112, y: 4, w: 100, items: [{ label: '雨衣', icon: ICON.coat }, { label: '充电宝', icon: ICON.bank }, { label: '备用雨伞', icon: ICON.umbrella, dimAt: at('s17', 1.6) }], cur: (t) => t < at('s17', .6) ? 0 : t < at('s17', .9) ? ss(seg(t, at('s17', .6), at('s17', .7))) : 1 + ss(seg(t, at('s17', .9), at('s17', 1.0))), sel: at('s17', 1.6) });
 ev(at('s17', .6), 'cursor'); ev(at('s17', .9), 'cursor'); ev(at('s17', 1.6), 'select'); ev(at('s17', 2.0), 'umbrella'); hit('umbrella', at('s17', 2.0), 'kid', 16); ev(at('s17', 2.1), 'item');
 D('s18', .1, 2.6, 'kid', '谢谢叔叔！', { expr: 'joy', noPortrait: 1 });
 // s19–s22 the dog
