@@ -1,0 +1,16 @@
+[note] WebGL runs on software rendering (ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftSh): 3D/CRT demos will be slow. macOS: LEMO_ANGLE=metal; Linux: needs GPU drivers. See core/README.md.
+OK  card1              at 0.16s    2 chars  need 1.94s  got 2.32s  "清晨"
+OK  title              at 8.36s    6 chars  need 2.83s  got 4.56s  "最后一班渡船"
+OK  xs1                at 13.76s   11 chars  need 3.63s  got 5.20s  "周爷爷，明天还有船吗？"
+OK  lz1                at 19.60s    7 chars  need 2.90s  got 3.56s  "明天就走桥啦。"
+OK  card2              at 30.16s    2 chars  need 1.94s  got 2.32s  "正午"
+OK  br1                at 41.52s    7 chars  need 2.74s  got 3.76s  "周伯，吃喜糖！"
+OK  card3              at 50.16s    2 chars  need 1.94s  got 2.08s  "黄昏"
+OK  ob1                at 60.88s    7 chars  need 2.74s  got 3.20s  "老周，末班了？"
+OK  lz2                at 64.84s    6 chars  need 2.52s  got 3.00s  "嗯，末班船。"
+OK  card4              at 68.16s    1 chars  need 1.72s  got 1.80s  "夜"
+OK  mo1                at 88.52s   11 chars  need 3.63s  got 4.96s  "周师傅，小石烧得厉害！"
+OK  lz3                at 101.40s    3 chars  need 2.01s  got 2.20s  "上船。"
+OK  card5              at 124.76s    2 chars  need 1.94s  got 2.04s  "黎明"
+OK  xs2                at 138.32s    7 chars  need 2.74s  got 2.80s  "周爷爷，给你。"
+EXIT 0

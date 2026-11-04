@@ -29,8 +29,10 @@ function tiltCenter(subject, fixed) {
   return Math.min(.8, Math.max(.2, _v.y * .5 + .5));
 }
 window.DUR = DUR;
+const FAST = Q.has('fast');   // ?fast=1: overlay only (for readcheck, which needs TEXTS, not the picture)
 window.render = t => {
   const shot = shotAt(t);
+  if (FAST) { drawOverlay(t); return; }
   if (shot.card) { renderer.setRenderTarget(null); renderer.setClearColor('#0c0705'); renderer.clear(); drawOverlay(t); return; }
   post.vig.uniforms.fade.value = 1; post.bloom.strength = .5; post.bloom.threshold = .85; renderer.toneMappingExposure = 1.15;
   V.warm.value = .1; V.sat.value = 1.05; V.amt.value = .6; V.contrast.value = .22;

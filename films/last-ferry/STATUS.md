@@ -18,3 +18,4 @@
 2026-11-04T15:37Z full render 1 in progress: worker0 1740/1800, worker1 1680/1800 frames
 2026-11-04T15:41Z full render 1 done: 3600 frames in 164 min; muxing and review pass 1
 2026-11-04T15:44Z review pass 1 done (3 contact sheets, 10 key-action strips); fix round: s7/s8 cameras, tilt band in two-shots, lamp glow, pier lantern key
+2026-11-04T15:46Z full render 2 starts (after the pass-1 fix round)
