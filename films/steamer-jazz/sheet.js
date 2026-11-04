@@ -2,12 +2,16 @@
 import * as T from './toon.js';
 import { P } from './parts.js';
 import * as C from './cast.js';
+import { paintLane, paintKitchen } from './bgs.js';
+import { drawBG } from './bgkit.js';
 const q = new URLSearchParams(location.search), kind = q.get('sheet');
 const cv = document.getElementById('c'); T.init(cv);
 const label = (s, x, y) => { const g = T.g; g.setTransform(1, 0, 0, 1, 0, 0); g.font = '26px XiaoWei, serif'; g.fillStyle = P.ink; g.textAlign = 'center'; g.fillText(s, x, y); };
-await document.fonts.ready;
+await document.fonts.ready; for (const f of ['40px Huang', '40px XiaoWei']) await document.fonts.load(f, '王记包子六点开门面粉蒸笼爵士');
 function bgFill() { const g = T.g; g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = P.light; g.fillRect(0, 0, 1920, 1080); g.fillStyle = P.mid; g.fillRect(0, 760, 1920, 320); }
 const DRAW = {
+  export(t) { if (window.EXPORT) return; const L = paintLane(), K = paintKitchen(); window.EXPORT = { lane: { url: L.cv.toDataURL('image/png'), ox: L.ox, oy: L.oy, w: L.w, h: L.h }, kitchen: { url: K.cv.toDataURL('image/png'), ox: K.ox, oy: K.oy, w: K.w, h: K.h } }; },
+  bg(t) { const g = T.g; g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = '#000'; g.fillRect(0, 0, 1920, 1080); const which = q.get('bg'); const B = which === 'lane' ? (window._L ||= paintLane()) : (window._K ||= paintKitchen()); T.init(cv); const cam = { x: +(q.get('cx') || (which === 'lane' ? 2200 : 1300)), y: +(q.get('cy') || (which === 'lane' ? 0 : 700)), z: +(q.get('z') || (which === 'lane' ? .4 : .7)) }; drawBG(g, B, cam); },
   model(t) {
     bgFill(); T.frame(t);
     C.wang({ x: 190, y: 700, k: 1.1, ex: 'neutral', must: 0 });

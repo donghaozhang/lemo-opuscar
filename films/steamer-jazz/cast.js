@@ -316,3 +316,39 @@ export function bun(x, y, k = 1, o = {}) {
   if (o.best) T.dot(-14, -16, 3, P.mid);
   pop();
 }
+
+// ———————————————— neighbours for the morning queue (Wang's rig, other heads) ————————————————
+// v: 'lady' (hair bun, qipao), 'old' (felt hat, beard), 'worker' (cloth cap); ex, k, arms like wang
+export function neighbour(p) {
+  begin(p);
+  const v = p.v || 'lady';
+  const L = p.legs || LEGS(30);
+  legs(L, [[-26, -90], [26, -90]], 14);
+  const sh = [[-64, -200], [64, -200]];
+  arms(p.arms || [{ x: -86, y: -110, hand: 'open' }, { x: 86, y: -110, hand: 'open' }], sh, 13, P.dark, false);
+  const col = v === 'lady' ? P.light : v === 'old' ? P.dark : P.mid;
+  if (v === 'lady') shape(spline([[-48, -236], [-76, -150], [-64, -84], [0, -76], [64, -84], [76, -150], [48, -236], [0, -246]], true, 6), { fill: col, shade: () => { for (let i = -3; i <= 3; i++) T.fillOnly(ell(i * 22, -160, 5, 5), P.mid, { boil: 0 }); } });
+  else shape(spline([[-58, -236], [-90, -160], [-84, -90], [0, -78], [84, -90], [90, -160], [58, -236], [0, -248]], true, 6), { fill: col, shade: () => T.fillOnly(rect(20, -250, 80, 180), P.ink, { boil: 0, alpha: .25 }) });
+  arms(p.arms || [], sh, 13, P.dark, true);
+  push(); translate(0, -290);
+  shape(ell(0, 0, 54, 52), { fill: P.pale, shade: () => T.fillOnly(ell(40, 20, 34, 40), P.light, { boil: 0 }) });
+  face(0, -4, 14, p.ex, { dx: 20, my: 28, mw: 26, nose: () => shape(ell(0, 14, 8, 7), { fill: P.light }) });
+  if (v === 'lady') { shape(spline([[-56, -6], [-50, -44], [0, -60], [50, -44], [56, -6], [40, -30], [0, -40], [-40, -30]], true, 6), { fill: P.ink }); shape(ell(0, -66, 26, 20), { fill: P.ink }); stroke([[-30, -70], [30, -62]], T.S.lw * .7); }
+  if (v === 'old') { shape(rr(-60, -46, 120, 16, 6), { fill: P.dmid }); shape(rr(-38, -96, 76, 54, 14), { fill: P.dmid }); shape(spline([[-20, 34], [0, 70], [20, 34]], true, 4), { fill: P.white }); }
+  if (v === 'worker') { shape(spline([[-56, -18], [-46, -50], [0, -62], [48, -50], [58, -20]], true, 6), { fill: P.mid }); shape(spline([[0, -22], [50, -26], [74, -16], [0, -14]], true, 4), { fill: P.mid }); }
+  pop();
+  pop();
+}
+// the back of the newsboy's head and shoulder (over-the-shoulder foreground): cap from behind, ears, nape, collar, scarf
+export function boyBack(p) {
+  begin(p);
+  shape(spline([[-170, 40], [-150, -60], [-60, -110], [60, -110], [150, -60], [170, 40]], true, 6), { fill: P.dmid, shade: () => T.fillOnly(rect(40, -120, 160, 200), P.dark, { boil: 0 }) });
+  shape(rr(-70, -128, 140, 30, 14), { fill: P.light }); for (let i = -2; i <= 2; i++) stroke([[i * 26 - 4, -126], [i * 26 + 4, -100]], T.S.lw * .5);
+  shape(ell(-64, -196, 13, 18), { fill: P.pale }); shape(ell(64, -196, 13, 18), { fill: P.pale });
+  shape(ell(0, -200, 60, 62), { fill: P.pale, shade: () => T.fillOnly(ell(30, -190, 50, 60), P.light, { boil: 0 }) });
+  shape(spline([[-58, -190], [-54, -150], [-20, -138], [20, -138], [54, -150], [58, -190], [0, -200]], true, 5), { fill: P.dark });
+  for (let i = -3; i <= 3; i++) stroke([[i * 14, -176], [i * 14 + 3, -150]], T.S.lw * .4, { line: P.ink });
+  shape(spline([[-72, -214], [-62, -262], [0, -282], [62, -262], [76, -216], [0, -206]], true, 6), { fill: P.dark });
+  dot(0, -278, 5, P.ink); shape(rr(18, -258, 22, 16, 3), { fill: P.dmid });
+  pop();
+}
