@@ -35,3 +35,4 @@
 - 2026-11-04 15:08 full render finished (render exit 0)
 - 2026-11-04 15:12 first full render done (3396 frames, 109 min; the last quarter ~10 s/frame), mastered to -14.1 LUFS; contact sheet pass 1 → stills/contact_pass1.jpg
 - 2026-11-04 15:15 pass-1 fixes done (curtain softer, end subtitle band, brighter chain, closer two-shot, cut into s07); second full render started
+- 2026-11-04 15:25 full render running: frames 1080/3396 (per-worker progress, logged every 60 frames)
