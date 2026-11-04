@@ -37,7 +37,7 @@ window.render = t => {
   const r = town.update(t, shot, camera, post, renderer);
   if (TILT) {
     const wide = r.tiltC != null;   // wides get the full tilt band; closer shots a gentle one
-    post.dof.tiltAmt = wide ? 17 : 6; post.dof.tiltC = tiltCenter(r.subject, r.tiltC); post.dof.tiltW = wide ? .075 : .16; post.dof.tiltF = .3; post.dof.maxCoc = Math.max(post.dof.maxCoc, 24);
+    post.dof.tiltAmt = wide ? 17 : 6; post.dof.tiltC = tiltCenter(r.subject, r.tiltC); post.dof.tiltW = wide ? .075 : r.wideBand ? .3 : .16; post.dof.tiltF = .3; post.dof.maxCoc = Math.max(post.dof.maxCoc, 24);
     if (shot.id === 's38') { const u = Math.min(1, Math.max(0, (t - T.underBridge) / (DUR - .6 - T.underBridge))); post.dof.tiltAmt = 6 + u * 20; post.dof.tiltW = .16 - u * .13; post.dof.tiltF = .3 - u * .12; }
     V.sat.value *= 1.12; V.contrast.value = .28;
   } else post.dof.tiltAmt = 0;

@@ -202,7 +202,7 @@ export function buildTown() {
   const lamps = [];
   for (const [x, z] of [[-8, .7], [6.2, .7], [-22, .8]]) { const g = new THREE.Group(); const pole = box(.14, 3.4, .14, MM.plankDark); g.add(pole); const arm = box(.7, .08, .08, MM.plankDark); arm.position.set(-.3, 3.2, 0); g.add(arm);
     const lamp = new THREE.Mesh(new THREE.BoxGeometry(.28, .3, .28), new THREE.MeshStandardMaterial({ color: '#2a2016', emissive: '#ffb45a', emissiveIntensity: 0 })); lamp.position.set(-.6, 3.0, 0); g.add(lamp);
-    const L = new THREE.PointLight('#ffae55', 0, 11, 2); L.position.set(-.6, 2.9, .2); g.add(L); const gl = glow('#ffb25e', 1.4, 1.1); gl.position.copy(lamp.position); g.add(gl);
+    const L = new THREE.PointLight('#ffae55', 0, 11, 2); L.position.set(-.6, 2.9, .2); g.add(L); const gl = glow('#ffb25e', .9, 1.0); gl.position.copy(lamp.position); g.add(gl);
     g.position.set(x, 0, z); scene.add(g); lamps.push({ g, L, lamp, gl }); }
   // red paper lanterns at two doors (festive props, dim practicals)
   const redLans = [];
@@ -355,7 +355,7 @@ export function buildTown() {
   // ———————————————————————— camera tracks ————————————————————————
   const CAMS = {
     s2:  { p: track([[T.boatDown + 2.2, [-.4, -.6, -6.3]], [9.0, [-9, 9, -1]], [13.3, [-17, 19, 24]]]), l: track([[T.boatDown + 2.2, [.9, -1.2, -7.9]], [9.0, [2, 0, -8]], [13.3, [3, 0, -10]]]), fov: [30, 36] },
-    s7:  { p: track([[32.5, [-6.5, 9.5, 7]], [36.5, [-5.5, 9, 6]]]), l: track([[32.5, [1.5, -.3, -4.5]], [36.5, [1.8, -.3, -4.8]]]), fov: [32, 32] },
+    s7:  { p: track([[32.5, [7.5, 9.0, 5.5]], [36.5, [6.5, 8.6, 4.5]]]), l: track([[32.5, [.5, -.3, -4.6]], [36.5, [.8, -.3, -4.9]]]), fov: [32, 32] },
     s10: { p: track([[45.5, [7, 32, -18]], [50, [7, 29, -17]]]), l: track([[45.5, [7, 0, -19]], [50, [7, 0, -18.5]]]), fov: [40, 38] },
     s11: { p: track([[52.25, [-15, 17, 21]], [56, [-12.5, 15.5, 18.5]]]), l: track([[52.25, [0, 0, -7]], [56, [1, 0, -7]]]), fov: [34, 34] },
     s15: { p: track([[70, [-12, 14, 15.5]], [73.5, [-11, 13.5, 14.5]]]), l: track([[70, [2, 0, -6]], [73.5, [2.2, 0, -6]]]), fov: [34, 34] },
@@ -472,7 +472,7 @@ export function buildTown() {
       show(C.lz, lzP, lzF, cam, true);
       if (id === 's9' && t > T.candyToss && t < T.candyLand) { const u = seg(t, T.candyToss, T.candyLand); const a = C.br.at(26, 12, true), b = C.lz.at(14, 10, true); candy.visible = true; candy.position.lerpVectors(a, b, u); candy.position.y += Math.sin(u * Math.PI) * .9; candy.rotation.set(t * 9, t * 7, 0); }
       if (id === 's7') { const Cm = CAMS.s7; cam.position.set(...Cm.p(t)); cam.fov = Cm.fov[0]; cam.lookAt(...Cm.l(t)); focusP = new THREE.Vector3(0, 0, -4); aper = 380; tiltC = .5; }
-      else if (id === 's8') { cam.position.set(19.5, 4.1, bp.z + 1.2); cam.fov = 28; cam.lookAt(bp.x, .5, bp.z - .4); focusP = onBoat(0, .8, 0); aper = 330; }
+      else if (id === 's8') { cam.position.set(26.5, 5.2, bp.z + 1.0); cam.fov = 24; cam.lookAt(bp.x, .4, bp.z - .4); focusP = onBoat(0, .8, 0); aper = 420; }
       else if (id === 's9') { cam.position.copy(onBoat(5.4, 3.0, 2.8)); cam.fov = 33; cam.lookAt(onBoat(0, .8, .6)); focusP = onBoat(0, .9, .4); aper = 240; }
       else if (id === 's10') { const Cm = CAMS.s10; cam.position.set(...Cm.p(t)); cam.fov = lerp(Cm.fov[0], Cm.fov[1], seg(t, 45.5, 50)); cam.up.set(0, 0, -1); cam.lookAt(...Cm.l(t)); cam.up.set(0, 1, 0); focusP = onBoat(0, .4, 0); aper = 420; tiltC = .52; }
       fill.intensity = 0;
@@ -567,7 +567,7 @@ export function buildTown() {
       // rain follows the camera's target
       const fp = focusP || new THREE.Vector3(0, 0, -6); RB[0] = fp.x - 22; RB[3] = fp.x + 22; RB[1] = fp.y - 3; RB[4] = fp.y + 18; RB[2] = fp.z - 22; RB[5] = fp.z + 14; RAIN.userData.update(t, [-7 - windK * 6, 0]);
       splashBox = [fp.x - 10, WATER + .02, fp.z - 10, fp.x + 10, 0, fp.z + 8]; splash.userData.update(t);
-      lanL.intensity = lit > 0 ? Math.max(.12, (onPier ? 5.0 : 3.8) * Math.pow(lit, 1.3)) * fk : 0; fill.intensity *= (1 - fillGut * .7);
+      lanL.intensity = lit > 0 ? Math.max(.12, (onPier ? 7.0 : 3.8) * Math.pow(lit, 1.3)) * fk : 0; fill.intensity *= (1 - fillGut * .7);
     }
     // ———————————————— DAWN ————————————————
     else {
@@ -639,7 +639,8 @@ export function buildTown() {
     renderer.toneMappingExposure = LSt.exp; V.warm.value = LSt.warm; V.sat.value = LSt.sat; V.amt.value = .6 + (t >= 68 && t < 124.6 ? .12 : 0);
     post.bloom.strength = .5 + (t >= 68 && t < 124.6 ? .2 : 0) + fl * .1;
     if (focusP) post.dof.focus = cam.position.distanceTo(focusP); post.dof.aper = aper; post.dof.maxCoc = 22;
-    return { tiltC, subject: focusP };
+    const wideBand = ['s12', 's13', 's20', 's29', 's33', 's35', 's3', 's9', 's6'].includes(id);
+    return { tiltC, subject: focusP, wideBand };
   }
   const winOff = new THREE.MeshStandardMaterial({ map: winMat().map, roughness: .7, color: '#9a9aa0' });
   return { scene, update };
