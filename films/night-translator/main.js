@@ -17,6 +17,7 @@ window.render = async t => {
     g.fillStyle = '#000'; g.fillRect(0, 0, 1920, 1080);
     await m[fn](g, t, Object.fromEntries(Q)); return;
   }
+  if (Q.has('textsOnly')) return;                       // readcheck: texts only, no drawing
   film.renderFilm(g, t);
 };
 window.DUR = film.DUR;

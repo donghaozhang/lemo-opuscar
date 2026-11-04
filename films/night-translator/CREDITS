@@ -1,0 +1,15 @@
+《深夜翻译官》 The Night Translator — third-party assets in this film
+
+Fonts (SIL Open Font License 1.1; licence texts in fonts/):
+- Noto Serif SC — Google / Adobe, via npm @fontsource/noto-serif-sc (only the unicode-range chunks used)
+- Playfair Display SC — Claus Eggers Sørensen, via npm @fontsource/playfair-display-sc
+- Old Standard TT — Alexey Kryukov, via npm @fontsource/old-standard-tt
+
+Sampled instruments (played by core/audio/sampler.py):
+- Upright piano: VS Chamber Orchestra: Community Edition (Versilian Studios), CC0 1.0
+- Woodblock, triangle, Nepalese hand bells, clash cymbals, snare, bass drum, shaker:
+  Versilian Community Sample Library (VCSL, Versilian Studios), CC0 1.0
+
+Everything else — the drawings, robots, sets, the film-print and ink passes (adapted from the library's
+silent-film engine), the score, the synthesised trap effects and the projector — was made in code for this film.
+No voice. No stock footage, images or recordings.

@@ -8,7 +8,7 @@ const SECS = [
   ['NIGHT',  72, 9,    'Misterioso — the archive at midnight'],
   ['GOAL',   72, 4.5,  'Misterioso cadence (card)'],
   ['WORK',  120, 15,   'Allegretto — the work theme, stride'],
-  ['PAGE',  120, 8.5,  'Allegretto, thinned (the insert)'],
+  ['PAGE',  120, 13,  'Allegretto, thinned (the insert)'],
   ['HURRY', 152, 22,   'Hurry — galop; the jam; trill; silence'],
   ['SHOUT', 152, 8,    'Agitato — cluster, diminished tremolo (card)'],
   ['DASH',  160, 8.5,  'Agitato hurry — the dash'],
@@ -60,8 +60,8 @@ export const HIT = {
   bonk:      at('WORK', 12),
   look:      at('WORK', 12.5),     // half iris; looks at us
   page:      at('PAGE', 0),
-  strike:    at('PAGE', 3),        // red strike through the literal translation
-  fix:       at('PAGE', 4),        // the right translation is written in
+  strike:    at('PAGE', 4),        // red strike through the literal translation
+  fix:       at('PAGE', 5),        // the right translation is written in
   hurry:     at('HURRY', 0),
   jam:       at('HURRY', 16),
   shake:     at('HURRY', 17),

@@ -119,8 +119,9 @@ chord(at('PAGE', 0), ['C3', 'G3'], 1.0, .32, -.2)
 key('strike', HIT['strike']); chord(HIT['strike'], ['B4', 'C5'], .6, .7, .1); chord(HIT['strike'], ['B1', 'C2'], .6, .6, -.2)   # minor second: wrong
 key('fix', HIT['fix']); gliss(HIT['fix'], 'C4', 'C6', .5, .4, .6)
 chord(HIT['fix'] + .55, ['C2', 'G2', 'C3'], 1.4, .5, -.3); chord(HIT['fix'] + .55, ['E5', 'G5', 'C6'], 1.2, .5, .2, roll=.03)
-melody('PAGE', 6, [(0, 'G5', .5), (.5, 'E5', .5), (1, 'C5', .5), (1.5, 'G4', .5)], v=.36)
-n(at('PAGE', 8), 'E2', .3, .4, -.2)                                                                                   # pickup into the hurry
+melody('PAGE', 8, [(0, 'G5', .5), (.5, 'E5', .5), (1, 'C5', .5), (1.5, 'G4', .5), (2, 'A4', .5), (2.5, 'C5', .5), (3, 'D5', 1)], v=.36)
+chord(at('PAGE', 8), ['C3', 'G3'], 1.0, .28, -.2); chord(at('PAGE', 10), ['F2', 'C3'], 1.0, .28, -.2)
+n(at('PAGE', 12.5), 'E2', .3, .4, -.2)                                                                                   # pickup into the hurry
 
 # ================= HURRY · galop (152, A minor) =================
 key('hurry', HIT['hurry'])
