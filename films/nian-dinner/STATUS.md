@@ -12,3 +12,4 @@ sample libraries karoryfer + vcsl + vsco2ce fetched.
 2026-11-04 11:15Z  score, foley mix, cue check, srt; first full render muxed (v1); review pass 1 done (stills/review1_sheet1-4.jpg), fixes applied
 2026-11-04 11:30Z  render v2 (after review pass 1) finished (exit=0)
 2026-11-04 11:47Z  review pass 2 done (stills/review2_sheet1-4.jpg, review2_strips.jpg): folded-sheet compositing fix, bigger sneeze; final render v3 started
+2026-11-04 11:57Z  final render (v3, after review pass 2) finished (exit=0)
