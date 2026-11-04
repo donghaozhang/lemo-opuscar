@@ -13,3 +13,11 @@
 | 7 | Pen handover | hands too thin to read | hands and pen ×1.3 |
 
 Checks after the fixes: score/mix rebuilt (rPop moved), cue check, readcheck.
+
+## Pass 2 — after render 2 (1 fps sheets + 0.2 s strips of the bonk, the headstand, the page catch, the can's flight)
+
+| # | Scene | Found | Fix |
+|---|---|---|---|
+| 1 | Monster reel: 小译 catches the page | the pay-off of the rule of three was tiny in the desk medium; the catch point was beyond 小译's arm reach, so the page hung in the air | close on 小译 for the throw and the catch, cut-in on 老校's monocle pop, back to the medium for the read, the nod and the bow; catch point moved inside the arm's reach |
+| 2 | Fire → tender | the iris-in still held ~0.5 s of black | linear iris opening |
+| — | Checked and kept | bonk (squash, antenna follow-through, half-iris look), headstand (flip, balance on the antenna bulb, monocle pop, topple), the can's flight in silence and the catch, all eight montage cuts, the burning title frame, the light pools in the race | — |

@@ -179,10 +179,10 @@ export function pageFix(g, t, sh) {
   return ret(cam, [720, 560], 'blue', .4);
 }
 export function ljPop(g, t, sh) {
-  const cam = { x: 935, y: 610, z: 3.0 };
+  const cam = { x: 935, y: 610, z: 3.0 }, P = HIT[sh.opt.pop || 'rPop'];
   blurredSet(g, cam, gg => SET.archive(gg, { pile: pileAt(t), done: doneAt(t), hours: hoursAt(t) }), 4);
-  laoJiao(g, deskLJ(t, { lensOut: K([[HIT.rPop - .05, .3], [HIT.rPop + .3, 1.7, 'spring']], t), glint: K([[HIT.rPop, 0], [HIT.rPop + .1, 1], [HIT.rPop + .5, 0]], t),
-    head: K([[HIT.rPop, 0], [HIT.rPop + .3, .35, 'back']], t), lean: K([[HIT.rPop, 0], [HIT.rPop + .3, -.14]], t) }));
+  laoJiao(g, deskLJ(t, { lensOut: K([[P - .05, .3], [P + .3, 1.7, 'spring']], t), glint: K([[P, 0], [P + .1, 1], [P + .5, 0]], t),
+    head: K([[P, 0], [P + .3, .35, 'back']], t), lean: K([[P, 0], [P + .3, -.14]], t) }));
   return ret(cam, LJ_HEAD, 'blue', .55);
 }
 export function ljRead(g, t, sh) {
@@ -274,7 +274,7 @@ export function pageHand(g, t, sh) {
   return ret(cam, [720, 560], 'blue', .4);
 }
 export function deskCatch(g, t, sh) {
-  const catchP = [XY0.x + 70, GY - 200 * XS];
+  const catchP = [XY0.x + 60 * XS, GY - 135 * XS];                       // within arm reach (arm = 60)
   let ball = throwBall(t, HIT.mThrow, HIT.mCatch, catchP, 140), held = null;
   if (t >= HIT.mCatch && t < HIT.mUnfold) held = catchP;
   const hR = K([[sh.t0, REST.R], [HIT.mCatch - .25, [catchP[0] + 10, catchP[1] - 10], 'eo'], [HIT.mCatch, catchP], [HIT.mUnfold - .1, [XY0.x + 60, GY - 175]], [HIT.mUnfold + .3, [XY0.x + 40, GY - 150]]], t);
@@ -288,9 +288,10 @@ export function deskCatch(g, t, sh) {
     head: K([[HIT.mPop, 0], [HIT.mPop + .3, .3, 'back'], [HIT.mBow - .2, .1], [HIT.mBow + .3, .35], [sh.t1, .25]], t) });
   if (t > HIT.mBow - .3) lj.lean = K([[HIT.mBow - .3, 0], [HIT.mBow + .3, -.18, 'eio'], [sh.t1, -.15]], t);
   const sheetP = t >= HIT.mUnfold ? [(hR[0] + hL[0]) / 2, (hR[1] + hL[1]) / 2 + 10] : null;
-  desk(g, t, DESK_CAM, { xy, lj, ball: ball || held, sheet: sheetP, lectern: t < HIT.mThrow - .05 ? { p: LEC, a: -.15, mark: true } : null });
+  const cam = sh.opt.close ? { x: 600, y: 745, z: 2.5 } : DESK_CAM;
+  desk(g, t, cam, { xy, lj, ball: ball || held, sheet: sheetP, lectern: t < HIT.mThrow - .05 ? { p: LEC, a: -.15, mark: true } : null });
   if (sheetP) red(g, m => { m.fillRect(sheetP[0] - 8, sheetP[1] - 20, 16, 3); });
-  return ret(DESK_CAM, XY_FACE);
+  return ret(cam, XY_FACE);
 }
 
 // ================================================================ MONTAGE

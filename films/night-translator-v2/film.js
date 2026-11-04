@@ -137,7 +137,7 @@ export function renderFilm(g, t) {
     src = RD.render(fc, { frame, h1: .55, h2: .72, h3: .86 });
     // irises: in/out per shot, plus any the shot asks for
     let r = res.iris ?? null;
-    if (IRIS_IN[sh.name] && t < sh.t0 + IRIS_IN[sh.name]) { const k = ss(seg(t, sh.t0, sh.t0 + IRIS_IN[sh.name])); r = Math.min(r ?? 1e9, .5 + k * k * 1900); }
+    if (IRIS_IN[sh.name] && t < sh.t0 + IRIS_IN[sh.name]) { const k = ss(seg(t, sh.t0, sh.t0 + IRIS_IN[sh.name])); r = Math.min(r ?? 1e9, .5 + k * 1900); }
     if (IRIS_OUT[sh.name] && t > sh.t1 - IRIS_OUT[sh.name]) { const k = ss(seg(t, sh.t1 - IRIS_OUT[sh.name], sh.t1)); r = Math.min(r ?? 1e9, lerp(1900, .5, Math.sqrt(k))); }
     if (r != null && r < 1900) {
       fg.setTransform(1, 0, 0, 1, 0, 0); fg.drawImage(src, 0, 0); src = fc;
