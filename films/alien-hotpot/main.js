@@ -545,7 +545,7 @@ SH.experiment = (t, u) => {
     k: .12 * glow,
     liu: 'table', liuP: L(t, { ...LIU_T, cross: true, look: [1, .3], lid: .5 }),
     pip: Pp(t, { flush: .3, look: [-.8, .4], jit: 3, mouth: { o: m.o * 1.2, w: m.w, sm: .2 }, brow: { h: 12, tilt: -.3 }, lean: -nv * .12,
-      armR: { h: [lerp(60, 230, nv), lerp(-20, 10, nv)], bend: -10, hold: hp => cell(hp[0] + 10, hp[1] - 40, .55, { glow, level: .4, t }) } }),
+      armR: { h: [lerp(60, 165, nv), lerp(-20, 10, nv)], bend: -10, hold: hp => cell(hp[0] + 10, hp[1] - 40, .55, { glow, level: .4, t }) } }),
     steam: .8,
   });
 };
@@ -577,11 +577,11 @@ SH.fill = (t, u) => {
   shop(t, {
     k: .15 + .85 * k,
     liu: 'table', liuP: L(t, { ...LIU_T, cross: true, look: [-1, .4], lid: lerp(.5, .3, k) }),
-    zug: Z(t, { look: [1, .6], lid: .5, armR: { h: [170, -60 + g3 * 30], bend: -30, hold: hp => { push(); translate(hp[0], hp[1]); rotate(.4 + g3 * .3); shape(noodle([0, 0], [120, 20], 0, 14, 12), { fill: C.steel, lw: 6 }); shape(ell(150, 30, 40, 18, 18), { fill: C.steel, lw: 6, shade: () => fillOnly(ell(150, 24, 30, 10, 14), C.broth, { boil: .3 }) }); pop(); } } }),
+    zug: Z(t, { look: [1, .6], lid: .5, armR: { h: [90, -90 + g3 * 30], bend: -30, hold: hp => { push(); translate(hp[0], hp[1]); rotate(.4 + g3 * .3); shape(noodle([0, 0], [120, 20], 0, 14, 12), { fill: C.steel, lw: 6 }); shape(ell(150, 30, 40, 18, 18), { fill: C.steel, lw: 6, shade: () => fillOnly(ell(150, 24, 30, 10, 14), C.broth, { boil: .3 }) }); pop(); } } }),
     pip: Pp(t, { flush: .2, jit: t > 100.4 ? 0 : 3, look: [-1, .4], y: PIP_T.y - jump * 110, sq: t > 101.2 ? landSq(t, 101.2) : 1 + jump * .2, happy: t > 100.4 ? 1 : 0, mouth: { o: t > 100.4 ? .6 : 0, sm: .8 },
       armR: t > 100.4 ? { h: [40, -150], bend: -10 } : undefined, armL: t > 100.4 ? { h: [-40, -150], bend: 10 } : undefined }),
     steam: .7,
-    front: () => cell(1060, 560, .85, { glow: .4 + .6 * k + g3 * .1, level: lev, t }),
+    front: () => cell(905, 600, .72, { glow: .4 + .6 * k + g3 * .1, level: lev, t }),
   });
   if (k > 0) screenRect(C.glow, .1 * k);
 };
