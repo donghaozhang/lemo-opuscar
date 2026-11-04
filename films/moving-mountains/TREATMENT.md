@@ -193,3 +193,15 @@ on Yu Gong's beard in I2, the sun behind the running boy in I3, the sun on the m
   actions (pick strike, pebble, laugh, the answer, the knife), `cuecheck`, `readcheck`, loudness, blackdetect (G4 is
   black wood with grain, not digital black — it must not trip blackdetect at the default threshold, checked), CJK glyph
   coverage.
+
+## 12. After the build: notes and the demo comparison (DIRECTOR §11)
+
+- The title section's grid is written as 120 bpm (eighths of the 60 bpm pulse) so the half-beat cuts at 4.0 / 5.5 s sit on it.
+- Compared with the style demo (*The Bell Founder*, read after this treatment): **structure** differs (a fable in self-contained
+  plates with a scoffer and a miracle vs one craftsman's fail-and-succeed); **opening** differs (the knife cuts the title
+  backwards and the first print is pulled vs a knife-cut horizon); **signature shot** differs (the block itself, the knife
+  clearing the mountains in great gouges while the giants stride off vs an 8× pull-back on a ringing bell); **camera path**
+  differs (map tracking, a tilt up a cliff, a peel into an endless line of generations, block-mode clearing); **ending**
+  differs (the straight road cut on the map, 完 and a red sun vs snow inked back in). The **score shape** is close (a minor
+  mode opening into D major at the peak), so the colour of the turn comes from the instruments instead: one low string,
+  digital silence, then tam-tam and timpani, and a folk-drone dance for the finale. Five of six differ.
