@@ -15,3 +15,4 @@
 13:32Z second full render: frames 3360/3488
 13:33Z second render muxed: −14.0 LUFS, peak −1.1 dBFS. Review pass 2 (stills/contact_r2_*.jpg): pass-1 fixes verified; B4 tilt sky brightened so the cliff reads; G2 caption +0.04 s (readcheck). Final render starting.
 13:44Z final render: frames 1800/3488
+13:54Z final render: frames 3240/3488
