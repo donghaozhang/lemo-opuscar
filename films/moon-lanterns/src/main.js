@@ -20,7 +20,7 @@ function get(i) { const p = plan[i]; if (!live.has(p.id)) live.set(p.id, SHOT[p.
 const fA = cv(W, H), fB = cv(W, H);
 function draw(i, t, target) { const s = get(i); s.update(t); s.S.render(target, t, { grade: s.grade ? s.grade(t) : undefined }); }
 
-const sub = document.getElementById('sub'), zh = sub.querySelector('.zh');
+const sub = document.getElementById('sub'), zh = sub.querySelector('.zh'), band = sub.querySelector('.band');
 export function R(t) {
   let i = plan.findIndex(p => t >= p.start && t < p.end); if (i < 0) i = plan.length - 1;
   const p = plan[i], tl = t - p.start;
@@ -31,11 +31,11 @@ export function R(t) {
   } else if (i > 0 && p.tr === 'curtain' && tl < 1.0) {   // a near sheet sweeps across: the new shot is revealed behind a soft edge moving right → left
     draw(i - 1, t, fA); draw(i, t, fB);
     ctx.drawImage(fA, 0, 0);
-    const u = ss(tl / 1.0), edge = W * (1.15 - u * 1.3);
-    const g = ctx.createLinearGradient(edge - 260, 0, edge + 60, 0); g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+    const u = ss(tl / 1.0), edge = W * (1.25 - u * 1.5);
+    const g = ctx.createLinearGradient(edge - 520, 0, edge + 120, 0); g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)');
     const m = cv(W, H), mx = m.getContext('2d'); mx.drawImage(fB, 0, 0); mx.globalCompositeOperation = 'destination-in'; mx.fillStyle = g; mx.fillRect(0, 0, W, H);
     ctx.drawImage(m, 0, 0);
-    const fg = ctx.createLinearGradient(edge - 200, 0, edge + 80, 0); fg.addColorStop(0, 'rgba(150,165,185,0)'); fg.addColorStop(.6, 'rgba(150,165,185,.55)'); fg.addColorStop(1, 'rgba(150,165,185,0)');
+    const fg = ctx.createLinearGradient(edge - 600, 0, edge + 200, 0); fg.addColorStop(0, 'rgba(150,165,185,0)'); fg.addColorStop(.6, 'rgba(150,165,185,.22)'); fg.addColorStop(1, 'rgba(150,165,185,0)');
     ctx.fillStyle = fg; ctx.fillRect(0, 0, W, H);
   } else { draw(i, t, canvas); }
   // fade in at the very start and out at the end
@@ -45,7 +45,7 @@ export function R(t) {
   let c = null, a = 0;
   for (const q of T.CUES) if (t > q.t0 && t < q.t1) { c = q; a = Math.min(ss(seg(t, q.t0, q.t0 + .25)), 1 - ss(seg(t, q.t1 - .25, q.t1))); }
   zh.textContent = c ? c.text.replace(/[，。]$/, '') : ''; sub.style.opacity = Q.has('nosub') ? 0 : a;
-  const s = get(i); sub.style.bottom = (s.subBottom ? s.subBottom(t) : 64) + 'px';
+  const s = get(i), sb = s.subBottom ? s.subBottom(t) : 64; sub.style.bottom = sb + 'px'; band.style.background = sb === 74 ? 'rgba(6,6,10,.55)' : 'transparent'; band.style.boxShadow = sb === 74 ? '0 0 28px 18px rgba(6,6,10,.45)' : 'none';
 }
 window.render = t => R(FROM + t);
 // sound / cue events for events.mjs (the mixer reads timeline.json; this is the same information, for the record)

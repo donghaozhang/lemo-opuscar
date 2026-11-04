@@ -411,7 +411,7 @@ function climbers(C) {
 function moveClimbers(C, t, t0, lightTimes, speed = .006) {
   const cl = climbers(C);
   cl.forEach((v, i) => { const u = clamp(v.u0 + (t - t0) * speed, 0, .97), [px, py, dir] = SC.pathAt(u); const w = walk((t - 80 + i * .3) * 1.5, .4); v.F.set({ x: px, y: py + HIP[v.F.spec.kind] * .3 + w.bob * .08, facing: dir, ...w, shN: .5, elN: -1.3, expr: i === 5 ? 'hope' : 'calm' }); const tt = lightTimes[i]; v.l.gate = (tt === undefined ? 0 : k(t, tt, tt + .25)) * flicker(t + i); });
-  return cl.map(v => ({ x: v.l.x, y: v.l.y - .007, z: -.082, r: .05, col: '#ffb060', k: .7 * v.l.gate }));
+  return cl.map(v => ({ x: v.l.x, y: v.l.y - .007, z: -.082, r: .065, col: '#ffb060', k: 1.0 * v.l.gate }));
 }
 SHOT.s24 = () => {
   const C = scene('cliff', () => SC.cliff()), { S, it } = C; if (!C.first3) SHOT.s23();
@@ -469,9 +469,9 @@ SHOT.s27 = () => {
     S.showOnly(['s23', 's24', 's27']); C.update(t); camf(t); it.sill.vis = false;
     it.slits.forEach(s => { s.gate = 0; }); it.dot.gate = flicker(t);
     const ex = moveClimbers(C, t, 90.2, lights, .007);
-    gal.forEach((g, i) => { const tt = H.galleryLights[i]; g.F.set({ x: .2 + g.dx, y: gy + HIP[g.F.spec.kind] * .16, facing: g.dx < 0 ? 1 : -1, shN: .5, elN: -1.3, expr: 'hope' }); g.l.gate = k(t, tt, tt + .25) * flicker(t + i); ex.push({ x: g.l.x, y: g.l.y - .004, z: -.106, r: .035, col: '#ffb060', k: .7 * g.l.gate }); });
-    const sw = k(t, H.swell - .3, H.swell + .6); it.tower.gate = sw * flicker(t);
-    S.extra = ex;
+    gal.forEach((g, i) => { const tt = H.galleryLights[i]; g.F.set({ x: .2 + g.dx, y: gy + HIP[g.F.spec.kind] * .16, facing: g.dx < 0 ? 1 : -1, shN: .5, elN: -1.3, expr: 'hope' }); g.l.gate = k(t, tt, tt + .25) * flicker(t + i); ex.push({ x: g.l.x, y: g.l.y - .004, z: -.106, r: .045, col: '#ffb060', k: 1.0 * g.l.gate }); });
+    const sw = k(t, H.swell - .3, H.swell + .6); it.tower.gate = sw * flicker(t); if (sw > 0) ex.push({ x: .2, y: .09 + .12 * .84, z: -.11, r: .09, col: '#ffd090', k: .9 * sw });
+    S.bloom.k = .75; S.bloom.k2 = .5; S.extra = ex;
     const warm = k(t, 103, 110); S.light.col = warm < .5 ? '#d8d4dc' : '#e8d4c0'; S.light.lit = .82 + .18 * warm;
     S.grade = { expo: 1 + .08 * sw, vig: .4 };
   } };

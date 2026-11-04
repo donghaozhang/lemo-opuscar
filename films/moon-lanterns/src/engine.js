@@ -187,8 +187,8 @@ export class Scene {
     for (let i = 0; i < 40; i++) { const xx = x0 + (x1 - x0) * (i + .5) / 40 + (vnoise(i * 3.1) - .5) * .04; ctx.beginPath(); ctx.moveTo(far.ox + xx * far.s, far.oy - yT * far.s); ctx.lineTo(near.ox + (xx + (vnoise(i * 7.7) - .5) * .06) * near.s, near.oy - yT * near.s); ctx.stroke(); }
     // spill: warm pool on the table in front of the box
     if (lit > 0) {
-      const sp = ctx.createRadialGradient(pr0.ox, fr[1] + fr[3], 0, pr0.ox, fr[1] + fr[3], fr[2] * 1.1);
-      sp.addColorStop(0, `rgba(255,190,110,${.55 * lit})`); sp.addColorStop(.4, `rgba(255,170,90,${.22 * lit})`); sp.addColorStop(1, 'rgba(255,160,80,0)');
+      const sp = ctx.createRadialGradient(pr0.ox, fr[1] + fr[3], 0, pr0.ox, fr[1] + fr[3], fr[2] * .8);
+      sp.addColorStop(0, `rgba(255,190,110,${.5 * lit})`); sp.addColorStop(.35, `rgba(255,170,90,${.18 * lit})`); sp.addColorStop(1, 'rgba(255,160,80,0)');
       ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = sp; ctx.fillRect(0, 0, W, H);
     }
     ctx.restore();
