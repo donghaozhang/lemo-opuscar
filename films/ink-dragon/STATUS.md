@@ -19,3 +19,4 @@ SwiftShader (software), 4 cores. Sample libraries vsco2ce + vcsl fetched. Music 
 | 09:50 | review pass 1 + redesign | render 1 reviewed (6 sheets in stills/r1_sheet*.jpg): loudness fixed to −14.0 LUFS / −3.3 dBTP, incense insert redrawn, cloud face kept readable in the bloom; dragon rig redesigned per producer notes, model sheet + faces + style frames re-rendered |
 | 10:03 | producer notes folded in | coverage broken into 41 shots (close-ups at every beat), paper-white eyes, lamp-lit night and warm dawn, side-view painter, the sacrifice beat (look back, breath, nod, one guqin note) and the body unravelling into rain threads; render 2 restarted |
 | 11:07 | review pass 2 | render 2 reviewed (stills/r2_sheet*.jpg): coverage and close-ups read; readcheck OK (7/7), −14.0 LUFS / −3.3 dBTP, no black frames; fix round: pupil size, painter's back; final render next |
+| 11:18 | final render | frames 540 / 3168 |
