@@ -32,7 +32,7 @@ const at = (id, lt) => +(SH[id].t0 + lt).toFixed(3);
 const SECT = [
   { id: 'open', t: 0, bpm: 0 }, { id: 'ow', t: SH.s05.t0, bpm: 120 }, { id: 'b1', t: SH.s09.t0, bpm: 150 }, { id: 'ride', t: SH.s13.t0, bpm: 120 },
   { id: 'b2', t: SH.s14.t0, bpm: 150 }, { id: 'kid', t: SH.s15.t0, bpm: 120 }, { id: 'dog', t: SH.s19.t0, bpm: 150 }, { id: 'boss', t: SH.s23.t0, bpm: 160 },
-  { id: 'hush', t: SH.s29.t0, bpm: 0 }, { id: 'tender', t: SH.s30.t0, bpm: 80 }, { id: 'drop', t: SH.s35.t0, bpm: 0 }, { id: 'song', t: SH.s36.t0 + .3, bpm: 105 },
+  { id: 'hush', t: SH.s29.t0, bpm: 0 }, { id: 'tender', t: SH.s30.t0, bpm: 80 }, { id: 'drop', t: SH.s35.t0, bpm: 0 }, { id: 'song', t: SH.s36.t0 + .6, bpm: 105 },
   { id: 'still', t: SH.s37.t0, bpm: 0 }, { id: 'payoff', t: SH.s40.t0, bpm: 80 }, { id: 'fanfare', t: SH.s44.t0, bpm: 120 }, { id: 'coda', t: SH.s45.t0, bpm: 120 }, { id: 'end', t: DUR, bpm: 0 },
 ];
 const beatOf = (sec, n) => { const s = SECT.find(x => x.id === sec); return +(s.t + n * 60 / s.bpm).toFixed(3); };
@@ -83,11 +83,11 @@ MENU('s04', .5, 4.0, { x: 226, y: 92, items: [{ label: '接受' }, { label: '拒
 ev(at('s04', 3.3), 'select'); ev(at('s04', 3.35), 'accept'); hit('accept', at('s04', 3.3));
 // s05 title over the overworld; s06 equip; s07 mount; s08 travel
 ev(SH.s05.t0, 'mosaic', { up: 0 }); hit('ow_downbeat', SH.s05.t0, 'ow', 0);
-MENU('s06', .2, 4.0, { x: 214, y: 30, w: 100, items: [{ label: '雨衣', icon: ICON.coat }, { label: '充电宝', icon: ICON.bank }, { label: '备用雨伞', icon: ICON.umbrella }], cur: () => 0, sel: at('s06', 1.2), title: '道具' });
-ev(at('s06', .6), 'cursor'); ev(at('s06', 1.2), 'select'); ev(at('s06', 1.4), 'cloth'); ev(at('s06', 2.0), 'gust'); ev(at('s06', 2.05), 'flap'); ev(at('s06', 2.8), 'swat');
-hit('equip', at('s06', 1.2));
-ev(at('s07', .4), 'jump'); ev(at('s07', .7), 'seat'); hit('seat', at('s07', .7)); ev(at('s07', 1.1), 'click'); ev(at('s07', 1.4), 'motor', { d: 1.2 }); ev(at('s07', 1.6), 'splash', { g: .5 });
-ev(at('s08', .2), 'motor', { d: 2.2, g: .5 }); ev(at('s08', 2.4), 'alert'); hit('alert1', at('s08', 2.4)); ev(at('s08', 2.6), 'swirl');
+MENU('s06', .2, 4.0, { x: 214, y: 30, w: 100, items: [{ label: '雨衣', icon: ICON.coat }, { label: '充电宝', icon: ICON.bank }, { label: '备用雨伞', icon: ICON.umbrella }], cur: () => 0, sel: at('s06', 1.0), title: '道具' });
+ev(at('s06', .5), 'cursor'); ev(at('s06', 1.0), 'select'); ev(at('s06', 1.2), 'cloth'); ev(at('s06', 1.95), 'gust'); ev(at('s06', 2.0), 'flap'); ev(at('s06', 2.8), 'swat');
+hit('equip', at('s06', 1.0), 'ow', 10);
+ev(at('s07', .45), 'jump'); ev(at('s07', 1.0), 'seat'); hit('seat', at('s07', 1.0), 'ow', 18); ev(at('s07', 1.5), 'click'); ev(at('s07', 1.7), 'motor', { d: 1.0 }); ev(at('s07', 1.8), 'splash', { g: .5 });
+ev(at('s08', .2), 'motor', { d: 2.3, g: .5 }); ev(at('s08', 2.5), 'alert'); hit('alert1', at('s08', 2.5), 'ow', 26); ev(at('s08', 2.6), 'swirl');
 // s09–s12 battle 1: the red light
 ev(SH.s09.t0, 'stomp'); hit('b1_in', SH.s09.t0, 'b1', 0);
 M('s09', .2, 3.2, '红灯 挡路了！');
@@ -100,7 +100,7 @@ ev(at('s11', .1), 'cursor'); ev(at('s11', .2), 'select');
 M('s11', .3, 3.2, '小满 等啊等……');
 for (let s = .5; s < 3.0; s += 1 / 6) ev(at('s11', s), 'tap', { g: .5 });
 ev(at('s11', 1.6), 'yawn'); ev(at('s11', 2.2), 'reset');
-ev(SH.s12.t0, 'green'); hit('green', SH.s12.t0, 'b1', 32);
+ev(SH.s12.t0, 'green'); hit('green', SH.s12.t0, 'b1', 26);
 M('s12', .1, 2.8, '绿灯 亮了！');
 ev(at('s12', .3), 'victory');
 // s13 ride; s14 battle 2
@@ -114,7 +114,7 @@ ev(at('s14', 5.0), 'shake');
 ev(at('s15', .2), 'motor', { d: .8, g: .6 }); ev(at('s15', 1.0), 'skid'); hit('skid', at('s15', 1.0), 'kid', 2);
 D('s16', .1, 3.8, 'kid', '公交停了……我走过去。', { expr: 'sadWet', wet: 1 });
 MENU('s17', .1, 3.6, { x: 8, y: 26, w: 100, items: [{ label: '雨衣', icon: ICON.coat }, { label: '充电宝', icon: ICON.bank }, { label: '备用雨伞', icon: ICON.umbrella, dimAt: at('s17', 1.6) }], cur: (t) => t < at('s17', .6) ? 0 : t < at('s17', .9) ? ss(seg(t, at('s17', .6), at('s17', .7))) : 1 + ss(seg(t, at('s17', .9), at('s17', 1.0))), sel: at('s17', 1.6) });
-ev(at('s17', .6), 'cursor'); ev(at('s17', .9), 'cursor'); ev(at('s17', 1.6), 'select'); ev(at('s17', 2.0), 'umbrella'); hit('umbrella', at('s17', 2.0), 'kid', 20); ev(at('s17', 2.1), 'item');
+ev(at('s17', .6), 'cursor'); ev(at('s17', .9), 'cursor'); ev(at('s17', 1.6), 'select'); ev(at('s17', 2.0), 'umbrella'); hit('umbrella', at('s17', 2.0), 'kid', 16); ev(at('s17', 2.1), 'item');
 D('s18', .1, 2.6, 'kid', '谢谢叔叔！', { expr: 'joy', noPortrait: 1 });
 // s19–s22 the dog
 ev(at('s19', .2), 'motor', { d: .6, g: .5 }); ev(at('s19', .8), 'alert'); ev(at('s19', 1.0), 'swirl');
@@ -123,14 +123,14 @@ M('s20', .1, 3.0, '大黄 汪汪汪！');
 const CMD3 = [{ label: '攻击' }, { label: '等待' }, { label: '摸摸', newAt: at('s21', .4) }, { label: '逃跑' }];
 UI.push({ kind: 'cmd', t0: SH.s21.t0, t1: SH.s21.t1, items: CMD3 });
 ev(at('s21', .4), 'sparkle'); ev(at('s21', 1.0), 'cursor'); ev(at('s21', 1.4), 'select'); ev(at('s21', 1.8), 'pat'); ev(at('s21', 2.1), 'pat'); ev(at('s21', 2.4), 'pat'); ev(at('s21', 2.0), 'heart'); ev(at('s21', 2.5), 'heart');
-hit('pat', at('s21', 1.4), 'dog', 24);
+hit('pat', at('s21', 1.4), 'dog', 15);
 M('s22', .1, 3.0, '大黄 成了朋友！'); ev(at('s22', .3), 'victory', { soft: 1 }); ev(at('s22', .5), 'woof');
 // s23–s28 boss: the stairs
 [.6, 1.0, 1.4].forEach(x => ev(at('s23', x), 'liftbuzz')); ev(at('s23', 2.2), 'thunk');
 ev(at('s24', .3), 'sweat');
-ev(at('s25', .0), 'bosssting'); hit('boss_well', SH.s25.t0, 'boss', 8);
+ev(at('s25', .0), 'bosssting'); hit('boss_well', SH.s25.t0, 'boss', 12);
 M('s25', .3, 4.5, 'BOSS：二十八层楼梯');
-ev(SH.s26.t0, 'swirlin'); ev(at('s26', .3), 'shout'); ev(at('s26', .55), 'lighton'); hit('lighton', at('s26', .55));
+ev(SH.s26.t0, 'swirlin'); ev(at('s26', .4), 'shout'); ev(at('s26', .75), 'lighton'); hit('lighton', at('s26', .75), 'boss', 26);
 M('s26', .3, 3.0, '声控灯 亮了！');
 for (let s = .1; s < 4.1; s += .25) ev(at('s27', s), 'step', { v: .7 + .3 * Math.sin(s * 5), stair: 1 });
 ev(at('s27', 1.0), 'item'); M('s27', 1.0, 4.2, '充电宝：电量+20%');
@@ -139,7 +139,7 @@ ev(at('s28', .3), 'step', { v: .5, stair: 1 }); ev(at('s28', .6), 'step', { v: .
 M('s28', .2, 3.0, '楼梯 倒下了。');
 // s29–s34 the door
 ev(at('s29', .5), 'knock'); ev(at('s29', .8), 'knock'); hit('knock', at('s29', .5));
-ev(at('s30', .2), 'latch'); ev(at('s30', .35), 'creak', { d: 1.0 }); ev(at('s30', .4), 'warm'); hit('door', SH.s30.t0, 'tender', 0);
+ev(at('s30', 0), 'latch'); ev(at('s30', .3), 'creak', { d: 1.0 }); ev(at('s30', .4), 'warm'); hit('door', SH.s30.t0, 'tender', 0);
 D('s31', .1, 3.3, 'lady', '哎呀，淋成这样……', { noPortrait: 1, cps: 9 });
 D('s32', .1, 2.6, 'rider', '……蜡烛呢？', { noPortrait: 1, cps: 9 }); ev(at('s32', .2), 'rustle');
 D('s33', .1, 3.5, 'lady', '没事。今天是我生日。', { noPortrait: 1, cps: 9 });
@@ -161,7 +161,7 @@ M('s38', 1.2, 4.0, '手机没电了。');
 // s39–s42 pay-off
 for (let s = at('s38', 2.2); s < SH.s40.t0 + .6; s += .32) ev(s, 'step', { v: .45, stair: 1, kid: 1 });
 ev(at('s40', .4), 'shake');
-D('s40', .1, 3.2, 'kid', '奶奶！生日快乐！', { expr: 'happy' }); hit('kid', SH.s40.t0, 'payoff', 0);
+D('s40', 0, 3.2, 'kid', '奶奶！生日快乐！', { expr: 'happy' }); hit('kid', SH.s40.t0, 'payoff', 0);
 D('s41', .1, 2.3, 'lady', '小豆？！', { noPortrait: 1 });
 D('s42', .1, 2.7, 'kid', '雨伞叔叔！', { expr: 'joy' }); ev(at('s42', 1.8), 'wink');
 // s43–s45 save, level up, end
@@ -169,7 +169,7 @@ ev(at('s43', .2), 'sparkle');
 UI.push({ kind: 'save', t0: at('s43', .3), t1: SH.s43.t1, text: '要存档吗？', sel: at('s43', 1.6) }); SUBS.push({ t0: at('s43', .3), t1: SH.s43.t1, text: '要存档吗？' });
 ev(at('s43', .3), 'open'); ev(at('s43', 1.0), 'cursor'); ev(at('s43', 1.6), 'select'); for (let s = 1.7; s < 2.5; s += .08) ev(at('s43', s), 'savetick'); ev(at('s43', 2.5), 'saved');
 UI.push({ kind: 'level', t0: at('s44', .1), t1: SH.s44.t1, text: '小满 升级了！', text2: '温暖 +1' }); SUBS.push({ t0: at('s44', .1), t1: SH.s44.t1, text: '小满 升级了！温暖 +1' });
-hit('fanfare', SH.s44.t0, 'fanfare', 0);
+hit('fanfare', SH.s44.t0, 'fanfare', 0); ev(SH.s44.t0, 'sparkle');
 ev(at('s45', .6), 'rainstop'); ev(at('s45', .9), 'motor', { d: 2.0, g: .4 }); ev(at('s45', 1.4), 'woof', { g: .5 });
 // rain bed automation (gain per shot)
 const RAINGAIN = { s25: .3, s26: .25, s27: .25, s28: .3, s29: .35, s30: .3, s31: .3, s32: .3, s33: .3, s34: .3, s35: .35, s36: .2, s37: .2, s38: .15, s39: .15, s40: .2, s41: .2, s42: .2, s43: .15, s44: .15, s45: 1, s23: .4, s24: .4, s14: .6 };
@@ -373,40 +373,40 @@ const SHOTS = {
   // s06 — medium: equip the raincoat; the hood blows over his face; he swats it back
   s06(t, lt) {
     S.street(fb, t, 40);
-    const coat = lt >= 1.4, hoodOver = lt >= 2.0 && lt < 2.8;
-    const pose = poseAt([[0, POSES.stand], [1.2, POSES.stand], [1.4, { ...POSES.shrug, sq: 1.04 }], [1.7, POSES.stand], [2.0, { ...POSES.stand, lean: -6 }], [2.6, { ...POSES.stand, armF: [160, 60], lean: -4 }], [2.8, { ...POSES.stand, armF: [120, 20] }], [3.1, POSES.stand]], lt);
+    const coat = lt >= 1.2, hoodOver = lt >= 2.0 && lt < 2.8;
+    const pose = poseAt([[0, POSES.stand], [1.0, POSES.stand], [1.2, { ...POSES.shrug, sq: 1.04 }], [1.5, POSES.stand], [2.0, { ...POSES.stand, lean: -6 }], [2.6, { ...POSES.stand, armF: [160, 60], lean: -4 }], [2.8, { ...POSES.stand, armF: [120, 20] }], [3.1, POSES.stand]], lt);
     ebike(fb, 168, 178, { u: 2.2, light: 0 });
-    figure(fb, 'rider', pose, 92, 182, { u: 2.4, coat, hood: coat && !hoodOver && lt > 2.8, expr: lt < 1.2 ? 'neutral' : lt < 2.0 ? 'determined' : lt < 3.0 ? 'deadpan' : 'deadpan', flag: flagSway(t, 2) });
+    figure(fb, 'rider', pose, 92, 182, { u: 2.4, coat, hood: coat && !hoodOver && lt > 2.8, expr: lt < 1.0 ? 'neutral' : lt < 2.0 ? 'determined' : lt < 3.0 ? 'deadpan' : 'deadpan', flag: flagSway(t, 2) });
     if (hoodOver) { // the hood flipped over his face: a teal blob covering the head, flapping (12 fps)
       const fl = Math.floor(lt * 12) % 2; fb.ell(98 + fl, 84, 18, 15, (x, y, nx, ny) => (-nx * .6 - ny * .5) > .4 ? C.cyan : C.blue); fb.ell(98 + fl, 84, 18, 15, (x, y, nx, ny) => nx * nx + ny * ny > .85 ? C.ink : T);
       fb.line(84, 96, 72 - fl * 2, 104, C.blue);
     }
-    if (lt >= 1.4 && lt < 1.6) for (let k = 0; k < 8; k++) { const a = k / 8 * 6.28; fb.px(92 + Math.cos(a) * (20 + (lt - 1.4) * 60), 110 + Math.sin(a) * (16 + (lt - 1.4) * 40), C.white); }
+    if (lt >= 1.2 && lt < 1.4) for (let k = 0; k < 8; k++) { const a = k / 8 * 6.28; fb.px(92 + Math.cos(a) * (20 + (lt - 1.2) * 60), 110 + Math.sin(a) * (16 + (lt - 1.2) * 40), C.white); }
     RAIN = lt >= 1.9 && lt < 2.3 ? 1.6 : 1;
   },
   // s07 — full: crouch, hop, land on the seat (squash), bounce, headlight, go
   s07(t, lt) {
     S.street(fb, t, 40);
-    const go = lt > 1.6 ? ei(seg(lt, 1.6, 2.5)) * 260 : 0;
-    const bounce = lt > .7 && lt < 1.2 ? Math.round(Math.sin((lt - .7) / .5 * Math.PI * 2) * 2 * (1 - (lt - .7) / .5)) : 0;
-    const bk = ebike(fb, 150 + go, 124, { light: lt > 1.1 ? 1 : 0, bounce, spin: go * .3 });
-    if (lt < .7) {
-      const p = poseAt([[0, POSES.stand], [.4, POSES.crouch], [.55, POSES.jump], [.7, POSES.jump]], lt);
-      const k = seg(lt, .4, .7); const x = lerp(118, bk.seat[0] + 1.5, k), y = lerp(124, bk.seat[1] + 11.6, k) - Math.sin(k * Math.PI) * 14;
+    const go = lt > 1.8 ? ei(seg(lt, 1.8, 2.5)) * 260 : 0;
+    const bounce = lt > 1.0 && lt < 1.5 ? Math.round(Math.sin((lt - 1.0) / .5 * Math.PI * 2) * 2 * (1 - (lt - 1.0) / .5)) : 0;
+    const bk = ebike(fb, 150 + go, 124, { light: lt > 1.5 ? 1 : 0, bounce, spin: go * .3 });
+    if (lt < 1.0) {
+      const p = poseAt([[0, POSES.stand], [.45, POSES.crouch], [.6, POSES.jump], [1.0, POSES.jump]], lt);
+      const k = seg(lt, .45, 1.0); const x = lerp(118, bk.seat[0] + 1.5, k), y = lerp(124, bk.seat[1] + 11.6, k) - Math.sin(k * Math.PI) * 14;
       figure(fb, 'rider', p, x, y, { coat: 1, hood: 1, flag: flagSway(t, 1) });
     } else {
-      const p = lt < .85 ? { ...POSES.ride, sq: .82, hipY: 5 } : POSES.ride;
-      figure(fb, 'rider', p, bk.seat[0] + 1.5, bk.seat[1] + 11.6 + bounce, { coat: 1, hood: 1, flag: lt > 1.6 ? -2 : flagSway(t * 2, 2) });
+      const p = lt < 1.15 ? { ...POSES.ride, sq: .82, hipY: 5 } : POSES.ride;
+      figure(fb, 'rider', p, bk.seat[0] + 1.5, bk.seat[1] + 11.6 + bounce, { coat: 1, hood: 1, flag: lt > 1.8 ? -2 : flagSway(t * 2, 2) });
     }
-    if (lt > 1.1) headCone(fb, bk.light[0], bk.light[1], 1, 90, LIGHT);
+    if (lt > 1.5) headCone(fb, bk.light[0], bk.light[1], 1, 90, LIGHT);
     S.splashes(fb, t, 128, 178, 30);
-    if (lt > 1.6 && lt < 2.2) for (let k = 0; k < 6; k++) fb.px(bk.seat[0] - 20 - k * 4, 124 - (k % 3), C.silver);
+    if (lt > 1.8 && lt < 2.4) for (let k = 0; k < 6; k++) fb.px(bk.seat[0] - 20 - k * 4, 124 - (k % 3), C.silver);
   },
   // s08 — overworld travel, "!" and the encounter swirl
   s08(t, lt) {
-    const u = lerp(0, .19, clamp(lt / 2.4, 0, 1)); const p = S.routePoint(u);
+    const u = lerp(0, .19, clamp(lt / 2.5, 0, 1)); const p = S.routePoint(u);
     const { ox, oy } = S.overworld(fb, t, p.x + 20, p.y - 10, { bike: { ...p, light: 1 }, route: [u + .01, u + .2] });
-    if (lt > 2.4) text(fb, '!', p.x - ox - 2, p.y - oy - 22 - (lt < 2.5 ? 3 : 0), C.red, { outline: C.ink });
+    if (lt > 2.5) text(fb, '!', p.x - ox - 2, p.y - oy - 22 - (lt < 2.6 ? 3 : 0), C.red, { outline: C.ink });
     if (lt > 2.6) { const s = (lt - 2.6) / .8; POST.push(u2 => { swirl(u2, s); mosaic(u2, 1 + Math.round(s * 6)); dissolve(u2, Math.max(0, s * 1.4 - .4)); }); }
   },
   // s09–s12 battle: the red light
@@ -518,15 +518,15 @@ const SHOTS = {
   },
   // s26 — boss battle frame: shout → the sound-activated light
   s26(t, lt) {
-    const lit = lt >= .55;
+    const lit = lt >= .75;
     S.battleBG(fb, t, 'stairs');
     bossStairs(t, lt, lit);
-    const shout = lt > .25 && lt < .7;
+    const shout = lt > .4 && lt < .8;
     figure(fb, 'rider', shout ? { ...POSES.stand, headTilt: -20, lean: -10, armB: [30, 90], armF: [30, 95], sq: 1.06 } : POSES.stand, 250, 128, { u: 1.8, coat: 1, face: -1, expr: shout ? 'startled' : 'determined', flag: flagSway(t) });
     bag(fb, 240, 112, 1.2);
     if (shout) { for (let k = 0; k < 3; k++) { const r = 8 + k * 6 + (lt - .25) * 40; fb.line(232 - r, 80 - k * 4, 226 - r, 76 - k * 6, C.white); } text(fb, '啊——！', 196, 62, C.white, { outline: C.ink }); }
     if (!lit) LUTX = L => dimIdx(L, 2);
-    else if (lt < .7) POST.push(u => dissolve(u, .25 * (1 - (lt - .55) / .15), 0xffffffff));
+    else if (lt < .9) POST.push(u => dissolve(u, .25 * (1 - (lt - .75) / .15), 0xffffffff));
     statusWin(t, { floor: '1F' });
     if (lt < .4) POST.push(u => { const s = 1 - lt / .4; swirl(u, s * .6); mosaic(u, 1 + Math.round(s * 5)); });
   },
