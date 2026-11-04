@@ -17,3 +17,4 @@
 13:44Z final render: frames 1800/3488
 13:54Z final render: frames 3240/3488
 14:04Z final render: frames 3360/3488
+14:06Z final render done (3488 frames); master −14.0 LUFS / −1.1 dBFS; delivery encodes in progress (two-pass, size targets)
