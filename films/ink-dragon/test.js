@@ -70,6 +70,12 @@ export function render(t, A, B, TMP, TMP2, comp, mode, q) {
     ex.forEach((k, i) => { const x = 260 + (i % 4) * 470, y = 280 + Math.floor(i / 4) * 480; cloud(A, { x, y, r: 150, breath: 0, ink: k === 'heavy' ? .7 : k === 'shocked' ? .3 : 0, inkAt: [.1, -.2], expr: CEXPR[k], bubble: k === 'asleep' ? .9 : 0, gust: k === 'blow' ? 1 : 0, drops: k === 'heavy' ? .8 : 0, tug: k === 'mumble' ? [180, 40, 1] : null }, { t: T }); label(A, k, x - 60, y + 230); });
     return comp(A, B, { paper: [0, 0, 1], bleed: 5, rim: .9 });
   }
+  if (mode === 'glyphs') {   // every character of the film, large, for a visual tofu scan
+    const cs = [...(q.get('chars') || '')]; const c = A.cd; c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = '#000'; c.globalAlpha = .9; c.font = '110px "Ma Shan Zheng"'; c.textBaseline = 'middle'; c.textAlign = 'center';
+    cs.forEach((ch, i) => c.fillText(ch, 120 + (i % 14) * 130, 140 + Math.floor(i / 14) * 150)); c.font = '60px "Noto Serif SC"';
+    cs.forEach((ch, i) => c.fillText(ch, 120 + (i % 14) * 130, 760 + Math.floor(i / 14) * 90)); c.restore();
+    return comp(A, B, { paper: [0, 0, 1] });
+  }
   if (mode === 'strip') {   // a few frames of one action, side by side
     const T0 = +(q.get('t') || 0);
     for (let i = 0; i < 6; i++) { const tt = T0 + i * .2; dragon(A, TMP, { a: -.1 + Math.sin(tt * 4) * .2, amp: 6, k: 1.1, ph: tt * 7, legs: 0 }, { x: 160 + i * 300, y: 400, s: 1.3, t: tt, seed: 3 }); label(A, tt.toFixed(1), 100 + i * 300, 560); }
