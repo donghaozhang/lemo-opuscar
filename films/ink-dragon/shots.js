@@ -94,7 +94,7 @@ function s01(A, t) {
 // ---- S02 top-down: the drop lands, blooms, becomes the dragon; the eye opens ----
 function dragonBirthState(t) {
   const blotR = 1 - sg(t, HIT.tailCurl, HIT.headLift + .9), p = sg(t, HIT.headLift, HIT.eyeOpen - .05), eye = eo(sg(t, HIT.eyeOpen, HIT.eyeOpen + .25));
-  return { S: { a: -.15, amp: 5 * (1 - blotR), k: 1, ph: .4, legs: lerp(0, 1, sg(t, HIT.headLift, HIT.eyeOpen)), ground: 15, blotR, expr: EXPR.neutral, headTilt: -.25 * (1 - blotR) }, p: Math.max(.02, p), eye };
+  return { S: { a: -.15, amp: 5 * (1 - blotR), k: 1, ph: .4, legs: lerp(0, 1, sg(t, HIT.headLift, HIT.eyeOpen)), ground: 13, blotR, expr: EXPR.neutral, headTilt: -.25 * (1 - blotR) }, p: Math.max(.02, p), eye };
 }
 function s02(A, t) {
   const L = A.ink, cam = { x: ST.DROP_AT[0] + 30, y: ST.DROP_AT[1] - 6, z: 3.4 };
@@ -130,7 +130,7 @@ function s03(A, t) {
   mass(L.wet, [[-50, 1080], [1970, 1080], [1970, 745], [-50, 745]], .06, 0, 35);    // the desk top is a shade darker than the sky of paper
   // the dragon in profile, standing on the desk
   const sc = 4.0, x = 1000, y = 720 - 15 * sc;
-  let S = { a: 0, amp: 4, k: 1, ph: 1, legs: 1, ground: 15, expr: EXPR.neutral, headTilt: -.1 };
+  let S = { a: 0, amp: 4, k: 1, ph: 1, legs: 1, ground: 13, expr: EXPR.neutral, headTilt: -.1 };
   let X = { x, y, s: sc, dir: -1, t, seed: 3, boil: t * 12 };
   const stand = sg(t, 8.0, 8.5);
   S.legs = stand; S.a = -.1 * (1 - stand);
@@ -139,11 +139,11 @@ function s03(A, t) {
   if (shake > 0) { const tt = twos(t); S.amp = 14 * shake; S.k = 1.6; S.ph = tt * 42; S.headTilt = Math.sin(tt * 42) * .35 * shake; S.expr = EXPR.closed; splatter(A, x - 60 * sc * .3, y - 10, 320, sg(t, HIT.shake + .1, HIT.shake + .9), 9, 22, shake); }
   // 10.5–11.3 stretch: a long cat stretch (back arched up, head low and forward, mouth in a yawn)
   const st = pulse(t, HIT.stretch, HIT.sneeze, .6);
-  if (st > 0) { S.amp = -16 * st; S.k = .5; S.ph = Math.PI / 2; S.headTilt = .35 * st; S.expr = mixExpr(EXPR.neutral, { ...EXPR.closed, mouth: .7 }, st); S.legs = 1; S.stride = 10; }
+  if (st > 0) { S.amp = -16 * st; S.k = .5; S.ph = Math.PI / 2; S.headTilt = .35 * st; S.expr = mixExpr(EXPR.neutral, EXPR.yawn, st); S.legs = 1; S.stride = 10; S.stretch = 1 + .1 * st; }
   // sneeze: head back (anticipation), then a snap forward with a puff of ink, squash
   const an = pulse(t, HIT.sneeze - .45, HIT.sneeze, .8), sn = t >= HIT.sneeze ? Math.exp(-(t - HIT.sneeze) * 6) : 0;
-  if (an > 0) { S.headTilt = -.55 * an; S.expr = mixExpr(EXPR.neutral, EXPR.closed, an); S.a = -.1 * an; }
-  if (sn > 0) { S.headTilt = .5 * sn; S.expr = mixExpr(EXPR.neutral, { ...EXPR.closed, mouth: .4 }, sn); S.squash = 1 - .12 * sn; S.a = .08 * sn; }
+  if (an > 0) { S.headTilt = -.55 * an; S.expr = mixExpr(EXPR.neutral, EXPR.gasp, an); S.a = -.1 * an; S.stretch = 1 - .12 * an; S.curl = .1 * an; }
+  if (sn > 0) { S.headTilt = .5 * sn; S.expr = mixExpr(EXPR.neutral, { ...EXPR.closed, mouth: .4 }, sn); S.squash = 1 - .12 * sn; S.a = .08 * sn; S.stretch = 1 + .18 * sn; S.curl = -.08 * sn; }
   // 12–13 looks around: curious, head turns up and down, the pupil wanders
   if (t >= HIT.lookAround) { const u = t - HIT.lookAround; S.expr = { ...EXPR.curious, pupil: [Math.sin(u * 2.5), -.4 + Math.cos(u * 1.7) * .5] }; S.headTilt = -.2 + Math.sin(u * 2.2) * .25; }
   const d = dragon(A, TMP, S, X);
@@ -173,7 +173,7 @@ function s04(A, t) {
   // the dragon walking on twos along the path; frozen at the snort with a startled expression
   const wu = walkU(twos(t)), [px, py, ang] = pathAt(PATH4, wu), moving = (walkU(twos(t) + 1 / 12) - wu) > 0;
   const frozen = t >= HIT.snort && t < HIT.snort + 1.0;
-  const S = { a: 0, amp: 3, k: 1, ph: 0, legs: 1, ground: 15, gait: moving ? twos(t) * 22 : 0, stride: 6, expr: frozen ? EXPR.shocked : EXPR.neutral, headTilt: frozen ? -.3 : -.15 + .1 * Math.sin(t * 3) };
+  const S = { a: 0, amp: 4, k: 1, ph: twos(t) * 4, legs: 1, ground: 13, gait: moving ? twos(t) * 22 : 0, stride: 6, expr: frozen ? EXPR.shocked : EXPR.curious, headTilt: frozen ? -.3 : -.15 + .1 * Math.sin(t * 3), vel: moving ? [12, 0] : [0, 0], curl: frozen ? .1 : -.04, stretch: frozen ? .9 : 1 };
   const dir = Math.cos(ang) >= 0 ? 1 : -1;
   // heading: along the path; the body follows the heading (the dragon walks "up" the margin then right)
   S.a = dir > 0 ? ang : ang - Math.PI;
@@ -194,7 +194,7 @@ function s05(A, t) {
   A.xf(X.s, X.tx, X.ty); A.cc.setTransform(X.s, 0, 0, X.s, X.tx, X.ty);
   ST.painter(L, PAINTER[0], PAINTER[1], 1, { breath: breathOf(t) });
   // the dragon at the sheet's top edge looking down at the village (it leaves the frame as the camera pushes in)
-  const S = { a: .25, amp: 3, k: 1, ph: 0, legs: 1, ground: 15, expr: { ...EXPR.worried, pupil: [.4, .8] }, headTilt: .45 };
+  const S = { a: .25, amp: 3, k: 1, ph: 0, legs: 1, ground: 13, expr: { ...EXPR.worried, pupil: [.4, .8] }, headTilt: .45 };
   dragon(A, TMP, S, { x: 1000, y: 290, s: DS, dir: 1, t, seed: 3, boil: t * 12 });
   return { paper: paperOf(cam), bleed: 5 * cam.z, rim: 1, vig: .38, night: 1 };
 }
@@ -233,7 +233,7 @@ function s06(A, t) {
   // eye from the incense (up-right) to the village (down-right); inhale; the dive: the body plunges into the sheet, rings spread
   const look = sg(t, HIT.eyeToVillage, HIT.eyeToVillage + .5), inh = sg(t, HIT.inhale, HIT.dive);
   const dive = t >= HIT.dive ? sg(t, HIT.dive, HIT.dive + .3) : 0;
-  const S = { a: lerp(-.35, .4, look) + .5 * ei(dive) * 2, amp: 3 + 6 * inh, k: 1, ph: inh * 3, legs: 1 - clamp(dive * 3), ground: 15, headTilt: lerp(-.35, .4, look) - .4 * ei(inh) + 1.2 * dive, expr: inh < 1 ? mixExpr({ ...EXPR.worried, pupil: [.6, -.6] }, { ...EXPR.determined, pupil: [.5, .6], puff: .8 }, inh) : EXPR.determined };
+  const S = { a: lerp(-.35, .4, look) + .5 * ei(dive) * 2, amp: 3 + 6 * inh, k: 1, ph: inh * 3, legs: 1 - clamp(dive * 3), ground: 13, headTilt: lerp(-.35, .4, look) - .4 * ei(inh) + 1.2 * dive, expr: inh < 1 ? mixExpr({ ...EXPR.worried, pupil: [.6, -.6] }, { ...EXPR.determined, pupil: [.5, .6], puff: .8 }, inh) : EXPR.determined, stretch: 1 - .15 * ei(inh) * (1 - dive) + .4 * dive, curl: .12 * inh * (1 - dive) - .1 * dive, vel: [60 * dive, 40 * dive] };
   if (inh > 0 && inh < 1) S.expr.puff = Math.sin(inh * Math.PI * .5) * 1.2;
   const sc = DS * (1 - .85 * ei(dive));
   const x = 1000 + 40 * dive, y = 300 + 60 * dive;
@@ -268,7 +268,7 @@ function s07(A, t) {
   const dx = lerp(2850, 1500, ue) + Math.sin(t * 1.1) * 10, dy = lerp(520, 640, ue) + Math.sin(t * 2.3) * 14;
   paintCam(A, cam);
   mist(A, cam, [[840, 1060, .85], [1200, 1320, .5]]);
-  const S = { a: -.08 + Math.sin(t * 2.3) * .06, amp: 9, k: 1.1, ph: -t * 7, legs: 0, expr: { ...EXPR.curious, pupil: [-.5, .3] }, headTilt: -.05, wind: [14, 0] };
+  const S = { a: -.08 + Math.sin(t * 2.3) * .06, amp: 11, k: 1.1, ph: -t * 7, legs: 0, expr: { ...EXPR.curious, pupil: [-.5, .3] }, headTilt: -.05, wind: [6, 0], vel: [45, 0], curl: -.03, stretch: 1.05 };
   dragon(A, TMP, S, { x: dx, y: dy, s: 3.0, dir: -1, t, seed: 3, boil: t * 12 });
   return { paper: paperOf(cam), bleed: 5 * cam.z, rim: .9, vig: .2, warm: .5, night: 0 };
 }
@@ -281,7 +281,7 @@ function s08(A, t) {
   mist(A, cam, [[1150, 1330, .4]]);
   const dxk = keys([[t0, 2560], [HIT.boat, 2100], [HIT.slow, 1980], [t1, 1940]], t, ss), dyk = keys([[t0, 1610], [HIT.boat - .5, 1560], [HIT.slow, 1520], [t1, 1500]], t, ss);
   const slow = sg(t, HIT.slow - .4, HIT.slow + .3);
-  const S = { a: lerp(-.05, .3, slow) + Math.sin(t * 2) * .04, amp: lerp(9, 5, slow), k: 1.1, ph: -t * (8 - 5 * slow), legs: 0, expr: { ...EXPR.worried, pupil: [-.3, .9 * slow] }, headTilt: .25 * slow + .1, wind: [lerp(18, 4, slow), 0] };
+  const S = { a: lerp(-.05, .3, slow) + Math.sin(t * 2) * .04, amp: lerp(11, 6, slow), k: 1.1, ph: -t * (8 - 5 * slow), legs: 0, expr: { ...EXPR.worried, pupil: [-.3, .9 * slow] }, headTilt: .25 * slow + .1, wind: [lerp(6, 2, slow), 0], vel: [lerp(50, 8, slow), 0], stretch: lerp(1.08, 1, slow), curl: -.05 * (1 - slow) };
   const d = dragon(A, TMP, S, { x: dxk, y: dyk, s: 2.5, dir: -1, t, seed: 3, boil: t * 12 });
   // dust raised by its belly: dry streaks trailing behind and settling
   const pts = d.spine.filter((p, i) => i > 2 && i < 12 && i % 2 === 0).map(p => [p[0] + 20, p[1] + 40 + Math.sin(t * 5 + p[0]) * 4]);
@@ -300,7 +300,7 @@ function s09(A, t) {
   // the dragon spirals up the face
   const uu = sg(t, t0, t1 - .2), dy = lerp(1640, 560, eio(uu)), dx = 1330 + Math.sin(uu * Math.PI * 2.5) * 170 - 280 * uu;
   const dirSign = Math.cos(uu * Math.PI * 2.5) >= 0 ? 1 : -1;
-  const S = { a: -.9 + Math.cos(uu * Math.PI * 2.5) * .3, amp: 9, k: 1.1, ph: -t * 8, legs: 0, expr: { ...EXPR.determined, pupil: [0, -.6] }, headTilt: -.2, wind: [0, 20] };
+  const S = { a: -.9 + Math.cos(uu * Math.PI * 2.5) * .3, amp: 11, k: 1.1, ph: -t * 8, legs: 0, expr: { ...EXPR.determined, pupil: [0, -.6] }, headTilt: -.2, wind: [0, 6], vel: [40, 0], stretch: 1.06, curl: .06 };
   dragon(A, TMP, S, { x: dx, y: dy, s: 2.3, dir: dirSign, t, seed: 3, boil: t * 12 });
   return { paper: paperOf(cam), bleed: 5 * cam.z, rim: .95, vig: .3, shake: [Math.sin(t * 40) * sh, Math.cos(t * 37) * sh], night: 0 };
 }
@@ -329,7 +329,7 @@ function s11(A, t) {
   if (t >= HIT.gust) { C.expr = mixC(CEXPR.peek, CEXPR.blow, blow); C.gust = blow * (1 - done); C.expr = mixC(C.expr, CEXPR.asleep, done); }
   // ---- the dragon ----
   const L = A.ink;
-  let S = { a: 0, amp: 4, k: 1, ph: 0, legs: 1, ground: 15, expr: EXPR.neutral, headTilt: -.2, wind: [0, 0] };
+  let S = { a: 0, amp: 4, k: 1, ph: 0, legs: 1, ground: 13, expr: EXPR.neutral, headTilt: -.2, wind: [0, 0] };
   let x = 940, y = 455 - 15 * 1.5, dir = -1, sc = 1.5, am = 1, show = true;
   const tt = twos(t);
   if (t < HIT.land) {           // arriving from the right, descending
@@ -345,27 +345,27 @@ function s11(A, t) {
     const u = sg(t, HIT.mumble, HIT.roll + .5); S.headTilt = -.4 + .3 * Math.sin(u * Math.PI); S.expr = { ...EXPR.worried, pupil: [-.4, -.5] }; x = 880;
   } else if (t < HIT.yank) {   // bites the wisp and tugs: rears up, head at the wisp, then pulls back with effort, feet skidding
     const r = sg(t, HIT.bite, HIT.tug0), pull = sg(t, HIT.tug0, HIT.yank);
-    x = lerp(880, 870, r) + 70 * pull + Math.sin(tt * 30) * 2 * pull; y = 432 - 30 * r + 20 * pull; S.a = lerp(0, -.95, r) + .4 * pull; S.headTilt = lerp(-.4, -.3, r) + .5 * pull; S.legs = 1; S.gait = pull > 0 ? tt * 26 : 0; S.stride = 9;
+    x = lerp(880, 870, r) + 70 * pull + Math.sin(tt * 30) * 2 * pull; y = 432 - 30 * r + 20 * pull; S.a = lerp(0, -.95, r) + .4 * pull; S.headTilt = lerp(-.4, -.3, r) + .5 * pull; S.legs = 1; S.gait = pull > 0 ? tt * 26 : 0; S.stride = 9; S.stretch = 1 + .14 * pull; S.curl = -.14 * pull;
     S.expr = pull > 0 ? { ...EXPR.effort, mouth: 0 } : { ...EXPR.determined, mouth: .6 * r }; S.amp = 4 + 6 * pull; S.ph = pull * 3;
   } else if (t < HIT.puff) {   // flung: a parabola to the right with a spin, lands on its head, wobbles upright
     const u = sg(t, HIT.flung - .15, HIT.landHead);
-    if (u < 1) { x = lerp(940, 1300, u); y = 452 - 260 * Math.sin(u * Math.PI) + 10; S.a = -1 - u * 5.2; S.legs = 0; S.amp = 10; S.k = 1.4; S.expr = EXPR.dizzy; S.headTilt = .3; }
+    if (u < 1) { x = lerp(940, 1300, u); y = 452 - 260 * Math.sin(u * Math.PI) + 10; S.a = -1 - u * 5.2; S.legs = 0; S.amp = 12; S.k = 1.4; S.expr = EXPR.dizzy; S.headTilt = .3; S.curl = .25; S.stretch = 1.15; S.vel = [40, 0]; }
     else { const v = t - HIT.landHead; const sp = spring(v, 6, .3); x = 1300; y = 452 + 10 - 30 * (1 - sp); S.a = -Math.PI * .95 * (1 - sp) + .0; S.squash = 1 - .22 * Math.exp(-v * 9); S.legs = sp; S.expr = mixExpr(EXPR.dizzy, EXPR.angry, sg(v, .3, .7)); S.headTilt = .2 * (1 - sp); }
   } else if (t < HIT.blownOff) {   // walks back, puffs up, inhales, roars a squeak; the cloud blows
     const w = sg(t, HIT.puff, HIT.inhale2 - .2); x = lerp(1300, 920, ss(w)); S.gait = w > 0 && w < 1 ? tt * 22 : 0; S.stride = 8;
     const pf = sg(t, HIT.inhale2 - .2, HIT.roar), rr = t >= HIT.roar ? 1 - sg(t, HIT.roar + .35, HIT.roar + .7) : 0;
-    S.expr = mixExpr({ ...EXPR.angry, puff: .3 }, { ...EXPR.puffed, puff: 1.3 }, pf); if (rr > 0) S.expr = { ...EXPR.roar, puff: .5 * rr }; S.headTilt = -.5 - .3 * pf + .8 * rr; S.a = -.15 * pf + .1 * rr; S.squash = 1 + .06 * pf - .08 * rr;
+    S.expr = mixExpr({ ...EXPR.angry, puff: .3 }, { ...EXPR.puffed, puff: 1.3 }, pf); if (rr > 0) S.expr = { ...EXPR.roar, puff: .5 * rr }; S.headTilt = -.5 - .3 * pf + .8 * rr; S.a = -.15 * pf + .1 * rr; S.squash = 1 + .06 * pf - .08 * rr; S.stretch = 1 - .1 * pf + .25 * rr; S.curl = .12 * pf - .1 * rr;
     if (rr > 0) { for (let i = 0; i < 3; i++) draw(L, mk([[x - 70 - i * 6, 395 + (i - 1) * 22], [x - 100 - i * 14, 390 + (i - 1) * 34]], { w: 2.4, tone: .6 * rr, dry: .6, prof: 'tip', nb: 3, seed: 120 + i }), 1, rr); }
     if (t >= HIT.gust) { const g = sg(t, HIT.gust, HIT.blownOff); S.wind = [60 * g, 0]; S.expr = mixExpr(S.expr, EXPR.shocked, g); x += 20 * g; S.a = .2 * g; }
   } else if (t < HIT.climbBack) {  // blown off: swept right in a diagonal flying-white streak, tumbling, out of frame
-    const u = sg(t, HIT.blownOff, HIT.blownOff + .8); x = lerp(940, 2200, ei(u) * .6 + u * .4); y = lerp(432, 160, u) + Math.sin(u * 7) * 20; S.a = -.3 + u * 7; S.legs = 0; S.amp = 12; S.k = 1.5; S.expr = EXPR.shocked; S.wind = [80, 0];
+    const u = sg(t, HIT.blownOff, HIT.blownOff + .8); x = lerp(940, 2200, ei(u) * .6 + u * .4); y = lerp(432, 160, u) + Math.sin(u * 7) * 20; S.a = -.3 + u * 7; S.legs = 0; S.amp = 12; S.k = 1.5; S.expr = EXPR.shocked; S.wind = [30, 0]; S.stretch = 1.3; S.vel = [70, 0];
     draw(L, mk([[1000, 420], [1400, 320], [1900, 190], [2300, 110]], { w: 30, tone: .5, dry: .8, wet: .05, prof: 'tip', nb: 40, seed: 130, gapLen: 900 }), 1, .8 * (1 - sg(t, HIT.blownOff + .5, HIT.blownOff + 1.2)));
   } else {                         // climbs back: hovers in the air, panting; eye down (to the village), then up to the cloud; brow settles; rises
-    const u = sg(t, HIT.climbBack, HIT.climbBack + 1.0); x = lerp(1700, 1120, eo(u)); y = lerp(150, 330, eo(u)) + Math.sin(t * 2.4) * 8; S.legs = 0; S.a = -.1; S.amp = 7; S.ph = -t * 5;
+    const u = sg(t, HIT.climbBack, HIT.climbBack + 1.0); x = lerp(1700, 1120, eo(u)); y = lerp(150, 330, eo(u)) + Math.sin(t * 2.4) * 8; S.legs = 0; S.a = -.1; S.amp = 8; S.ph = -t * 5; S.vel = [25 * (1 - u), 0]; S.curl = -.03;
     const pant = Math.max(0, Math.sin(t * 7)) * (1 - sg(t, HIT.eyeUp, HIT.browSettle)), down = pulse(t, HIT.climbBack + .8, HIT.eyeUp + .2, .6);
     S.expr = { ...EXPR.worried, mouth: .35 * pant, pupil: [-.5 + .3 * down, lerp(-.3, 1, down)] }; S.headTilt = .35 * down - .2 * (1 - down);
     const det = sg(t, HIT.browSettle, HIT.browSettle + .7); if (det > 0) S.expr = mixExpr({ ...EXPR.worried, pupil: [-.5, -.3] }, { ...EXPR.determined, pupil: [-.6, -.2] }, det);
-    const rise = sg(t, HIT.rise, SHOT.s12); y -= 700 * ei(rise); x -= 60 * rise; S.a = -.1 - .6 * rise; S.headTilt = -.2 - .3 * rise; S.ph = -t * (5 + 3 * rise);
+    const rise = sg(t, HIT.rise, SHOT.s12); y -= 700 * ei(rise); x -= 60 * rise; S.a = -.1 - .6 * rise; S.headTilt = -.2 - .3 * rise; S.ph = -t * (5 + 3 * rise); S.stretch = 1 + .15 * rise; S.vel = [50 * rise, 0];
   }
   if (C.tug) { const sn = [x + dir * Math.cos(S.a) * 44, y + Math.sin(S.a) * 44 + 6], wp = [CLOUD.x + 1.1 * CLOUD.r, CLOUD.y + .25 * CLOUD.r]; C.tug = [sn[0] - wp[0], sn[1] - wp[1], C.tug[2]]; }
   cloud(A, { ...CLOUD, ...C }, { t });
@@ -384,7 +384,7 @@ function s12(A, t) {
   paintCam(A, cam);
   cloud(A, { ...CLOUD, breath: breathOf(t + 2), bubble: .5 + .5 * breathOf(t + 2), expr: CEXPR.asleep }, { t });
   const curl = sg(t, HIT.curl, HIT.curl + 1.2), open = sg(t, 81.6, 82.0);
-  const S = { a: -.7 + .6 * curl, amp: 3, k: .8, ph: 0, legs: 0, curl: .95 * ss(curl), expr: mixExpr({ ...EXPR.determined, pupil: [0, .6] }, curl > 0 ? EXPR.closed : EXPR.determined, ss(curl) * (1 - open)), headTilt: .2 * curl, taper: 1 };
+  const S = { a: -.7 + .6 * curl, amp: 3, k: .8, ph: 0, legs: 0, curl: .95 * ss(curl), expr: mixExpr({ ...EXPR.determined, pupil: [0, .6] }, curl > 0 ? EXPR.closed : EXPR.determined, ss(curl) * (1 - open)), headTilt: .2 * curl, taper: 1, stretch: 1 - .1 * ss(curl) };
   dragon(A, TMP, S, { x: 700 - 30 * curl, y: -430 + Math.sin(t * 1.4) * 6, s: 1.2, dir: 1, t, seed: 3, boil: t * 12 });
   return { paper: paperOf(cam), bleed: 5 * cam.z, rim: .9, vig: .15, warm: .4, night: 0 };
 }
@@ -404,7 +404,7 @@ function s13(A, t) {
   if (!d.entered) {
     const y1 = lerp(-700, 250, d.u);
     draw(L, mk([[640, -800, .4], [640, y1 - 300, 1.1], [642, y1, 1.0]], { w: 64, tone: .85, dry: .62, wet: .3, prof: 'rise', nb: 56, seed: 140, gapLen: 1200 }), 1, 1);
-    dragon(A, TMP, { a: Math.PI / 2, amp: 2, k: .6, legs: 0, len: 220, taper: 1.2, expr: EXPR.closed, headTilt: 0 }, { x: 640, y: y1, s: 1.1, dir: 1, t, seed: 3 });
+    dragon(A, TMP, { a: Math.PI / 2, amp: 2, k: .6, legs: 0, len: 220, taper: 1.2, expr: EXPR.determined, headTilt: 0, stretch: 1.4, vel: [120, 0] }, { x: 640, y: y1, s: 1.1, dir: 1, t, seed: 3 });
   } else {
     const v = t - d.hit, k = clamp(1 - v / .5);
     draw(L, mk([[640, -800, .4], [640, -200, 1.0], [642, 250, 1.0]], { w: 64, tone: .85 * k, dry: .62, wet: .3, prof: 'rise', nb: 56, seed: 140, gapLen: 1200 }), 1, k);

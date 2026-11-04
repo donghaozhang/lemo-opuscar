@@ -14,29 +14,33 @@ export function render(t, A, B, TMP, TMP2, comp, mode, q) {
   if (mode === 'sheet') {
     const T = +(q.get('t') || 0);
     label(A, '墨龙 model sheet', 60, 60, 34);
-    // row 1: flying (right), flying (left), standing, curled (drop)
+    // row 1: flying right, flying left, standing, curled (the drop)
     const row1 = [
-      ['飞 flying', { a: -.15, amp: 7, k: 1.1, ph: T * 6, legs: 0 }, 1],
-      ['飞 左向 facing left', { a: .1, amp: 7, k: 1.1, ph: 1.5, legs: 0 }, -1],
-      ['立 standing', { a: 0, amp: 3, k: .8, ph: .6, legs: 1, ground: 15 }, 1],
-      ['蜷 curled', { a: -.6, amp: 2, k: .5, curl: .95, legs: 0, len: 100, expr: EXPR.closed }, 1],
+      ['飞 flying', { a: -.15, amp: 11, k: 1.1, ph: T * 6 + .8, legs: 0, vel: [30, 0] }, 1],
+      ['飞 左向 facing left', { a: .1, amp: 11, k: 1.1, ph: 1.5, legs: 0, vel: [30, 0] }, -1],
+      ['立 standing', { a: 0, amp: 5, k: .9, ph: .6, legs: 1, ground: 13, curl: -.05 }, 1],
+      ['蜷 curled', { a: -.6, amp: 2, k: .5, curl: .95, legs: 0, expr: EXPR.closed }, 1],
     ];
-    row1.forEach(([n, S, dir], i) => { const x = 330 + i * 450 + (dir < 0 ? 180 : 0), y = 230; dragon(A, TMP, S, { x, y, s: 2.1, dir, t: T, seed: 3 + i }); label(A, n, 170 + i * 450, 390); });
-    // row 2: expressions
+    row1.forEach(([n, S, dir], i) => { const x = 300 + i * 450 + (dir < 0 ? 240 : 0), y = 230; dragon(A, TMP, S, { x, y, s: 2.0, dir, t: T, seed: 3 + i }); label(A, n, 170 + i * 450, 390); });
+    // row 2: expressions, head and neck only (large)
     const ex = [['好奇 curious', 'curious'], ['忧 worried', 'worried'], ['怒 angry', 'angry'], ['决 determined', 'determined'], ['惊 shocked', 'shocked'], ['喜 happy', 'happy'], ['困 sleepy', 'sleepy'], ['吼 roar', 'roar']];
-    ex.forEach(([n, k], i) => { const x = 120 + i * 230, y = 560; dragon(A, TMP, { a: 0, amp: 2, k: 1, len: 60, legs: 1, ground: 10, expr: EXPR[k] }, { x: x - 10, y: y - 20, s: 2.6, t: T, seed: 20 + i }); label(A, n, x - 60, 660, 22); });
-    // row 3: key poses: anticipation crouch (puffed), tug (effort), flung (dizzy, squash), birth blot
+    ex.forEach(([n, k], i) => { const x = 60 + i * 235, y = 560; dragon(A, TMP, { a: 0, amp: 3, k: 1, len: 60, legs: 1, ground: 10, expr: EXPR[k], curl: -.1 }, { x: x + 30, y: y - 30, s: 3.2, t: T, seed: 20 + i }); label(A, n, x - 20, 668, 22); });
+    // row 3: key poses with a line of action: anticipation (squash), dash (stretch), tug (effort), flung (dizzy)
     const row3 = [
-      ['鼓气 puffed', { a: -.25, amp: 4, k: 1, legs: 1, ground: 14, expr: EXPR.puffed, headTilt: -.3 }, 1, 1],
-      ['拽 tug', { a: .35, amp: 6, k: 1, legs: 1, ground: 10, expr: EXPR.effort, headTilt: .5, stride: 10 }, 1, 1],
-      ['摔 flung', { a: 2.4, amp: 9, k: 1.3, legs: 0, expr: EXPR.dizzy, headTilt: .4 }, 1, 1],
-      ['墨点成形 birth 0.5', { a: -.1, amp: 4, k: 1, legs: 0, blotR: .5 }, 1, .55],
+      ['蓄力 anticipation', { a: -.2, amp: 6, k: 1, legs: 1, ground: 12, expr: EXPR.determined, headTilt: .2, stretch: .82, curl: .12 }, 1, 1],
+      ['冲 dash', { a: -.1, amp: 4, k: 1.2, legs: 0, expr: EXPR.determined, stretch: 1.25, vel: [60, 0], curl: -.04 }, 1, 1],
+      ['拽 tug', { a: .35, amp: 7, k: 1, legs: 1, ground: 10, expr: EXPR.effort, headTilt: .5, stride: 10, curl: -.12 }, 1, 1],
+      ['摔 flung', { a: 2.4, amp: 12, k: 1.3, legs: 0, expr: EXPR.dizzy, headTilt: .4, curl: .2 }, 1, 1],
     ];
-    row3.forEach(([n, S, dir, p], i) => { const x = 300 + i * 450, y = 880; dragon(A, TMP, S, { x, y, s: 1.7, dir, t: T, seed: 40 + i, p }); label(A, n, 170 + i * 450, 1040); });
-    // palette: five tones + vermilion
+    row3.forEach(([n, S, dir, p], i) => { const x = 240 + i * 450, y = 880; dragon(A, TMP, S, { x, y, s: 1.7, dir, t: T, seed: 40 + i, p }); label(A, n, 170 + i * 450, 1040); });
     const c = A.cw; c.save(); c.setTransform(1, 0, 0, 1, 0, 0);
     [.96, .82, .6, .34, .16].forEach((a, i) => { c.fillStyle = `rgba(0,0,0,${a})`; c.fillRect(1480 + i * 60, 30, 48, 48); });
     c.restore(); A.cc.fillStyle = `rgb(${VERM.join(',')})`; A.cc.fillRect(1480 + 300, 30, 48, 48);
+    return comp(A, B, { paper: [0, 0, 1], bleed: 5, rim: .9 });
+  }
+  if (mode === 'faces') {   // all expressions, heads large, two rows
+    const T = +(q.get('t') || 0), ks = Object.keys(EXPR);
+    ks.forEach((k, i) => { const x = 110 + (i % 8) * 235, y = 230 + Math.floor(i / 8) * 480; dragon(A, TMP, { a: 0, amp: 3, k: 1, len: 60, legs: 1, ground: 10, expr: EXPR[k], curl: -.1 }, { x: x + 20, y, s: 3.4, t: T, seed: 20 + i }); label(A, k, x - 40, y + 130, 22); });
     return comp(A, B, { paper: [0, 0, 1], bleed: 5, rim: .9 });
   }
   if (mode === 'studio') {

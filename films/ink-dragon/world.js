@@ -38,8 +38,7 @@ export function init() {
   cun(LAY.mid.ink, { x0: 1650, x1: 2980, ridge: midR, tone: .32, cun: 1.3, moss: 1.2, seed: 7, cunLen: 1.2, cunW: 1.3, mossR: 1.5 });
   // the pine cliff on the left: a big rock, face to the right, rising from the river to the summit
   bigCliff(LAY.cliff.ink);
-  pine(LAY.cliff.ink, 130, 475, 1.9, 5, 0, 0, 1);
-  pine(LAY.cliff.ink, 470, 468, 1.5, 8, 0, 0, -1);
+  pine(LAY.cliff.ink, 60, 475, 1.9, 5, 0, 0, 1);   // one pine on the summit, left of the cloud so its face stays clear
   pine(LAY.cliff.ink, 905, 1030, 1.3, 11, 0, 0, 1);          // a pine on the ledge halfway down
   pine(LAY.cliff.ink, 760, 1420, 1.1, 13, 0, 0, 1);
   fadeLayer(LAY.cliff, 0, 1600, 0, 1800, 1, 0);                // the cliff foot vanishes into the river mist
