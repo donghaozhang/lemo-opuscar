@@ -14,3 +14,4 @@ SwiftShader (software), 4 cores. Sample libraries vsco2ce + vcsl fetched. Music 
 | 08:41 | score + foley + mix | score.wav (guqin/xiao/drums), 234 events → mix.wav; cue check 44 cues, 41 within 40 ms, 3 soft slides ≤70 ms; first full render started |
 | 08:52 | render 1 | frames 540 / 3168 |
 | 09:02 | render 1 | frames 1260 / 3168 |
+| 09:12 | render 1 | frames 1860 / 3168 |
