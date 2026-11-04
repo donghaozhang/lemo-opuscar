@@ -420,7 +420,7 @@ const s32 = sheet('s32', {
   paint(ctx, t, R, lt) {
     // the arched leap held over the peak: the back arch rhymes with the mountain
     // the leap peaks right over the summit: the arched back rhymes with the slopes of the mountain
-    const u = seg(lt, 0, 1.8), cx = lerp(1700, 260, u), cy = 520 - Math.sin(u * Math.PI) * 260;
+    const u = seg(lt, 0, 1.8), cx = lerp(1700, 260, u), cy = 780 - Math.sin(u * Math.PI) * 210;
     R.fig(A => catSide(A, cx, cy, 560, -1, { ...gait('run', .5), arch: .22, eye: .9, brow: -.4, ear: -.3 }, { t: q8(lt) }));
     kasumiLive(ctx, 960, 870, 1800, 40);
   },
@@ -544,7 +544,7 @@ const s51 = sheet('s51', {
   sky: x => { bokashi(x, 0, 0, W, 900, '#1a2440', 1, .55, { rough: 26, seed: 2, col2: '#3a4a6c' }); bokashi(x, 0, 700, W, 1100, PAL.beniL, 0, .6, { rough: 20, seed: 5 }); bokashi(x, 0, 1100, W, BRT, '#1d2a44', .8, 1, { rough: 14, seed: 31, col2: '#0d1424' }); },
   col: x => { rect(x, '#3b2e24', 0, 560, W, 640); for (let X = 100; X < W; X += 300) rect(x, '#2b221b', X, 640, X + 40, 1500); rect(x, '#5d6272', 0, 1560, W, BRT); x.strokeStyle = '#4a3a2c'; x.lineWidth = 14; x.beginPath(); x.moveTo(0, 440); x.lineTo(W, 440); x.stroke(); for (let X = 60; X < W; X += 200) rect(x, '#4a3a2c', X, 440, X + 16, 560); },
   key: x => { K(x, [[0, 560], [W, 560]], 3, { taper: [0, 0] }); K(x, [[0, 640], [W, 640]], 3, { taper: [0, 0] }); for (let X = 100; X < W; X += 300) { x.strokeStyle = S; x.lineWidth = 2.4; x.strokeRect(X, 640, 40, 860); } K(x, [[0, 1560], [W, 1560]], 3); K(x, [[0, 434], [W, 434]], 2.6); K(x, [[0, 448], [W, 448]], 2); for (let X = 60; X < W; X += 200) { x.lineWidth = 2; x.strokeRect(X, 440, 16, 120); } ripples(x, 1250, 1550, 0, W, 4, S); },
-  cam: (lt, d) => { const u = ss(seg(lt, .4, 2.6)); return { cx: 960, cy: lerp(BRT - 540, 600, u), z: 1 }; },
+  cam: (lt, d) => { const u = ss(seg(lt, .4, 2.6)); return { cx: lerp(960, 1010, u), cy: lerp(BRT - 540, 400, u), z: lerp(1, 1.3, ss(seg(lt, 1.6, 3.2))) }; },
   paint(ctx, t, R, lt) {
     const tq = q8(lt);
     R.fig(A => { catSide(A, 1000, 1580, 260, 1, pose('sit', { ha: .2, eye: .6 }), { t: tq }); kitten(A, 1200, 1575, 190, { E: fexpr('eat'), t: tq, dip: .6 }); fish(A, [1230, 1560], 200, 0, 0, 2.4); });

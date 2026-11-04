@@ -107,7 +107,7 @@ const SCROLL = {
   s28(t, lt, d) { return { cx: lerp(VC('snow')[0], SLOT.fields + FD.w - 960, ease(seg(lt, 0, d))), cy: lerp(0, 540, ease(seg(lt, 0, d))) }; },
   s29(t, lt, d) { return { cx: SLOT.fields + clamp(FIELDS.track(t) - 300, 960, FD.w - 960), cy: 540 }; },
   s34(t, lt, d) { const a = SLOT.fields + clamp(FIELDS.track(SH.s29.t1) - 300, 960, FD.w - 960); return { cx: lerp(a, VC('pass')[0], ease(seg(lt, 0, d))), cy: 540 }; },
-  s35(t, lt, d) { const u = ease(seg(lt, .1, d - .9)); return { cx: VC('pass')[0], cy: lerp(540, -540, u) }; },
+  s35(t, lt, d) { const u = ease(seg(lt, 3.3, d)); return { cx: VC('pass')[0], cy: lerp(540, -540, u) }; },
   s39(t, lt, d) { const u = ease(seg(lt, 1.0, d - .3)), z = lerp(1, .82, Math.sin(Math.PI * u)); return { cx: lerp(VC('pass')[0], VC('sea')[0], u), cy: lerp(-560, 540, ss(seg(lt, .8, d - .2))), z }; },
   s40() { return { cx: VC('sea')[0] + 0, cy: 540 }; },
   s45(t, lt, d) {   // tilt up past the border with the fish, then push in on the catch (the cat ≈ a third of the frame), hold
@@ -135,7 +135,7 @@ function runners(id, t, lt, d, M) {
     runner(M, A => catSide(A, lerp(a[0], b[0], u), lerp(a[1], b[1], u), 80, -1, gait('run', (tq * 2.6) % 1), { t: tq }));
   }
   if (id === 's34') {
-    const u = ss(seg(lt, 0, d)), a = at('fields', 500, FD.levee - 4), b = at('pass', 1500, 2088);
+    const u = ss(seg(lt, 0, d)), a = at('fields', 1500, FD.levee - 4), b = at('pass', 1500, 2088);
     runner(M, A => catSide(A, lerp(a[0], b[0], u), lerp(a[1], b[1], u), 80, -1, gait('run', (tq * 2.6) % 1), { t: tq }));
   }
   if (id === 's39') {
@@ -165,7 +165,7 @@ function catchScene(id, t, lt, M) {
   }
 }
 // —— screen overlays: the fishmonger's shout (horizontal cartouche) ——
-const SHOUT = { t0: HIT.shout, t1: SH.s11.t1 + .05, text: '站——住！' };
+const SHOUT = { t0: HIT.shout, t1: SH.s12.t0 + .7, text: '站——住！' };
 function subtitle(t) {
   if (t < SHOUT.t0 || t >= SHOUT.t1) return;
   const a = clamp((t - SHOUT.t0) / .22), fo = 1 - clamp((t - (SHOUT.t1 - .25)) / .25);
@@ -194,9 +194,9 @@ function titleCard(t, M) {
 // dusk cartouche (s48) and the end slip (s56) on the bridge print
 function duskCards(t, M) {
   const Mi = [M[0], M[1], M[2], M[3], M[4] + M[0] * SLOT.bridge, M[5]];
-  const c0 = SH.s48.t0 + 1.5, c1 = SH.s49.t0;
+  const c0 = SH.s48.t0 + 1.2, c1 = SH.s49.t0;
   if (t >= c0 && t < c1) { const p = clamp((t - c0) / .3); ctx.save(); ctx.setTransform(...Mi); let b; stampFn(ctx, x => { b = cartouche(x, 130, 70, '七 暮归', { series: SERIES, w: 86, size: 52, ssize: 25 }); }, p, [0, -14]); if (b) drawSeal(ctx, '猫', 130, b.y0 + b.h + 44, 56, clamp((t - c0 - .4) / .3), { seed: 11 }); ctx.restore(); if (p >= 1 && b) { TEXTS.push({ id: 'cart-dusk-s', text: SERIES, ...scr(Mi, b.x0, b.y0, b.x0 + b.w, b.y0 + b.h) }); TEXTS.push({ id: 'cart-dusk', text: '七 暮归', ...scr(Mi, b.x0, b.y0, b.x0 + b.w, b.y0 + b.h) }); } }
-  const e0 = SH.s56.t0 + 1.6;
+  const e0 = SH.s56.t0 + 1.3;
   if (t >= e0) { const p = clamp((t - e0) / .35); ctx.save(); ctx.setTransform(...Mi); let b; stampFn(ctx, x => { b = cartouche(x, 1100, 600, '终', { series: '', w: 96, size: 66 }); }, p, [0, -14]); if (b) drawSeal(ctx, '猫鱼', 1100, b.y0 + b.h + 60, 84, clamp((t - e0 - .5) / .3), { seed: 31, normal: true }); ctx.restore(); if (p >= 1 && b) TEXTS.push({ id: 'end', text: '终', ...scr(Mi, b.x0, b.y0, b.x0 + b.w, b.y0 + b.h) }); }
 }
 

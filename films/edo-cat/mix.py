@@ -227,7 +227,7 @@ def lufs(x):
     L = -.691 + 10 * np.log10(ms + 1e-12); g = ms[L > -70]; rel = -.691 + 10 * np.log10(g.mean()) - 10; g2 = ms[(L > -70) & (L > rel)]
     return -.691 + 10 * np.log10(g2.mean())
 for _ in range(3):
-    MIX *= 10 ** ((-14.3 - lufs(MIX)) / 20); MIX = limit(MIX, 10 ** (-1.6 / 20))
+    MIX *= 10 ** ((-14.1 - lufs(MIX)) / 20); MIX = limit(MIX, 10 ** (-3.0 / 20))
 print('master', round(lufs(MIX), 2), 'LUFS, peak', round(20 * np.log10(np.abs(MIX).max()), 2), 'dBFS')
 sf.write(os.path.join(HERE, 'mix.wav'), MIX.astype(np.float32), SR)
 def db(x): return 20 * np.log10(np.sqrt(np.mean(x ** 2)) + 1e-9)

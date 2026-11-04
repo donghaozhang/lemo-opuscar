@@ -291,7 +291,7 @@ function snowLayer(x, part) {
   }
 }
 export const SNOWV = {
-  id: 'snow', w: W, h: SN.h, cart: { x: 1790, y: 60, title: '三 雪寺', t0: () => SH.s23.t0 + 1.0 },
+  id: 'snow', w: W, h: SN.h, cart: { x: 1790, y: 570, title: '三 雪寺', t0: () => SH.s23.t0 + .6 },
   layers: { sky: { g: 1, grain: .12, draw: x => snowLayer(x, 'sky') }, col: { g: 2, grain: .05, draw: x => snowLayer(x, 'col') }, snow: { g: 1, speck: .1, draw: x => snowLayer(x, 'snow') }, key: { g: 0, speck: .12, draw: x => snowLayer(x, 'key') } },
   paint(ctx, t, R) {
     R.L('sky'); R.L('col'); R.L('snow'); R.L('key');
@@ -343,7 +343,7 @@ function fieldLayer(x, part) {
   }
 }
 export const FIELDS = {
-  id: 'fields', w: FD.w, h: H, cart: { x: 3740, y: 64, title: '四 稻田', t0: () => SH.s29.t0 + .3 },
+  id: 'fields', w: FD.w, h: H, cart: { x: 2050, y: 64, title: '四 稻田', t0: () => SH.s29.t0 + .3 },
   layers: { sky: { g: 1, grain: .1, draw: x => fieldLayer(x, 'sky') }, col: { g: 2, grain: .04, draw: x => fieldLayer(x, 'col') }, snow: { g: 3, speck: .05, draw: x => fieldLayer(x, 'snow') }, key: { g: 0, speck: .12, draw: x => fieldLayer(x, 'key') } },
   paint(ctx, t, R) {
     R.L('sky'); R.L('col'); R.L('snow'); R.L('key');
@@ -352,11 +352,11 @@ export const FIELDS = {
     [[400, 900], [1500, 1000], [2200, 870], [3000, 960], [3500, 880]].forEach(([X, Y], i) => R.fig(A => person(A, X, Y, 120, i % 2 ? 1 : -1, 'farmer', 0, { bend: 1, hat: PAL.straw })));
     // the kite ahead, the cat along the levee, both travelling right → left over the diptych
     if (t >= SH.s29.t0 && t < SH.s34.t0) { const u = seg(t, SH.s29.t0, SH.s29.t1);
-      R.fig(A => kite(A, lerp(3500, 150, u), 300 + Math.sin(tq * 2) * 30, 130, -1, Math.sin(tq * 14), { fish: 1, t }));
-      const cx = lerp(3900, 500, u); R.fig(A => catSide(A, cx, FD.levee - 4, 85, -1, gait('run', (tq * 2.5) % 1), { t: tq })); }
+      R.fig(A => kite(A, lerp(3500, 1100, u), 300 + Math.sin(tq * 2) * 30, 130, -1, Math.sin(tq * 14), { fish: 1, t }));
+      const cx = lerp(3900, 1500, u); R.fig(A => catSide(A, cx, FD.levee - 4, 85, -1, gait('run', (tq * 2.5) % 1), { t: tq })); }
   },
   // camera follows the cat: x of the cat at time t
-  track: t => lerp(3900, 500, seg(t, SH.s29.t0, SH.s29.t1)),
+  track: t => lerp(3900, 1500, seg(t, SH.s29.t0, SH.s29.t1)),
 };
 
 // ————————————————————— MOUNTAIN PASS (tall: 1920 × 2160) —————————————————————
@@ -393,7 +393,7 @@ function passLayer(x, part) {
   }
 }
 export const PASS = {
-  id: 'pass', w: W, h: PS.h, cart: { x: 1790, y: 70, title: '五 山岭', t0: () => SH.s35.t0 + 1.2 },
+  id: 'pass', w: W, h: PS.h, cart: { x: 1790, y: 1740, title: '五 山岭', t0: () => SH.s35.t0 + .05 },
   layers: { sky: { g: 1, grain: .12, draw: x => passLayer(x, 'sky') }, col: { g: 2, grain: .06, draw: x => passLayer(x, 'col') }, mist: { g: 3, speck: .05, draw: x => passLayer(x, 'mist') }, key: { g: 0, speck: .12, draw: x => passLayer(x, 'key') } },
   zig: ZIG,
   catAt(u) { // position along the zigzag 0..1
@@ -404,12 +404,12 @@ export const PASS = {
   paint(ctx, t, R) {
     R.L('sky'); R.L('col'); R.L('mist'); R.L('key');
     const tq = q8(t), a = SH.s34.t0;
-    const u = seg(t, SH.s35.t0, SH.s35.t1 - .2), c = this.catAt(u);
+    const lt0 = t - SH.s35.t0, u = lt0 < 3.3 ? .5 * lt0 / 3.3 : .5 + .5 * seg(lt0, 3.3, SH.s35.t1 - SH.s35.t0 - .1), c = this.catAt(u);
     if (t < SH.s35.t0) return;
     if (t < SH.s39.t0) {
       R.fig(A => catSide(A, c.p[0], c.p[1] + 8, 80, c.dir, gait('run', (tq * 2.4) % 1), { t: tq }));
       R.fig(A => kite(A, lerp(1800, 1100, u), lerp(1700, 420, u), 130, -1, Math.sin(tq * 12), { fish: 1, t }));
-      const v = seg(t, SH.s35.t0 + 1.4, SH.s35.t1 + 1), m = this.catAt(v * .55);
+      const v = seg(t, SH.s35.t0 + .8, SH.s35.t1), m = this.catAt(v * .45);
       R.fig(A => monger(A, m.p[0], m.p[1] + 10, 150, m.dir, manGait('run', (tq * 1.5) % 1), { pole: 'hand' }));
     } else {
       // summit: the cat on the top looking left to the sea; the kite flying off left

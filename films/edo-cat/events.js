@@ -16,7 +16,7 @@ export function events() {
   for (const id of ['s17', 's22', 's28', 's34']) add('scroll', SH[id].t0, { d: SH[id].t1 - SH[id].t0, v: .8 });
   add('scroll', SH.s39.t0 + 1, { d: SH.s39.t1 - SH.s39.t0 - 1, v: .7 });
   add('scroll', SH.s47.t0, { d: 2.0, v: 1.2, fast: 1 });
-  const carts = [SH.s02.t0 + 1.0, SH.s18.t0 + .35, SH.s23.t0 + 1.0, SH.s29.t0 + .3, SH.s35.t0 + 1.2, SH.s40.t0 + .3, SH.s48.t0 + 1.5, SH.s56.t0 + 1.6];
+  const carts = [SH.s02.t0 + 1.0, SH.s18.t0 + .35, SH.s23.t0 + .6, SH.s29.t0 + .3, SH.s35.t0 + .05, SH.s40.t0 + .3, SH.s48.t0 + 1.2, SH.s56.t0 + 1.3];
   carts.forEach(t => { add('slip', t, { v: .5 }); add('seal', t + .5, { v: .8 }); });
   add('slip', HIT.shout, { v: .6 }); add('seal', HIT.shout + .05, { v: .6 });
   // dusk reprint: dawn blocks peel, dusk blocks printed; the end: blocks peel off one by one
@@ -66,9 +66,9 @@ export function events() {
   for (let k = 0; k < 6; k++) add('step', SH.s55.t0 + .2 + k * .55, { v: .35, m: 'wood' });
   // subtitles (.srt): the printed texts, in the order they appear
   const sub = (t0, t1, text) => ev.push({ t: +t0.toFixed(3), type: 'sub', t1: +t1.toFixed(3), text });
-  sub(SH.s02.t0 + 1.0, SH.s03.t0, '江户猫追鱼记 · 一 晨市'); sub(HIT.shout, SH.s11.t1, '站——住！');
-  sub(SH.s18.t0 + .35, SH.s19.t0, '二 骤雨'); sub(SH.s23.t0 + 1.0, SH.s24.t0, '三 雪寺'); sub(SH.s29.t0 + .3, SH.s30.t0, '四 稻田');
-  sub(SH.s35.t0 + 1.2, SH.s36.t0, '五 山岭'); sub(SH.s40.t0 + .3, SH.s41.t0, '六 怒涛'); sub(SH.s48.t0 + 1.5, SH.s49.t0, '七 暮归'); sub(SH.s56.t0 + 1.6, DUR, '终');
+  sub(SH.s02.t0 + 1.0, SH.s03.t0, '江户猫追鱼记 · 一 晨市'); sub(HIT.shout, SH.s12.t0 + .7, '站——住！');
+  sub(SH.s18.t0 + .35, SH.s19.t0, '二 骤雨'); sub(SH.s23.t0 + .6, SH.s24.t0, '三 雪寺'); sub(SH.s29.t0 + .3, SH.s30.t0, '四 稻田');
+  sub(SH.s35.t0 + .05, SH.s36.t0, '五 山岭'); sub(SH.s40.t0 + .3, SH.s41.t0, '六 怒涛'); sub(SH.s48.t0 + 1.2, SH.s49.t0, '七 暮归'); sub(SH.s56.t0 + 1.3, DUR, '终');
   // the music grid and hit points for the score, the mixer and the cue check
   for (const s of SECS) ev.push({ t: s.t, type: 'sec', id: s.id, bpm: s.bpm, beats: s.beats });
   for (const [id, t] of Object.entries(HIT)) ev.push({ t: +t.toFixed(4), type: 'hit', id });

@@ -7,3 +7,4 @@
 2026-11-04T11:02Z cue map exported (CUEMAP.md, events.json); original score rendered (music/score.py: shamisen, shakuhachi, koto, taiko, shime, hyoshigi, rin)
 2026-11-04T11:03Z first full render started (3471 frames, 3 workers)
 2026-11-04T11:18Z first full render done (412 s render); review pass 1 written (REVIEW.md), fixes applied; second render starting
+2026-11-04T12:08Z review pass 2 done (REVIEW.md); readcheck OK, glyph check OK, cue check OK; final render starting
