@@ -55,6 +55,8 @@ def drone(d, f=73.42, v=1.0, fifth=True, att=1.5, rel=1.5):
     x = .6 * bp(x, 180, 1600, 2) + .4 * lp(x, 500)
     env = np.minimum(1, np.minimum(t / att, (d - t) / rel).clip(0))
     return (x * env * v * .08).astype(np.float32)
+CUES = []
+def cue(kind, at): CUES.append({'kind': kind, 't': round(float(at), 4)})
 def place(x, at, g=1.0, pan=0.0): add(mus, x, at, g, pan)
 def note(inst, p, at, dur, vel=.6, g=1.0, pan=0.0, att=0, rel=None):
     kw = {'attack': att} if att else {}
@@ -70,7 +72,7 @@ def fd(at, v=.7, pan=-.2):
 
 # ================================================================ A · title (0–8): knife alone, then the drone, a struck metal at the print
 place(drone(4.5, 73.42, .7, att=2.5, rel=.5), 4.0)
-place(metal(587.3, .8, 5), 5.5, .8, .1)
+place(metal(587.3, .8, 5), 5.5, .8, .1); cue('ding', 5.5)
 note('cellos', 'D2', 5.5, 3.0, .35, .7, att=1.2, rel=.6)
 
 # ================================================================ B · the detour (72 bpm, 24 beats): pizz walk, log drum, drone, the mountain theme
@@ -108,11 +110,11 @@ for i in range(0, 17):
     if i % 2 == 0: place(logdrum(104, .9), bt('D', i), .9, -.25)
     else: fd(bt('D', i), .6)
     wb(bt('D', i + .5), .4, .35)
-for e, p in zip(evt('season_hit'), ['D3', 'A2', 'F3', 'D3']): note('timpani', p, e['t'], 1.5, .85, 1.0)
+for e, p in zip(evt('season_hit'), ['D3', 'A2', 'F3', 'D3']): note('timpani', p, e['t'], 1.5, .85, 1.0); cue('season_hit', e['t'])
 for p, nb, b0 in [('D3', 4, 0), ('F3', 4, 4), ('A3', 4, 8), ('C4', 2, 12), ('A3', 2, 14)]: note('cellos', p, bt('D', b0), nb * bl + .05, .55, .75, .2, att=.05)
 d5 = SH['D5']['t0']
 note('cellos', 'D3', d5, 3.0, .45, .8, .1, att=.3, rel=1.0); note('cellos', 'A3', d5, 3.0, .4, .7, .2, att=.3, rel=1.0); note('contrabass', 'D2', d5, 3.2, .45, .8, -.2, att=.3, rel=1.0)
-for e in evt('plink'): note('cellos_pizz', 'D4', e['t'], .6, .7, 1.0, .35)
+for e in evt('plink'): note('cellos_pizz', 'D4', e['t'], .6, .7, 1.0, .35); cue('plink', e['t'])
 
 # ================================================================ E · mockery (88 bpm, 20 beats): a falling pizzicato joke, thinning out
 bl = 60 / 88
@@ -139,21 +141,22 @@ for tt in np.arange(g2, g4 - .05, 1 / 12):
     a = .25 + .5 * ((tt - g2) / (g4 - g2))
     note('cellos_spic', 'D2' if k % 2 == 0 else 'Eb2', tt, .1, a, .7, .1); k += 1
 place(metal(146.8, .35, 3.5), g2 + .5, .7, -.2)
-for e in evt('fright'): note('timpani', 'A2', e['t'], 1.2, .8); place(metal(415.3, .6, 2.5), e['t'], .6, .3)
+for e in evt('fright'): cue('fright', e['t']); note('timpani', 'A2', e['t'], 1.2, .8); place(metal(415.3, .6, 2.5), e['t'], .6, .3)
 g3 = SH['G3']['t0']
 for i, tt in enumerate(np.arange(g3 + .3, g4 - .02, 1 / 14)): note('timpani', 'D3', tt, .12, .2 + .7 * (tt - g3) / (g4 - g3), .8, (i % 2 - .5) * .3)
 place(metal(587.3, .5, 3.0), g3 + .8, .6, 0); place(metal(880.0, .4, 2.6), g3 + 1.8, .5, .3)
 
 # ================================================================ H · the giants and the knife
 h0 = SEC['H']['t0']; bl = 60 / 72
-hitv('gong', 3, h0, 1.0, 1.4); hitv('bass_drum', None, h0, 1.0, 1.2)
+hitv('gong', 3, h0, 1.0, 1.4); cue('BOOM', h0); hitv('bass_drum', None, h0, 1.0, 1.2)
 note('timpani', 'D3', h0, 2.0, 1.0, 1.1); note('contrabass', 'D2', h0, 2.6, .9, 1.0, att=0, rel=1.0); note('cellos', 'D2', h0, 2.6, .9, 1.0, att=0, rel=1.0)
-for e in evt('giant_step'): note('timpani', 'A2', e['t'], 1.0, .85, 1.0); hitv('bass_drum', None, e['t'], .8, .9)
+for e in evt('giant_step'): cue('giant_step', e['t']); note('timpani', 'A2', e['t'], 1.0, .85, 1.0); hitv('bass_drum', None, e['t'], .8, .9)
 h2 = SH['H2']['t0']
 for i, p in enumerate(['D2', 'E2', 'F2', 'G2', 'A2', 'Bb2', 'C3', 'C#3']):
     note('cellos', p, h2 + i * bl * .7 + .5, bl * .75, .7 + i * .03, .9, -.1, rel=.3); note('contrabass', p, h2 + i * bl * .7 + .5, bl * .75, .65, .8, .1, rel=.3)
-for e in evt('gouge'): note('timpani', 'D3', e['t'], .8, .6, .8)
+for e in evt('gouge'): note('timpani', 'D3', e['t'], .8, .6, .8); cue('gouge', e['t'])
 h3 = SH['H3']['t0']                                                        # D major opens: the red sunrise
+cue('red_dawn', h3)
 for p, g in [('D2', .9), ('A2', .8)]: note('contrabass', p, h3, 4.4, .6, g, -.2, att=.6, rel=1.5)
 for p, g in [('D3', .8), ('F#3', .75), ('A3', .75)]: note('cellos', p, h3, 4.4, .55, g, .1, att=.5, rel=1.5)
 for p, g in [('A3', .55), ('D4', .55), ('F#4', .5)]: note('violas', p, h3 + .4, 4.0, .5, g, .3, att=.8, rel=1.5)
@@ -178,7 +181,7 @@ for p, n in melody:
     if bt('I', b) > SH['I5']['t0'] - .2: break
     note('cellos', p, bt('I', b), n * bl + .05, .62, .85, .15, att=.03); b += n
 end = SH['I5']['t0']
-hitv('gong', 2, end, .7, .9)
+hitv('gong', 2, end, .7, .9); cue('end', end)
 for f in (293.7, 440.0, 587.3, 740.0): place(metal(f, .4, 5.5), end, .4, .1)
 for p in ('D2', 'A2'): note('contrabass', p, end, 4.5, .45, .7, att=.1, rel=2.0)
 for p in ('D3', 'F#3', 'A3'): note('cellos', p, end, 4.0, .45, .65, .1, att=.1, rel=2.0)
@@ -192,5 +195,6 @@ mus = S.room(mus, size=.5, mix=.16)
 mus[s0:s1] = 0
 pk = np.abs(mus).max(); mus = mus / max(pk, 1e-6) * .9
 sf.write(os.path.join(HERE, 'music.wav'), mus[:int(DUR * SR)], SR)
+json.dump(CUES, open(os.path.join(HERE, 'cues.json'), 'w'))
 json.dump({'vcsl': HAVE_VCSL, 'used': ['cellos', 'cellos_spic', 'cellos_pizz', 'contrabass', 'contrabass_pizz', 'violas', 'timpani', 'gong', 'bass_drum'] + (['woodblock', 'frame_drum'] if HAVE_VCSL else [])}, open(os.path.join(HERE, 'used.json'), 'w'))
 print('music.wav', round(DUR, 2), 's; vcsl', HAVE_VCSL)

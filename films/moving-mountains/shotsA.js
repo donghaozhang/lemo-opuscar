@@ -470,7 +470,7 @@ function seasonPlate(m, lt, season, n, sh) {
   const T0 = 0, T1 = .45;
   if (season === 'spring') {
     const B = WD.blossomBranch('sp');
-    m.save(); m.translate(-60, 40); ST.carveShape(m, B.main, lt, T0, T1); for (const [x, y, rr] of B.buds) { if (lt > T0 + (x + 200) / 900 * (T1 - T0)) { INK.blob(m, x, y, rr, rr * .9, '#fff'); INK.blob(m, x, y, rr * .3, rr * .3, '#000'); } } m.restore();
+    m.save(); m.translate(-80, 30); m.scale(1.45, 1.45); ST.carveShape(m, B.main, lt, T0, T1); for (const [x, y, rr] of B.buds) { if (lt > T0 + (x + 200) / 900 * (T1 - T0)) { const q = rr * 1.7; for (let p = 0; p < 5; p++) INK.blob(m, x + Math.cos(p * 1.257) * q * .55, y + Math.sin(p * 1.257) * q * .55, q * .45, q * .38, '#fff', p * 1.257); INK.blob(m, x, y, q * .22, q * .22, '#000'); } } m.restore();
     for (let i = 0; i < 14; i++) { const ph = (lt * .35 + i / 14) % 1, x = 100 + i * 120 + Math.sin(lt * 2 + i) * 30 + ph * 300, y = 80 + ph * 600; INK.blob(m, x, y, 5, 3, '#fff', lt * 3 + i); }
   }
   if (season === 'summer') {

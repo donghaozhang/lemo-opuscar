@@ -69,7 +69,7 @@ SHOTS.E3 = {   // insert: thin fingers pluck one blade of grass from the slope; 
     plate(g, t, lt, sh, { x: 980, y: 400, z }, m => {
       // the slope: dark earth with grass blades carved white
       INK.poly(m, [[-400, 560], [2400, 380], [2400, 1500], [-400, 1500]], '#000');
-      const sl = once('slope', () => WD.sky('slope', [-400, -400, 2800, 1000], (x, y) => clamp(.5 + .4 * clamp((y + 100) / 700)), { sp: 12, seed: 111 }));
+      const sl = once('slope', () => WD.sky('slope', [-400, -400, 2800, 1000], (x, y) => clamp(.12 + .3 * clamp((y + 100) / 700)), { sp: 12, seed: 111 }));
       m.save(); m.beginPath(); m.moveTo(-400, -400); m.lineTo(2400, -400); m.lineTo(2400, 380); m.lineTo(-400, 560); m.clip(); ST.carve(m, sl); m.restore();
       const r = mulberry(5);
       for (let i = 0; i < 70; i++) { const x = -300 + i * 38 + r() * 20, y = 560 - (x + 400) * .064 + 10 + r() * 30, h = 40 + r() * 50, sw = Math.sin(lt * 3 + i) * 6; INK.taper(m, [[x, y], [x + sw + 6, y - h * .6], [x + sw * 1.6 + 10, y - h]], 6, '#fff', { a: .05, b: .8 }); }
