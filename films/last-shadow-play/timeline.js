@@ -18,7 +18,7 @@ export const HIT = {
   squareIn: 16.0, beckon: B('square', 9), eyeRoll: B('square', 16), sigh: B('square', 17), pocket: B('square', 18.5), rodGiven: B('square', 20.5),
   clap1: B('square', 22), clap2: B('square', 22.8), clap3: B('square', 23.6),
   mountain: B('show1', 0.5), pine: B('show1', 1.5), cloudIn: B('show1', 2.6), cloudFlip: B('show1', 4.4), pushIn: B('show1', 4.4),
-  monkeyIn: B('show1', 7.7), freeze1: B('show1', 8.8), labelIn: B('show1', 8.4), labelOut: B('show1', 15.4),
+  monkeyIn: B('show1', 7.7), freeze1: B('show1', 8.8), labelIn: B('show1', 8.4), labelOut: B('show1', 17.8),
   twist: B('show1', 19.4), flip1: B('show1', 19.8), land1: B('show1', 22), cloudOff: +(B('show1', 22) + .5).toFixed(3), twirl1: B('show1', 22.6),
   maidenIn: B('show1', 26), headTurn: B('show1', 30.8), laugh: B('show1', 33.9), eyeFlare: B('show1', 40.7), whip1: B('show1', 44),
   headSwap: B('show1', 46.2), boyO: B('show1', 51.5), headDown: B('show1', 53.9),
@@ -33,7 +33,7 @@ export const HIT = {
   gutter: 108.26, out: 109.26, pupils2: 110.9, brows2: 111.4, hand2: 111.8, phoneOut: 112.8, click: 113.4, torch: 113.5, raised: 114.0, clothLit: 114.2,
   stageLit: 115.5, bigGong: 115.6, straighten: 118.8, look: 119.6, musicDrop: 120.0, lampLift: 121.8, lampOut: 122.6, taken0: 123.4, taken1: 124.2,
   walkOff: 125.5, walkEnd: 128.0, cricketsOut: 126.5, birds: 127.0,
-  tilt0: 129.0, tilt1: 132.5, twist2: B('dawn', 10), flip3: B('dawn', 10.2), flip3End: B('dawn', 11), land4: 137.6, endIn: 138.2, pluck: 138.2
+  tilt0: 129.0, tilt1: 132.5, twist2: B('dawn', 10), flip3: B('dawn', 10.2), flip3End: B('dawn', 11), land4: 137.6, endIn: 137.3, pluck: 137.3
 };
 export const T = HIT;
 // Shots: [t0, t1, id, set]  set: F = the square (front), B = behind the screen, D = dawn front, E = dawn back
@@ -55,8 +55,8 @@ export const shotAt = t => SHOTS.find(s => t >= s[0] && t < s[1]) || SHOTS[SHOTS
 // Placards (storyteller's board) and plaques; .srt is built from these
 export const PLACARDS = [
   { id: 'P1', t0: 16.5, t1: 20.0, text: '村口，入夜。最后一场。' },
-  { id: 'P2', t0: 21.0, t1: 23.5, text: '放下手机，来搭把手。' },
-  { id: 'P3', t0: 75.8, t1: 78.0, text: '爷爷？' },
+  { id: 'P2', t0: 20.8, t1: 24.6, text: '放下手机，来搭把手。' },
+  { id: 'P3', t0: 75.7, t1: 78.4, text: '爷爷？' },
   { id: 'P4', t0: 122.0, t1: 125.0, text: '灯，交给你了。' }
 ];
 export const PLAQUES = [
