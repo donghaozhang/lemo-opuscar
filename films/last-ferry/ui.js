@@ -26,8 +26,7 @@ function rule(cx, y, w, a) {
 function chapterCard(t, shot) {
   const lt = t - shot.a, L = shot.b - shot.a;
   const a0 = ss(seg(lt, .15, .7)), out = 1 - ss(seg(lt, L - .55, L - .05));
-  const bg = g.createRadialGradient(W / 2, H / 2, 60, W / 2, H / 2, 1100); bg.addColorStop(0, '#2a1a14'); bg.addColorStop(1, '#0c0705');
-  g.fillStyle = bg; g.fillRect(0, 0, W, H);
+  plate(1);
   g.textAlign = 'center'; g.textBaseline = 'middle';
   g.globalAlpha = a0 * out; g.fillStyle = COPPER; g.font = '500 30px Cinzel'; spaced(shot.num, W / 2, 446, 8);
   rule(W / 2, 490, 200 * (.4 + .6 * a0), a0 * out);
@@ -81,11 +80,17 @@ function dialog(t, L) {
 }
 
 // —— Fades: into and out of every chapter card, and the end ——
+// the warm-ink plate of the chapter cards; the scene dissolves into it and out of it (never a pure black frame)
+function plate(a) {
+  if (a <= 0) return;
+  const bg = g.createRadialGradient(W / 2, H / 2, 60, W / 2, H / 2, 1100); bg.addColorStop(0, '#34201a'); bg.addColorStop(1, '#120a08');
+  g.save(); g.globalAlpha = a; g.fillStyle = bg; g.fillRect(0, 0, W, H); g.restore();
+}
 function blackout(t) {
   let a = 0;
   for (const s of SHOTS) if (s.card) { if (t < s.a && t > s.a - .45) a = Math.max(a, ss(seg(t, s.a - .45, s.a))); if (t >= s.b && t < s.b + .6) a = Math.max(a, 1 - ss(seg(t, s.b, s.b + .6))); }
-  a = Math.max(a, ss(seg(t, T.fade, DUR - .1)));
-  if (a > 0) { g.fillStyle = `rgba(12,7,5,${a})`; g.fillRect(0, 0, W, H); }
+  a = Math.max(a, ss(seg(t, T.fade, DUR - .05)));
+  plate(a);
 }
 export function drawOverlay(t) {
   const shot = shotAt(t);

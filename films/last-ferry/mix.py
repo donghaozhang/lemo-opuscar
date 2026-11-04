@@ -189,8 +189,11 @@ musS = lvl(mus, -20); ambS = lvl(amb, -30); fxS = lvl(fx, -27)
 # the beds drop under the heartbeat (the lantern dies) and thin into the second silence
 ambS *= curve([(0, 1), (112.3, 1), (112.9, .35), (115.3, .35), (116.4, 1), (121.1, 1), (122.5, .6), (150, .6)])[:, None]
 mix = musS + ambS + fxS
-pk = np.abs(mix).max(); print('peak %.1f dB' % (20 * np.log10(pk)))
-for ch in range(2): mix[:, ch] = limit(mix[:, ch], .92)
+pk = np.abs(mix).max(); print('peak before %.1f dBFS' % (20 * np.log10(pk)))
+# master headroom: aim near −14 LUFS with the true peak under −2 dBTP, so mux.sh's loudnorm only trims: +2.5 dB, then a look-ahead limiter at .70
+mix *= 10 ** (2.5 / 20)
+for ch in range(2): mix[:, ch] = limit(mix[:, ch], .70, .004)
+mix = np.clip(mix, -.75, .75)
 OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, 'out', 'mix.wav')
 sf.write(OUT, mix.astype(np.float32), SR, subtype='FLOAT')
 print('wrote', OUT, DUR, 's | mus', round(rms_db(musS), 1), 'amb', round(rms_db(ambS), 1), 'fx', round(rms_db(fxS), 1), '| events', len(EV))
