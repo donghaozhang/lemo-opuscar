@@ -11,3 +11,4 @@
 12:56Z first full render: frames 3360/3488
 13:02Z second full render starting (pass-1 fixes)
 13:12Z second full render: frames 1440/3488
+13:22Z second full render: frames 2580/3488
