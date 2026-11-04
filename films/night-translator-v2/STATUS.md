@@ -11,3 +11,4 @@ One line about every 10 minutes during long renders (UTC, step, frames done / to
 - 2026-11-04 07:59 UTC — render 2 (after review pass 1) — 2040 / 3540 frames
 - 2026-11-04 08:08 UTC — render 2 (after review pass 1) — 2940 / 3540 frames
 - 2026-11-04 08:16 UTC — render 2 finished; review pass 2 — 3360 / 3540 frames
+- 2026-11-04 08:33 UTC — render 3 (final, after review pass 2) — 540 / 3540 frames
