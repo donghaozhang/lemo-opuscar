@@ -79,9 +79,6 @@ SHOTS.E3 = {   // insert: thin fingers pluck one blade of grass from the slope; 
       if (lk < PL) { pos = [bx, by]; ang = -PI / 2; }
       else if (lk < 1.7) { const u = ss(seg(lk, PL, 1.2)); pos = [bx + 40 * u, by - 260 * u]; ang = -PI / 2 + .1 * u; }
       else { const u = seg(lk, 1.7, 2.73); pos = [bx + 40 + 1100 * u * u + 60 * Math.sin(u * 9), by - 260 - 380 * u + 50 * Math.sin(u * 7)]; ang = -PI / 2 + u * 7; }
-      const L = 230, tipx = pos[0] + Math.cos(ang) * L, tipy = pos[1] + Math.sin(ang) * L;
-      INK.taper(m, [pos, [(pos[0] + tipx) / 2 + 8, (pos[1] + tipy) / 2], [tipx, tipy]], 22, '#fff', { a: .05, b: .7 });
-      INK.taper(m, [pos, [(pos[0] + tipx) / 2 + 8, (pos[1] + tipy) / 2], [tipx, tipy]], 2.4, '#000', { a: .2, b: .6 });
       // the fingers: long white thumb and forefinger pinching, black sleeve from the upper left
       if (lk < 1.75) {
         const hx = lk < PL ? lerp(700, bx - 10, ss(seg(lk, 0, PL))) : pos[0] - 10, hy = lk < PL ? lerp(200, by - 40, ss(seg(lk, 0, PL))) : pos[1] - 40;
@@ -92,6 +89,9 @@ SHOTS.E3 = {   // insert: thin fingers pluck one blade of grass from the slope; 
         INK.taper(m, [[hx - 100, hy - 50], [hx - 40, hy - 30], [hx, hy + 6]], 3, '#000');
         INK.taper(m, [[hx - 64, hy - 74], [hx - 56, hy - 54]], 3, '#000');   // a knuckle crease
       }
+      const L = 230, tipx = pos[0] + Math.cos(ang) * L, tipy = pos[1] + Math.sin(ang) * L;
+      INK.taper(m, [pos, [(pos[0] + tipx) / 2 + 8, (pos[1] + tipy) / 2], [tipx, tipy]], 22, '#fff', { a: .05, b: .7 });
+      INK.taper(m, [pos, [(pos[0] + tipx) / 2 + 8, (pos[1] + tipy) / 2], [tipx, tipy]], 2.4, '#000', { a: .2, b: .6 });
       if (lk > 1.7) for (let i = 0; i < 8; i++) { const y = 200 + i * 60, x = ((lk - 1.7) * 1600 + i * 300) % 2200 - 200; INK.taper(m, [[x, y], [x + 200, y - 30]], 3, '#fff', { a: .3, b: .6 }); }
     });
   },
