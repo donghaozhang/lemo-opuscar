@@ -20,3 +20,4 @@
 2026-11-04T15:44Z review pass 1 done (3 contact sheets, 10 key-action strips); fix round: s7/s8 cameras, tilt band in two-shots, lamp glow, pier lantern key
 2026-11-04T15:46Z full render 2 starts (after the pass-1 fix round)
 2026-11-04T15:56Z full render 2 in progress: worker0 120/1800, worker1 0/1800 frames
+2026-11-04T16:06Z full render 2 in progress: worker0 240/1800, worker1 120/1800 frames
