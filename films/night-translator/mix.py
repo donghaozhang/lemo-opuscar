@@ -154,7 +154,10 @@ for a, b in [(S1, HIT['shout']), (S2, HIT['catch'])]:
     score *= g[:, None]; trap[i0 + ramp:i1] *= 0
 sc = score * .9; lk = np.abs(sc).max(1); gk = compress(lk, thr=.2, ratio=3, att=.002, rel=.12) / np.maximum(lk, 1e-9)
 mix = sc * gk[:, None] * 1.45 + trap * .9 + pr
-for c in (0, 1): mix[:, c] = limit(mix[:, c], .95)
+# master bus: bring it near −14 LUFS here (period piano is never this peaky), so loudnorm only trims and the true peak holds
+mk = np.abs(mix).max(1); gm = compress(mk, thr=.16, ratio=3, att=.001, rel=.15) / np.maximum(mk, 1e-9)
+mix = mix * gm[:, None] * 2.3
+for c in (0, 1): mix[:, c] = limit(mix[:, c], .7, look=.003)
 sf.write(os.path.join(D, 'out/mix.wav'), mix.astype(np.float32), SR, subtype='PCM_24')
 for nm, x in (('score', sc * gk[:, None] * 1.45), ('trap', trap * .9), ('projector', pr)):
     print(f'{nm:10s} rms {20 * np.log10(np.sqrt((x ** 2).mean()) + 1e-12):6.1f} dBFS')
