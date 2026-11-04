@@ -4,4 +4,4 @@ A watercolour journal kept by a girl, Xiao He, over many years. Summer, age six:
 
 How it was made: everything is drawn in code (Canvas 2D brush strokes on generated paper: a stroke engine, a 2.5D figure rig with IK and painted faces, a bicycle rig, a lane painted in profile and in one-point perspective), composed on one timeline (`timeline.js`: sections, tempos, hits) that also drives an original sampled score (`score.py`: nylon guitar, clarinet, flute, oboe, strings, felt piano, glockenspiel) and procedural foley (`mix.py`). `build.sh` rebuilds the whole film. `CREDITS` lists every third-party asset and its licence.
 
-Checks run: see `deliveries/grandpas-bicycle/README.md` for the results.
+Delivered to `deliveries/grandpas-bicycle/` (final.mp4, final-720p.mp4, poster.jpg, subtitles.srt, README.md with the checks and their results).
