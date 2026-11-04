@@ -155,3 +155,20 @@ Two real silences: the band stop when the kettle sees the rat (68.5) and the kno
 ## 10. Native moves
 
 Everything breathes on the beat (whole kitchen at the peak, background squash ×3); Mickey-mousing (each prop an instrument); rubber-hose stretch (the newsboy's catch); transformation (the dough rope → a trombone slide; the clock hands → a spinning top); the film is an object (title shade, the rat pulls the iris shut).
+
+## 11. Compared with the style's demo (after the treatment)
+
+| Axis | Demo (*Coffee Cup Chase*) | This film | Same? |
+|---|---|---|---|
+| Structure | one hero's want → 3-piece chase → stretch → turn → dance | a night-shift musical in acts (sleepy overture / number / chase / solo / stomp) told by a whole kitchen + an outsider | differs |
+| Opening | title card rolls up like a shade | an iris opens on a falling snowflake; the chimney steam becomes the title (changed from my first plan, which matched the demo) | differs |
+| Signature shot | the rubber-hose stretch around a drain | the held close-up of the boy with the last warm bun; the concertina steamer stack toppling | differs |
+| Camera path | one kitchen, trucking along a counter | lane (tilt from the roofs) → kitchen stage → window / over-the-shoulder → lane trucking pan → doorway → morning queue | differs |
+| Score shape | one 144 BPM theme throughout, one stop | five tempos (120 / 72 / 120 / 144 / free / 72 / 144), four hard stops, a lone-clarinet solo, key change up a tone at the headline | differs |
+| Ending | a glove pulls the iris shut | the rat in an apron kneads the dough into 「完」 and the iris closes on it (changed from my first plan) | differs |
+
+## 12. Changes made during production
+
+- The title is formed above the roofs (steam letters hopping on the beat) rather than a title card; the clock card reads 「闹钟忘了上弦」 so the set-up cannot be missed.
+- The best bun is the one the rat steals, so the boy catches it last (from the rat's grip) and it is the bun the kettle gives back to him.
+- The morning queue uses three neighbours (a lady, an old man, a worker) built on Wang's rig.
