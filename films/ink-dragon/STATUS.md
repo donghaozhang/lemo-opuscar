@@ -10,3 +10,4 @@ SwiftShader (software), 4 cores. Sample libraries vsco2ce + vcsl fetched. Music 
 | UTC | step | note |
 |---|---|---|
 | 07:53 | brief + treatment | TREATMENT.md written; fonts installed (ma-shan-zheng, noto-serif-sc, zhi-mang-xing) |
+| 08:38 | engine + shots | dragon rig, studio, painting world, cloud, calligraphy, all 19 shots render (~1 s/frame); model sheet and style frames in stills/ |
