@@ -142,7 +142,7 @@ SHOTS.B3 = {
 // B4: tilt up the cliff to the summit lost in cloud
 function cliffTop() {
   return once('clifftop', () => ({
-    sky: WD.sky('tall', [-600, -3600, PW + 1200, 4600], (x, y) => clamp(.25 + .5 * clamp((y + 3200) / 2600)), { sp: 13 }),
+    sky: WD.sky('tall', [-600, -3600, PW + 1200, 4600], (x, y) => clamp(.45 + .42 * clamp((y + 3200) / 2600)), { sp: 13 }),
     clouds: [WD.cloud('c1', 900, -2520, 150, { seed: 3 }), WD.cloud('c2', 1400, -2300, 120, { seed: 5 }), WD.cloud('c3', 600, -2100, 110, { seed: 7 })],
   }));
 }
