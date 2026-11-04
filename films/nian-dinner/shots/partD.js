@@ -186,8 +186,8 @@ export function shotPinchDoor(g, t) {
     const C = cam(GATE.x - 820, GROUND - 60, 1.05), open = E_(st(t), TT.door, TT.door + .4), out = seg(st(t), TT.door + .4, TT.hug);
     drawVillage(g, C, t, { mode: 'night', winI: NIGHTI, flowers: () => 1, bloom: .5, mid: gg => {
       // the bus set down on the snow beside the gate; the Nian behind it, kneeling, soft
-      drawNian(gg, mul(C, mul(T(GATE.x - 1100, GROUND + 50), mul(S(.95), T(0, -NJ.ground)))), { ...NPOSE.sit, lean: .1, head: .0, eye: 'happy', tail: .5, shF: -.2, shB: .3 }, { shadow: 1.6 });
-      const bm = busOnRoad(gg, C, t, { u: 0, dx: GATE.x - 700 - roadAt(0).x, dy: GROUND - 10 - roadAt(0).y + 10, tilt: 0, s: .85, blink: false });
+      drawNian(gg, mul(C, mul(T(GATE.x - 1420, GROUND + 50), mul(S(.95), T(0, -NJ.ground)))), { ...NPOSE.sit, lean: .1, head: .0, eye: 'happy', tail: .5, shF: -.2, shB: .3 }, { shadow: 1.6 });
+      const bm = busOnRoad(gg, C, t, { u: 0, dx: GATE.x - 760 - roadAt(0).x, dy: GROUND - 10 - roadAt(0).y + 10, tilt: 0, s: .85, blink: false });
       // the door: a flap that folds open (the door hole already exists; a door leaf swings out)
       const dM = mul(bm, T(126, 0)); gg.save(); gg.setTransform(...mul(dM, [1 - open * 1.6, 0, 0, 1, 0, 0])); gg.fillStyle = '#9c1323'; paperShadow(gg, C[0], 1); gg.fillRect(-22, -70, 44, 70); gg.restore();
       // the parents step down: 妈妈 first, 爸爸 after, with the suitcase
@@ -204,8 +204,8 @@ export function shotHug(g, t) {
   if (t >= TT.gong - .25) { clockShot(g, t, 12, 0, TT.gong, true, false); return; }
   const C = cam(GATE.x - 560, GROUND - 160, 1.1), run = seg(st(t), TT.hug - .2, TT.hug + .55), hug = t >= TT.hug + .55;
   drawVillage(g, C, t, { mode: 'night', winI: NIGHTI, flowers: () => 1, bloom: .5, mid: gg => {
-    drawNian(gg, mul(C, mul(T(GATE.x - 1100, GROUND + 50), mul(S(.95), T(0, -NJ.ground)))), { ...NPOSE.sit, lean: .1, eye: 'happy', tail: .6 + .2 * Math.sin(st(t) * 6), shF: -.2, shB: .3 }, { shadow: 1.6 });
-    busOnRoad(gg, C, t, { u: 0, dx: GATE.x - 700 - roadAt(0).x, dy: GROUND - roadAt(0).y, tilt: 0, s: .85, blink: false });
+    drawNian(gg, mul(C, mul(T(GATE.x - 1420, GROUND + 50), mul(S(.95), T(0, -NJ.ground)))), { ...NPOSE.sit, lean: .1, eye: 'happy', tail: .6 + .2 * Math.sin(st(t) * 6), shF: -.2, shB: .3 }, { shadow: 1.6 });
+    busOnRoad(gg, C, t, { u: 0, dx: GATE.x - 760 - roadAt(0).x, dy: GROUND - roadAt(0).y, tilt: 0, s: .85, blink: false });
     const mx = GATE.x - 460, dx = GATE.x - 580;
     drawFolk(gg, mul(C, T(dx, GROUND + 60)), 'dad', { expr: 'laugh', lean: .1, shF: -1.6, elF: -.9, shB: -1.4, elB: -.8, handF: 'open', handB: 'open', scale: 1.0, hipF: -.3, knF: .4 }, { shadow: 1.1 });
     drawFolk(gg, mul(C, T(mx, GROUND + 60)), 'mom', { expr: 'laugh', lean: hug ? .4 : .15, shF: hug ? -1.3 : -1.7, elF: -1.0, shB: -1.2, elB: -.9, handF: 'open', handB: 'open', scale: .95, hipF: hug ? -.8 : -.2, knF: hug ? .9 : .2, hipB: hug ? -.5 : 0, knB: hug ? .6 : 0 }, { shadow: 1.1 });
@@ -243,11 +243,11 @@ export function shotDinner(g, t) {
   pool(...pt(C, [1000, 160]), 1100, 'rgba(255,205,150,1)', .9);
   for (const x of [700, 960, 1220, 1480]) put(g, K.stool, mul(C, T(x, 860)), { shadow: .9 });
   const ts = st(t), gulp = t >= TT.gulp2, laugh = t > TT.gulp2 + .6;
-  const sit = { hipF: -1.4, knF: 1.5, hipB: -1.3, knB: 1.4, y: -110 };
+  const sit = { hipF: -1.4, knF: 1.5, hipB: -1.3, knB: 1.4, y: -6 };
   drawFolk(g, mul(C, T(700, 1000)), 'gm', { ...sit, expr: laugh ? 'laugh' : 'smile', shF: -.8, elF: -1.2, handF: 'hold', shB: -.5, elB: -.9 }, { shadow: 1 });
-  drawFolk(g, mul(C, T(960, 1000)), 'dad', { ...sit, expr: laugh ? 'laugh' : 'smile', shF: -1.0, elF: -1.3, handF: 'hold', shB: -.5, elB: -.9, y: -140 }, { shadow: 1 });
-  drawFolk(g, mul(C, T(1220, 1000)), 'mom', { ...sit, expr: laugh ? 'laugh' : 'smile', shF: -.9, elF: -1.3, handF: 'hold', shB: -.5, elB: -.9, y: -140 }, { shadow: 1 });
-  drawGirl(g, mul(C, T(1480, 1000)), { ...sit, expr: laugh ? 'laugh' : 'smile', head: -.25, shF: -1.4, elF: -1.0, handF: 'open', shB: -.6, elB: -.9, y: -110 }, { shadow: 1.1 });
+  drawFolk(g, mul(C, T(960, 1000)), 'dad', { ...sit, expr: laugh ? 'laugh' : 'smile', shF: -1.0, elF: -1.3, handF: 'hold', shB: -.5, elB: -.9, y: 26 }, { shadow: 1 });
+  drawFolk(g, mul(C, T(1220, 1000)), 'mom', { ...sit, expr: laugh ? 'laugh' : 'smile', shF: -.9, elF: -1.3, handF: 'hold', shB: -.5, elB: -.9, y: 26 }, { shadow: 1 });
+  drawGirl(g, mul(C, T(1480, 1000)), { ...sit, expr: laugh ? 'laugh' : 'smile', head: -.25, shF: -1.4, elF: -1.0, handF: 'open', shB: -.6, elB: -.9, y: -10 }, { shadow: 1.1 });
   // the Nian at the right end on a stool too small for it, the giant dumpling in its paws, popped into its mouth at gulp2
   put(g, K.stool, mul(C, mul(T(1760, 900), S(.9))), { shadow: .9 });
   const nb = laugh ? Math.sin((t - TT.gulp2 - .6) * 12) * .04 : 0;

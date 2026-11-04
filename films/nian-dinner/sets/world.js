@@ -20,14 +20,14 @@ export const pop = (t, t0, k = 1.15) => { const u = st(t - t0); return u < 0 ? 0
 // —— sky ——
 export function sky(g, C, mode = 'night') {
   g.save(); g.setTransform(1, 0, 0, 1, 0, 0); fillPaper(g, 'ink', 0, 0, W, H, C);
-  if (mode === 'dusk') { const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, 'rgba(40,36,80,0)'); gr.addColorStop(.55, 'rgba(120,80,110,.35)'); gr.addColorStop(1, 'rgba(190,120,110,.5)'); g.fillStyle = gr; g.fillRect(0, 0, W, H); }
+  if (mode === 'dusk') { const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, 'rgba(40,36,80,0)'); gr.addColorStop(.45, 'rgba(130,80,120,.5)'); gr.addColorStop(.8, 'rgba(210,130,110,.62)'); gr.addColorStop(1, 'rgba(230,160,120,.7)'); g.fillStyle = gr; g.fillRect(0, 0, W, H); }
   g.restore();
 }
 // —— the village. o: { mode:'dusk'|'night'|'midnight', winI(i,t) window brightness, flowers (bool: window flowers pasted), crackers (bool), gateLanterns, behind(g), mid(g), front(g), lights(), after(g), bloom, snow, nianBehind }
 const [HLc, HL] = canvas(W, H);
 export function drawVillage(g, C, t, o = {}) {
   const V = kit(), z = C[0], mode = o.mode || 'night', night = true;
-  beginLight(o.amb || (mode === 'dusk' ? 'rgb(214,206,226)' : mode === 'midnight' ? 'rgb(150,150,200)' : 'rgb(170,172,214)'));
+  beginLight(o.amb || (mode === 'dusk' ? 'rgb(226,210,222)' : mode === 'midnight' ? 'rgb(150,150,200)' : 'rgb(170,172,214)'));
   sky(g, C, mode === 'dusk' ? 'dusk' : 'night');
   if (o.sky) o.sky(g);
   put(g, V.far, mul(C, T(1700, 640)), { shadow: .8 });

@@ -56,10 +56,11 @@ export function shotSteam(g, t) {
       const V = kit(); for (let k = 0; k < 3; k++) { const hp = V.houses[k]; put(gg, hp, mul(C, mul(T(1220 + k * 150, 1150), S(.42))), { shadow: .6 }); put(gg, hp.snowCap, mul(C, mul(T(1220 + k * 150, 1150), S(.42))), { shadow: .3 }); }
       // the steam trail: a cut-cloud ribbon from the chimney up to the Nian's nose
       const prog = seg(t, TT.steam - .4, TT.sniff);
-      steamTrail(gg, C, [[1300, 1030], [1340, 920], [1300, 820], [1380, 700], [1440, 600], [1420, 500], [1480, 430], [1540, 400], [1580, 390]], prog);
       const pose = nianSit(t, { eye: rumble ? 'curious' : sniff ? 'sniff' : 'lookup', head: sniff ? .22 + .04 * Math.sin(st(t) * 30) : .1 });
       if (rumble && t < TT.rumble + .5) pose.lean = .1 + .05 * Math.sin((t - TT.rumble) * 40);
-      drawNianOnRidge(gg, C, t, pose, 1.0, 0, 20);
+      const r = drawNianOnRidge(gg, C, t, pose, 1.0, 0, 20);
+      const n = r.joints.nose, nx = (n[0] - C[4]) / C[0], ny = (n[1] - C[5]) / C[0];
+      steamTrail(gg, C, [[1300, 1030], [1340, 920], [1300, 820], [1380, 700], [1440, 600], [1420, 500], [nx - 60, ny + 70], [nx - 20, ny + 20], [nx + 10, ny - 10]], prog, '#f3eef8', 38);
     } });
 }
 ev(TT.sniff, 'sniff'); ev(TT.sniff + .5, 'sniff'); ev(TT.rumble, 'rumble');

@@ -232,7 +232,7 @@ export function shotBowls(g, t) {
   const i = Math.min(3, Math.floor((t - TT.bowls + .5) / .5)), place = bowls.some(b => t > b - .35 && t < b + .1);
   const gx = 560 + 260 * clamp((t - TT.bowls + .5) / 2.0) * 3.0;
   drawFolk(g, mul(C, T(gx, 1000)), 'gm', { expr: 'smile', ...walkPose(ts * 7, place ? 0 : .3), shF: place ? -1.5 : -1.0, elF: place ? -.5 : -.8, handF: 'open', shB: -.6, elB: -1.2, handB: 'open', scale: 1.0, prop: (t > bowls[3] + .1) ? null : (q, M2) => put(q, K.bowlSide, mul(M2, mul(T(10, -8), S(.9))), { shadow: .8 }) });
-  drawGirl(g, mul(C, T(700, 1000)), { expr: 'lookdown', hipF: -1.45, knF: 1.5, hipB: -1.35, knB: 1.45, shF: -1.0, elF: -1.4, handF: 'hold', shB: -.7, elB: -1.2, handB: 'hold', head: .15, scissors: { ang: -.4, open: .3 + .25 * Math.max(0, Math.sin(ts * 15)) }, scale: .95, y: -120, propB: (q, M2) => put(q, foldedSheet(1, 1.2), mul(M2, mul(T(0, -8), mul(R(-.3), S(.2)))), { shadow: .8 }) });
+  drawGirl(g, mul(C, T(700, 1000)), { expr: 'lookdown', hipF: -1.45, knF: 1.5, hipB: -1.35, knB: 1.45, shF: -1.0, elF: -1.4, handF: 'hold', shB: -.7, elB: -1.2, handB: 'hold', head: .15, scissors: { ang: -.4, open: .3 + .25 * Math.max(0, Math.sin(ts * 15)) }, scale: .95, y: -10, propB: (q, M2) => put(q, foldedSheet(1, 1.2), mul(M2, mul(T(0, -8), mul(R(-.3), S(.2)))), { shadow: .8 }) });
   put(g, K.tableSide, mul(C, T(1080, 790)), { shadow: 1.4 });
   bowls.forEach((tb0, k) => { if (t < tb0) return; const s = pop(t, tb0, 1.1); put(g, K.bowlSide, mul(C, mul(T(700 + k * 260, 758), S(s))), { shadow: 1 }); });
   applyLight(g); bloom(g, .35);

@@ -81,7 +81,7 @@ export function shotLaughGrandma(g, t) {
   for (let k = 0; k < 3; k++) put(g, K.dumpRow[k], mul(C, mul(T(980 + k * 90, 752), S(.5))), { shadow: .8 });
   put(g, K.stool, mul(C, T(1200, 850)), { shadow: .9 });
   const hop = laughing ? Math.abs(Math.sin((t - TT.laugh2) * 9)) * 10 : 0;
-  drawGirl(g, mul(C, T(1200, 1000 - hop)), { expr: laughing ? 'laugh' : 'smile', flip: true, hipF: -1.45, knF: 1.5, hipB: -1.35, knB: 1.45, shF: laughing ? -.3 : -.9, elF: laughing ? -1.8 : -1.2, shB: -.3, elB: -1.5, head: laughing ? -.2 + .05 * Math.sin(ts * 12) : .05, y: -110 }, { shadow: 1.1 });
+  drawGirl(g, mul(C, T(1200, 1000 - hop)), { expr: laughing ? 'laugh' : 'smile', flip: true, hipF: -1.45, knF: 1.5, hipB: -1.35, knB: 1.45, shF: laughing ? -.3 : -.9, elF: laughing ? -1.8 : -1.2, shB: -.3, elB: -1.5, head: laughing ? -.2 + .05 * Math.sin(ts * 12) : .05, y: -22 }, { shadow: 1.1 });
   // grandma in the doorway from grandmaDoor: hand over her mouth, then laughing too
   if (t >= TT.grandmaDoor - .3) { const u = E_(ts, TT.grandmaDoor - .3, TT.grandmaDoor + .2), lg = t > TT.grandmaDoor + 1.0; drawFolk(g, mul(C, T(1640 + 60 * (1 - u), 1000)), 'gm', { expr: lg ? 'laugh' : 'surprise', flip: true, shF: lg ? -.6 : -2.0, elF: lg ? -1.2 : -1.9, shB: -.4, elB: -1.0, handF: 'mitten', head: lg ? -.1 : .05, lean: -.03 }, { shadow: 1 }); }
   applyLight(g); bloom(g, .3);
@@ -135,7 +135,7 @@ export function shotEmptyChairs(g, t) {
   pool(...pt(C, [1000, 160]), 900 * 1.1, 'rgba(255,200,140,1)', .7);
   for (const x of [700, 960, 1220, 1480]) put(g, K.stool, mul(C, T(x, 860)), { shadow: .9 });
   const ts = st(t), look = E_(ts, TT.emptyChairs + .6, TT.emptyChairs + 1.1);
-  drawFolk(g, mul(C, T(760, 1000)), 'gm', { expr: look > .5 ? 'worried' : 'neutral', head: -.1 + .25 * look, lean: .02, shF: -.6, elF: -1.0, shB: -.5, elB: -.9, handF: 'mitten', handB: 'mitten', hipF: -1.4, knF: 1.5, hipB: -1.3, knB: 1.4, y: -110 }, { shadow: 1 });
+  drawFolk(g, mul(C, T(760, 1000)), 'gm', { expr: look > .5 ? 'worried' : 'neutral', head: -.1 + .25 * look, lean: .02, shF: -.6, elF: -1.0, shB: -.5, elB: -.9, handF: 'mitten', handB: 'mitten', hipF: -1.4, knF: 1.5, hipB: -1.3, knB: 1.4, y: -6 }, { shadow: 1 });
   put(g, K.tableSide, mul(C, T(1080, 790)), { shadow: 1.4 });
   for (let k = 0; k < 4; k++) put(g, K.bowlSide, mul(C, T(700 + k * 260, 758)), { shadow: 1 });
   for (let k = 0; k < 3; k++) put(g, K.dumpRow[k], mul(C, mul(T(1000 + k * 90, 752), S(.5))), { shadow: .8 });
