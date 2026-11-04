@@ -642,11 +642,11 @@ const SHOTS = {
   },
   // s39 — the dark stairwell: a red umbrella climbs toward 28F
   s39(t, lt) {
-    const foot = S.stairs(fb, t, 26.5, { lit: 0, floor0: 1, sx: 170, sy: 110 });
+    const foot = S.stairs(fb, t, 26.2, { lit: 0, floor0: 1, sx: 150, sy: 130 });
     const q = 25.95 + Math.floor(lt * 8) / 8 * .32; const [x, y] = foot(q); const bob = Math.floor(lt * 6) % 2;
     figure(fb, 'kid', bob ? POSES.climb0 : POSES.climb1, x, y - bob, { u: 1.6, expr: 'happy' });
-    umbrella(fb, x + 6, y - 22 - bob, 1.6, 1, 8);
-    LUTX = L => dimIdx(L, 1);
+    umbrella(fb, x - 9, y - 20 - bob, 1.6, 1, -6);
+    fb.glow(x + 6, y - 40, 60, 50, WARM, .8);   // the warm light from 2803 leaks down the stairs
   },
   // s40 — the kid at the door
   s40(t, lt) {
