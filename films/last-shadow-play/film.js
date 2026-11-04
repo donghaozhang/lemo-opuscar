@@ -279,8 +279,8 @@ export function frame(t, tr, fr, gl) {
   out.fade = 0; out.fadeCol = [0, 0, 0];
   if (t < T.match) { out.fade = 1; }
   if (id === 'stageLit') { const f = 1 - E(t, T.stageLit, T.stageLit + .35); out.fade = f * .85; out.fadeCol = [1, .9, .7]; }
-  if (id === 'walkoff') { out.fade = E(t, T.walkEnd - .4, 129.0) * .72; out.fadeCol = [.07, .045, .03]; }
-  if (id === 'dawnWide') { out.fade = (1 - E(t, 129.0, 130.2)) * .8; out.fadeCol = [.55, .45, .36]; }
+  if (id === 'walkoff') { out.fade = E(t, T.walkEnd - .4, 129.0) * .5; out.fadeCol = [.12, .08, .05]; }
+  if (id === 'dawnWide') { out.fade = (1 - E(t, 129.0, 130.2)) * .75; out.fadeCol = [.42, .34, .27]; }
   // the pillar wipes at the two truck-rounds (into backstage at 34.5 and 66.18)
   for (const tt of [34.5, 66.18]) { const w = seg(t, tt - .25, tt + .25); if (w > 0 && w < 1) { drawPillar(fr, lerp(2500, -600, w)); } }
   // placards

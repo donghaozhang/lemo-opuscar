@@ -329,7 +329,7 @@ export function lights(t) {
   if (t >= T.lampOn) { const u = t - T.lampOn; lamp = (u < .45 ? lerp(.1, 1, eo(u / .45)) + .35 * Math.sin(u / .45 * Math.PI) : 1) * fl; }
   if (t >= T.gutter) { const g = seg(t, T.gutter, T.out); lamp = lerp(1, .3, g) * (1 - .55 * g * Math.abs(Math.sin(t * 43)) ) * fl; }
   if (t >= T.out) lamp = .3 * fl * (1 + .5 * (vnoise(t * 11) - .5));
-  if (t >= T.walkOff) lamp *= 1 - E(t, T.cricketsOut, T.walkEnd);
+  if (t >= T.walkOff) lamp *= 1 - .6 * E(t, T.cricketsOut, T.walkEnd);
   if (t >= T.tilt0) lamp = 0;
   let match = 0;
   if (t >= T.match && t < 5.6) { match = t < T.match + .1 ? seg(t, T.match, T.match + .1) * 1.4 : (.9 + .1 * Math.sin(t * 40)) * (1 + .3 * vnoise(t * 9)); if (t > 5.45) match *= 1 - seg(t, 5.45, 5.6); }
