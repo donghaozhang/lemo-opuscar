@@ -15,3 +15,4 @@ SwiftShader (software), 4 cores. Sample libraries vsco2ce + vcsl fetched. Music 
 | 08:52 | render 1 | frames 540 / 3168 |
 | 09:02 | render 1 | frames 1260 / 3168 |
 | 09:12 | render 1 | frames 1860 / 3168 |
+| 09:22 | render 1 | frames 2460 / 3168 |
