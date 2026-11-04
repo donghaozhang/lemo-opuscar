@@ -39,3 +39,4 @@
 2026-11-04T18:32Z review pass 2 done; small fix round 3 (hands insert light, clinic door level, boat insert framing) as partial re-renders
 2026-11-04T18:37Z full render 2 in progress: worker0 1740/1800, worker1 1740/1800 frames
 2026-11-04T18:51Z nine partial ranges spliced into render 2 (video3, 3600 frames); final mux and checks running; poster made
+2026-11-04T21:06Z delivered: deliveries/last-ferry/ (final.mp4 73.9 MB, final-720p.mp4 25.8 MB, poster.jpg, subtitles.srt, README.md); all checks pass

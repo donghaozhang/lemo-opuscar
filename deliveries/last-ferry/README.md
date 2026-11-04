@@ -9,13 +9,13 @@
 | Check | Result |
 |---|---|
 | Loudness (ffmpeg ebur128 on `final.mp4` and `final-720p.mp4`) | I = −14.0 LUFS, LRA 10.1 LU, true peak −1.0 dBFS (both files) |
-| Black frames (`blackdetect d=0.1 pic_th=0.98`, both files) | BLACKLINE |
+| Black frames (`blackdetect d=0.1 pic_th=0.98`, both files) | none (the chapter transitions dissolve through the warm card plate; the darkest storm insert keeps a sky afterglow) |
 | Silence (`silencedetect −50 dB, 2 s`) | none over 2 s; the two designed silences are ambience-only beds (78.6–81.6 s and 121.1–124.6 s) |
 | Cue check (`tools/cuecheck.py`: every cut, hit, dialogue box and designed foley event against the beat grid) | 188 cues, worst offset 0.5 ms, 0 off the quarter-beat grid |
 | Reading time (`core/render/readcheck.mjs`, 4.5 CJK chars/s + 1.5 s) | 14 of 14 on-screen texts pass (title, 5 chapter cards, 8 dialogue boxes) |
 | CJK glyphs (`tools/cjkcheck.py`: every character drawn vs. the subset fonts' cmap) | 56 characters needed, 0 missing; frames with text checked by eye in both review passes |
 | Duration and frames | 150.000 s, 3600 frames, 24 fps, both files |
-| File sizes | `final.mp4` SIZE1080 (1920×1080, limit 95 MB); `final-720p.mp4` SIZE720 (1280×720, limit 28 MB) |
+| File sizes | `final.mp4` 73.9 MB (1920×1080, limit 95 MB); `final-720p.mp4` 25.8 MB (1280×720, limit 28 MB) |
 | Sign-off grep (`lemo ?lab`, `opus 5.5`) over source and deliveries | nothing outside `CREDITS` |
 
 Files: `final.mp4`, `final-720p.mp4`, `poster.jpg` (the lantern lit at dusk), `subtitles.srt` (the dialogue boxes and the title, exported from the same table that drives the overlay).
