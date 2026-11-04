@@ -16,3 +16,4 @@ SwiftShader (software), 4 cores. Sample libraries vsco2ce + vcsl fetched. Music 
 | 09:02 | render 1 | frames 1260 / 3168 |
 | 09:12 | render 1 | frames 1860 / 3168 |
 | 09:22 | render 1 | frames 2460 / 3168 |
+| 09:50 | review pass 1 + redesign | render 1 reviewed (6 sheets in stills/r1_sheet*.jpg): loudness fixed to −14.0 LUFS / −3.3 dBTP, incense insert redrawn, cloud face kept readable in the bloom; dragon rig redesigned per producer notes, model sheet + faces + style frames re-rendered |

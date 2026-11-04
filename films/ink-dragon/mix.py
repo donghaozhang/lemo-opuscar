@@ -256,6 +256,8 @@ duck = uniform_filter1d(duck, int(.12 * SR))
 mus *= duck[:, None]
 
 mix = mus * 1.3 + fx * 1.0 + amb * .8
+# tame the hot peaks (drum hits, the dive) before the limiter so loudnorm can reach −14 LUFS with true peak under −1 dBTP
+for c in range(2): mix[:, c] = compress(mix[:, c], thr=.2, ratio=4.0, att=.002, rel=.15)
 # literal silences: everything zeroed (30 ms fades)
 for e in E:
     if e['type'] != 'silence': continue
@@ -266,7 +268,8 @@ for e in E:
 for e in E:
     if e['type'] == 'drip' and 77.9 < e['t'] < 78.1: add(mix, drip(e.get('gain', 1)).astype(np.float32), e['t'], .5, 0)
 mix[-int(.2 * SR):] *= np.linspace(1, 0, int(.2 * SR))[:, None]
-for c in range(2): mix[:, c] = limit(mix[:, c], .95)
+mix *= 1.4
+for c in range(2): mix[:, c] = limit(mix[:, c], .32)   # a crest factor loudnorm can raise to −14 LUFS without passing −1 dBTP
 os.makedirs(os.path.join(HERE, 'out'), exist_ok=True)
 sf.write(os.path.join(HERE, 'out', 'mix.wav'), mix.astype(np.float32), SR)
 def rms(x): return np.sqrt(np.mean(x ** 2) + 1e-12)

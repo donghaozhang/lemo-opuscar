@@ -16,7 +16,7 @@ let TMP, TMP2;
 export async function init(t1, t2) { TMP = t1; TMP2 = t2; WD.init(); charStrokes('墨', [0, 0, 100]); charStrokes('龙', [0, 0, 100]); charStrokes('借', [0, 0, 100]); charStrokes('雨', [0, 0, 100]); }
 
 const PAINTER = [1010, 182];
-const DS = .85;                               // the dragon's scale on the desk (body length 62 desk units)
+const DS = .95;                               // the dragon's scale on the desk (body length 62 desk units)
 const CLOUD = { x: 560, y: 300, r: 220 };     // the cloud on the summit (painting units)
 const sg = (t, a, b) => clamp((t - a) / (b - a));
 const F = 1 / 24;
@@ -129,7 +129,7 @@ function s03(A, t) {
   draw(L, mk([[40, 528], [280, 505], [500, 540]], { w: 14, tone: .9, darkDir: [0, -1], side: .85, brWet: true, body: .3, dry: .4, wet: .9, prof: 'even', seed: 34 }));
   mass(L.wet, [[-50, 1080], [1970, 1080], [1970, 745], [-50, 745]], .06, 0, 35);    // the desk top is a shade darker than the sky of paper
   // the dragon in profile, standing on the desk
-  const sc = 4.0, x = 1000, y = 720 - 15 * sc;
+  const sc = 4.4, x = 1000, y = 720 - 13 * sc;
   let S = { a: 0, amp: 4, k: 1, ph: 1, legs: 1, ground: 13, expr: EXPR.neutral, headTilt: -.1 };
   let X = { x, y, s: sc, dir: -1, t, seed: 3, boil: t * 12 };
   const stand = sg(t, 8.0, 8.5);
@@ -203,21 +203,25 @@ function s05(A, t) {
 function incenseInsert(A, t, burn, flakeT) {
   const L = A.ink, cam = { x: 960, y: 540 + Math.sin(t * .5) * 2, z: 1 };
   A.xf(1, 0, 0); A.cc.setTransform(1, 0, 0, 1, 0, 0);
-  // the stick: from the bottom of the frame up to the ember; burn 0..1 shortens it
-  const x = 1000, yTop = 180 + 760 * burn, yBot = 1200;
-  draw(L, mk([[x, yBot], [x + 2, (yTop + yBot) / 2], [x, yTop]], { w: 26, tone: .85, dry: .4, wet: .25, prof: 'even', rough: .04, seed: 61 }));
-  draw(L, mk([[x + 10, yBot], [x + 11, yTop + 10]], { w: 6, tone: .5, dry: .7, prof: 'even', seed: 62 }), 1, .6);   // a lighter edge
-  // the ember: a dark burnt ring with a paper-white glow at its centre; it pulses
-  blot(L.dry, x, yTop - 2, 24, .95, 0, .5, 7); blot(L.wet, x, yTop - 4, 34, .55, 0, .6, 8);
-  for (const c of [L.wet, L.dry]) { c.save(); c.globalCompositeOperation = 'destination-out'; c.globalAlpha = .98; c.beginPath(); c.ellipse(x, yTop - 4, 13 * (1 + .12 * Math.sin(t * 9)), 7, 0, 0, 7); c.fill(); c.restore(); }
+  // the holder: a small bowl of sand at the bottom of the frame, the stick rising out of it; burn 0..1 shortens the stick from the top
+  const x = 1000, yBowl = 980, yTop = 300 + 420 * burn;
+  mass(L.wet, [[x - 150, yBowl - 60], [x + 150, yBowl - 60], [x + 120, yBowl + 40], [x - 120, yBowl + 40]], .42, 4, 60, [0, yBowl - 60, 0, yBowl + 40, .8, 1.3]);
+  draw(L, mk([[x - 160, yBowl - 62], [x, yBowl - 72], [x + 160, yBowl - 62]], { w: 12, tone: .85, darkDir: [0, -1], side: .85, brWet: true, body: .3, dry: .4, wet: .8, prof: 'even', seed: 611, gapLen: 400 }));
+  draw(L, mk([[x - 130, yBowl + 40], [x, yBowl + 52], [x + 130, yBowl + 40]], { w: 7, tone: .7, dry: .5, prof: 'tip', seed: 612 }));
+  for (let i = 0; i < 12; i++) blot(L.wet, x - 120 + i * 22 + (vnoise(i * 3.1) - .5) * 14, yBowl - 50 + (vnoise(i * 1.7 + 2) - .5) * 10, 2 + 3 * vnoise(i), .25, 0, .5, 640 + i);   // sand
+  // the stick: a dark bamboo-cored stick with a lighter edge
+  draw(L, mk([[x, yBowl - 40], [x + 2, (yTop + yBowl) / 2], [x, yTop]], { w: 26, tone: .86, dry: .4, wet: .25, prof: 'even', rough: .04, seed: 61 }));
+  draw(L, mk([[x + 11, yBowl - 42], [x + 12, yTop + 10]], { w: 5, tone: .45, dry: .7, prof: 'even', seed: 62 }), 1, .6);
+  // the ember: a burnt dark ring with a paper-white glow at its centre; it pulses
+  blot(L.dry, x, yTop - 2, 30, .95, 0, .55, 7); blot(L.wet, x, yTop - 4, 44, .6, 0, .6, 8);
+  for (const c of [L.wet, L.dry]) { c.save(); c.globalCompositeOperation = 'destination-out'; c.globalAlpha = .98; c.beginPath(); c.ellipse(x, yTop - 6, 15 * (1 + .12 * Math.sin(t * 9)), 8, 0, 0, 7); c.fill(); c.restore(); }
   // the ash above the ember: pale grey, cracked; the flake breaks off at flakeT and tumbles down
-  const ashH = 70, fl = flakeT != null ? sg(t, flakeT, flakeT + .9) : 0;
-  draw(L, mk([[x, yTop - 6], [x + 3, yTop - ashH * .5], [x - 2, yTop - ashH * (1 - fl * .7)]], { w: 22, tone: .3, dry: .75, wet: .35, prof: 'even', seed: 63 }), 1, 1);
-  for (let i = 0; i < 5; i++) draw(L, mk([[x - 10, yTop - 10 - i * 12], [x + 10, yTop - 12 - i * 12]], { w: 2, tone: .45, dry: .6, prof: 'tip', seed: 64 + i }), 1, .8 * (1 - fl));
-  if (fl > 0 && fl < 1) { const fy = yTop - ashH + fl * fl * 900, fx = x + 30 * fl + Math.sin(fl * 9) * 14; draw(L, mk([[fx - 9, fy], [fx + 9, fy + 3]], { w: 14, tone: .32, dry: .7, wet: .3, prof: 'lens', seed: 69 }), 1, 1 - fl * .3); }
-  // smoke: a thin dry line wandering up, on ones
-  const sm = []; for (let i = 0; i <= 26; i++) { const uu = i / 26; sm.push([x + Math.sin(uu * 6 - t * 1.1) * 30 * uu + (vnoise(uu * 4 + t * .3) - .5) * 90 * uu * uu, yTop - 8 - uu * 900, .95 - uu * .85]); }
-  draw(L, mk(sm, { w: 4.5, tone: .5, dry: .72, wet: .15, prof: 'tip', rough: .25, seed: 70 }), 1, .9);
+  const ashH = 80, fl = flakeT != null ? sg(t, flakeT, flakeT + .9) : 0;
+  draw(L, mk([[x, yTop - 8], [x + 3, yTop - ashH * .5], [x - 2, yTop - ashH * (1 - fl * .7)]], { w: 24, tone: .34, dry: .72, wet: .4, prof: 'even', seed: 63 }), 1, 1);
+  for (let i = 0; i < 5; i++) draw(L, mk([[x - 11, yTop - 12 - i * 13], [x + 11, yTop - 14 - i * 13]], { w: 2.2, tone: .5, dry: .6, prof: 'tip', seed: 64 + i }), 1, .8 * (1 - fl));
+  if (fl > 0 && fl < 1) { const fy = yTop - ashH + fl * fl * 1100, fx = x + 40 * fl + Math.sin(fl * 9) * 16; draw(L, mk([[fx - 10, fy], [fx + 10, fy + 3]], { w: 15, tone: .36, dry: .7, wet: .3, prof: 'lens', seed: 69 }), 1, 1 - fl * .3); }
+  // smoke: two thin dry lines wandering up and curling, on ones
+  for (const [sd, k] of [[70, 1], [71, .6]]) { const sm = []; for (let i = 0; i <= 28; i++) { const uu = i / 28; sm.push([x + 6 * k + Math.sin(uu * 5.5 - t * 1.1 + sd) * 46 * uu + (vnoise(uu * 4 + t * .3 + sd) - .5) * 120 * uu * uu, yTop - 10 - uu * (yTop + 60), .95 - uu * .85]); } draw(L, mk(sm, { w: 5 * k, tone: .55, dry: .7, wet: .2, prof: 'tip', rough: .25, seed: sd }), 1, .9 * k); }
   return { paper: paperOf(cam), bleed: 6, rim: 1.1, vig: .45, night: 1 };
 }
 
@@ -269,7 +273,7 @@ function s07(A, t) {
   paintCam(A, cam);
   mist(A, cam, [[840, 1060, .85], [1200, 1320, .5]]);
   const S = { a: -.08 + Math.sin(t * 2.3) * .06, amp: 11, k: 1.1, ph: -t * 7, legs: 0, expr: { ...EXPR.curious, pupil: [-.5, .3] }, headTilt: -.05, wind: [6, 0], vel: [45, 0], curl: -.03, stretch: 1.05 };
-  dragon(A, TMP, S, { x: dx, y: dy, s: 3.0, dir: -1, t, seed: 3, boil: t * 12 });
+  dragon(A, TMP, S, { x: dx, y: dy, s: 3.4, dir: -1, t, seed: 3, boil: t * 12 });
   return { paper: paperOf(cam), bleed: 5 * cam.z, rim: .9, vig: .2, warm: .5, night: 0 };
 }
 // ---- S08 the dry river: low tracking, the boat ----
@@ -282,7 +286,7 @@ function s08(A, t) {
   const dxk = keys([[t0, 2560], [HIT.boat, 2100], [HIT.slow, 1980], [t1, 1940]], t, ss), dyk = keys([[t0, 1610], [HIT.boat - .5, 1560], [HIT.slow, 1520], [t1, 1500]], t, ss);
   const slow = sg(t, HIT.slow - .4, HIT.slow + .3);
   const S = { a: lerp(-.05, .3, slow) + Math.sin(t * 2) * .04, amp: lerp(11, 6, slow), k: 1.1, ph: -t * (8 - 5 * slow), legs: 0, expr: { ...EXPR.worried, pupil: [-.3, .9 * slow] }, headTilt: .25 * slow + .1, wind: [lerp(6, 2, slow), 0], vel: [lerp(50, 8, slow), 0], stretch: lerp(1.08, 1, slow), curl: -.05 * (1 - slow) };
-  const d = dragon(A, TMP, S, { x: dxk, y: dyk, s: 2.5, dir: -1, t, seed: 3, boil: t * 12 });
+  const d = dragon(A, TMP, S, { x: dxk, y: dyk, s: 2.9, dir: -1, t, seed: 3, boil: t * 12 });
   // dust raised by its belly: dry streaks trailing behind and settling
   const pts = d.spine.filter((p, i) => i > 2 && i < 12 && i % 2 === 0).map(p => [p[0] + 20, p[1] + 40 + Math.sin(t * 5 + p[0]) * 4]);
   streaks(A, pts, (1 - slow) * .9, 90, 4);
@@ -301,7 +305,7 @@ function s09(A, t) {
   const uu = sg(t, t0, t1 - .2), dy = lerp(1640, 560, eio(uu)), dx = 1330 + Math.sin(uu * Math.PI * 2.5) * 170 - 280 * uu;
   const dirSign = Math.cos(uu * Math.PI * 2.5) >= 0 ? 1 : -1;
   const S = { a: -.9 + Math.cos(uu * Math.PI * 2.5) * .3, amp: 11, k: 1.1, ph: -t * 8, legs: 0, expr: { ...EXPR.determined, pupil: [0, -.6] }, headTilt: -.2, wind: [0, 6], vel: [40, 0], stretch: 1.06, curl: .06 };
-  dragon(A, TMP, S, { x: dx, y: dy, s: 2.3, dir: dirSign, t, seed: 3, boil: t * 12 });
+  dragon(A, TMP, S, { x: dx, y: dy, s: 2.6, dir: dirSign, t, seed: 3, boil: t * 12 });
   return { paper: paperOf(cam), bleed: 5 * cam.z, rim: .95, vig: .3, shake: [Math.sin(t * 40) * sh, Math.cos(t * 37) * sh], night: 0 };
 }
 // ---- S10 incense half ----
@@ -330,7 +334,7 @@ function s11(A, t) {
   // ---- the dragon ----
   const L = A.ink;
   let S = { a: 0, amp: 4, k: 1, ph: 0, legs: 1, ground: 13, expr: EXPR.neutral, headTilt: -.2, wind: [0, 0] };
-  let x = 940, y = 455 - 15 * 1.5, dir = -1, sc = 1.5, am = 1, show = true;
+  let x = 940, y = 455 - 13 * 1.75, dir = -1, sc = 1.75, am = 1, show = true;
   const tt = twos(t);
   if (t < HIT.land) {           // arriving from the right, descending
     const u = sg(t, SHOT.s11, HIT.land); x = lerp(1500, 940, eo(u)); y = lerp(250, 432, ss(u)); S.legs = sg(t, HIT.land - .3, HIT.land); S.a = -.1; S.amp = 9; S.ph = -t * 8; S.expr = EXPR.curious;
@@ -385,7 +389,7 @@ function s12(A, t) {
   cloud(A, { ...CLOUD, breath: breathOf(t + 2), bubble: .5 + .5 * breathOf(t + 2), expr: CEXPR.asleep }, { t });
   const curl = sg(t, HIT.curl, HIT.curl + 1.2), open = sg(t, 81.6, 82.0);
   const S = { a: -.7 + .6 * curl, amp: 3, k: .8, ph: 0, legs: 0, curl: .95 * ss(curl), expr: mixExpr({ ...EXPR.determined, pupil: [0, .6] }, curl > 0 ? EXPR.closed : EXPR.determined, ss(curl) * (1 - open)), headTilt: .2 * curl, taper: 1, stretch: 1 - .1 * ss(curl) };
-  dragon(A, TMP, S, { x: 700 - 30 * curl, y: -430 + Math.sin(t * 1.4) * 6, s: 1.2, dir: 1, t, seed: 3, boil: t * 12 });
+  dragon(A, TMP, S, { x: 700 - 30 * curl, y: -430 + Math.sin(t * 1.4) * 6, s: 1.4, dir: 1, t, seed: 3, boil: t * 12 });
   return { paper: paperOf(cam), bleed: 5 * cam.z, rim: .9, vig: .15, warm: .4, night: 0 };
 }
 // ---- S13 the dive stroke; S14 the bloom in the cloud ----
@@ -404,7 +408,7 @@ function s13(A, t) {
   if (!d.entered) {
     const y1 = lerp(-700, 250, d.u);
     draw(L, mk([[640, -800, .4], [640, y1 - 300, 1.1], [642, y1, 1.0]], { w: 64, tone: .85, dry: .62, wet: .3, prof: 'rise', nb: 56, seed: 140, gapLen: 1200 }), 1, 1);
-    dragon(A, TMP, { a: Math.PI / 2, amp: 2, k: .6, legs: 0, len: 220, taper: 1.2, expr: EXPR.determined, headTilt: 0, stretch: 1.4, vel: [120, 0] }, { x: 640, y: y1, s: 1.1, dir: 1, t, seed: 3 });
+    dragon(A, TMP, { a: Math.PI / 2, amp: 2, k: .6, legs: 0, len: 220, taper: 1.2, expr: EXPR.determined, headTilt: 0, stretch: 1.4, vel: [120, 0] }, { x: 640, y: y1, s: 1.2, dir: 1, t, seed: 3 });
   } else {
     const v = t - d.hit, k = clamp(1 - v / .5);
     draw(L, mk([[640, -800, .4], [640, -200, 1.0], [642, 250, 1.0]], { w: 64, tone: .85 * k, dry: .62, wet: .3, prof: 'rise', nb: 56, seed: 140, gapLen: 1200 }), 1, k);

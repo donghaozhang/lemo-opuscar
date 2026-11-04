@@ -24,7 +24,7 @@ export function render(t, A, B, TMP, TMP2, comp, mode, q) {
     row1.forEach(([n, S, dir], i) => { const x = 300 + i * 450 + (dir < 0 ? 240 : 0), y = 230; dragon(A, TMP, S, { x, y, s: 2.0, dir, t: T, seed: 3 + i }); label(A, n, 170 + i * 450, 390); });
     // row 2: expressions, head and neck only (large)
     const ex = [['好奇 curious', 'curious'], ['忧 worried', 'worried'], ['怒 angry', 'angry'], ['决 determined', 'determined'], ['惊 shocked', 'shocked'], ['喜 happy', 'happy'], ['困 sleepy', 'sleepy'], ['吼 roar', 'roar']];
-    ex.forEach(([n, k], i) => { const x = 60 + i * 235, y = 560; dragon(A, TMP, { a: 0, amp: 3, k: 1, len: 60, legs: 1, ground: 10, expr: EXPR[k], curl: -.1 }, { x: x + 30, y: y - 30, s: 3.2, t: T, seed: 20 + i }); label(A, n, x - 20, 668, 22); });
+    ex.forEach(([n, k], i) => { const x = 110 + i * 232, y = 560; dragon(A, TMP, { a: 0, amp: 3, k: 1, len: 50, legs: 0, expr: EXPR[k], curl: -.1, taper: 1 }, { x: x + 40, y: y - 30, s: 4.2, t: T, seed: 20 + i }); label(A, n, x - 20, 668, 22); });
     // row 3: key poses with a line of action: anticipation (squash), dash (stretch), tug (effort), flung (dizzy)
     const row3 = [
       ['蓄力 anticipation', { a: -.2, amp: 6, k: 1, legs: 1, ground: 12, expr: EXPR.determined, headTilt: .2, stretch: .82, curl: .12 }, 1, 1],
@@ -40,7 +40,7 @@ export function render(t, A, B, TMP, TMP2, comp, mode, q) {
   }
   if (mode === 'faces') {   // all expressions, heads large, two rows
     const T = +(q.get('t') || 0), ks = Object.keys(EXPR);
-    ks.forEach((k, i) => { const x = 110 + (i % 8) * 235, y = 230 + Math.floor(i / 8) * 480; dragon(A, TMP, { a: 0, amp: 3, k: 1, len: 60, legs: 1, ground: 10, expr: EXPR[k], curl: -.1 }, { x: x + 20, y, s: 3.4, t: T, seed: 20 + i }); label(A, k, x - 40, y + 130, 22); });
+    ks.forEach((k, i) => { const x = 160 + (i % 6) * 310, y = 200 + Math.floor(i / 6) * 340; dragon(A, TMP, { a: 0, amp: 3, k: 1, len: 50, legs: 0, expr: EXPR[k], curl: -.1 }, { x: x + 60, y, s: 5.6, t: T, seed: 20 + i }); label(A, k, x - 40, y + 150, 24); });
     return comp(A, B, { paper: [0, 0, 1], bleed: 5, rim: .9 });
   }
   if (mode === 'studio') {

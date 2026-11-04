@@ -31,7 +31,7 @@ export const EXPR = {
 export function mixExpr(a, b, u) { u = clamp(u); const o = {}; for (const k in b) { const x = a[k] ?? b[k], y = b[k]; o[k] = Array.isArray(y) ? y.map((v, i) => lerp((x ?? [0, 0])[i] ?? 0, v, u)) : typeof y === 'number' ? lerp(x, y, u) : y; } return o; }
 
 export const DEF = {
-  a: 0, len: 100, amp: 9, k: 1.1, ph: 0, curl: 0, taper: 1,
+  a: 0, len: 100, amp: 12, k: .9, ph: 0, curl: 0, taper: 1,
   legs: 0, ground: 12, gait: 0, stride: 7,
   headTilt: 0, expr: EXPR.neutral, wind: [0, 0], vel: [0, 0], tailUp: 0,
   blotR: 0, squash: 1, stretch: 1,
@@ -45,7 +45,7 @@ export function spine(S) {
   for (let i = 0; i < n; i++) {
     const u = i / (n - 1);
     const env = Math.sin(Math.PI * Math.min(1, u * 1.1)) * .7 + .3 * u;
-    const off = S.amp * Math.sin(S.k * u * Math.PI * 2 + S.ph) * env - S.tailUp * u * u * 20;
+    const off = S.amp * 1.7 * Math.sin(S.k * u * Math.PI * 2 + S.ph) * env - S.tailUp * u * u * 20;   // the S-curve: the line of action
     P.push([x + off * Math.sin(a), y - off * Math.cos(a)]);
     x += ds * Math.cos(a); y += ds * Math.sin(a);
     a += curlStep * (u < .1 ? u * 10 : 1);
@@ -93,37 +93,37 @@ export function dragon(A, T, S0, X = {}) {
     const c = [S.len * .15, 2], r = w0 * 2.4, m = poly.length;
     poly = poly.map((q, i) => { const an = (i / m) * Math.PI * 2 + .3, bq = [c[0] + Math.cos(an) * r * (1 + .1 * vnoise(i * .9 + 3)), c[1] + Math.sin(an) * r * .85]; return [lerp(q[0], bq[0], S.blotR), lerp(q[1], bq[1], S.blotR)]; });
   }
-  M(poly, .4 + .35 * S.blotR, 1.2, .5 * S.blotR);
+  M(poly, .3 + .45 * S.blotR, 1.2, .5 * S.blotR);
   const K = 1 - S.blotR;
   if (K > .02) {
     // 2. back (浓) and belly (重) loaded strokes
     const back = [], belly = [];
     for (let i = 0; i < n; i++) { const u = i / (n - 1), hw = w0 * WID(u, S) / 2; back.push([...up(i, -hw * .6), WID(u, S) * 1.1]); belly.push([...up(i, hw * .62), WID(u, S)]); }
-    St(back, { w: w0 * .6, tone: .84 * K, darkDir: [0, -1], side: .85, brWet: true, body: .24, dry: .38, wet: .9, prof: 'robe', nb: 26, rough: .1 });
-    St(belly.slice(0, 12), { w: w0 * .36, tone: .58 * K, darkDir: [0, 1], side: .8, brWet: true, body: .18, dry: .5, wet: .9, prof: 'robe', nb: 16 });
+    St(back, { w: w0 * .34, tone: .8 * K, darkDir: [0, -1], side: .9, brWet: true, body: .22, dry: .48, wet: .8, prof: 'robe', nb: 16, rough: .12 });
+    St(belly.slice(0, 14), { w: w0 * .22, tone: .5 * K, darkDir: [0, 1], side: .8, brWet: true, body: .16, dry: .55, wet: .8, prof: 'robe', nb: 10 });
     // 3. belly scales: short arcs
-    for (let j = 0; j < 6; j++) { const k = 1 + j * 2, u = k / (n - 1), hw = w0 * WID(u, S) / 2, c = up(k, hw * .55), r = hw * .55; St([add2(c, [-r, -r * .5]), add2(c, [0, r * .35]), add2(c, [r, -r * .5])], { w: 1.5 * hs, tone: .45 * K, dry: .6, prof: 'tip' }); }
+    for (let j = 0; j < 11; j++) { const k = 1 + j, u = k / (n - 1), hw = w0 * WID(u, S) / 2, c = up(k, hw * .45), r = hw * .5; if (r < 1.2) break; St([add2(c, [-r * .9, -r * .35]), add2(c, [0, r * .25]), add2(c, [r * .9, -r * .35])], { w: 1.3 * hs, tone: .4 * K, dry: .6, prof: 'tip', nb: 3 }); }
     // 4. dorsal spines: a row of small triangles along the whole back, bigger at the neck, bristling with the mane
-    for (let j = 0; j < 12; j++) { const k = 1 + Math.round(j * 1.2), u = k / (n - 1); if (k >= n - 1) break; const hw = w0 * WID(u, S) / 2, b = up(k, -hw * .98), L = (5.2 - 3.6 * u) * hs * (1 + .25 * Ex.mane), bk = [N[k][0] * L - 2.2 * hs, N[k][1] * L]; St([add2(b, [2.2 * hs, 0]), add2(b, bk), add2(b, [-2.4 * hs, 0])], { w: 2.6 * hs, tone: .78 * K, dry: .45, wet: .25, prof: 'lens', nb: 6 }); }
+    for (let j = 0; j < 14; j++) { const k = 1 + j; if (k >= n - 2) break; const u = k / (n - 1), hw = w0 * WID(u, S) / 2, b = up(k, -hw * .95), L = (7 - 5 * u) * hs * (1 + .3 * Ex.mane), bk = [N[k][0] * L * .9 - 3 * hs, N[k][1] * L * .9], bk2 = [N[k][0] * L * .4 - .5 * hs, N[k][1] * L * .4]; St([add2(b, [1.5 * hs, 0]), add2(b, bk2), add2(b, bk)], { w: 2.4 * hs, tone: .62 * K, dry: .55, wet: .15, prof: 'nail', nb: 5 }); }
     // 5. the flame tuft at the tail tip
     const tip = P[n - 1], td = [P[n - 1][0] - P[n - 3][0], P[n - 1][1] - P[n - 3][1]], tl = Math.hypot(td[0], td[1]) || 1, tdx = td[0] / tl, tdy = td[1] / tl, tnx = -tdy, tny = tdx;
-    for (let j = 0; j < 7; j++) { const sp = (j - 3) * .32, L = (14 + 8 * (1 - Math.abs(j - 3) / 3)) * hs, dx = tdx * Math.cos(sp) - tdy * Math.sin(sp), dy = tdx * Math.sin(sp) + tdy * Math.cos(sp), curlk = (j - 3) * .45 * hs; St([[tip[0] - tdx * 3 * hs, tip[1] - tdy * 3 * hs], [tip[0] + dx * L * .45 + drift[0] * .3, tip[1] + dy * L * .45 + drift[1] * .3], [tip[0] + dx * L + tnx * curlk * 6 + drift[0] * .8 + wav(j) * 1.5, tip[1] + dy * L + tny * curlk * 6 + drift[1] * .8]], { w: (3.4 - .3 * Math.abs(j - 3)) * hs, tone: .74 * K, dry: .66, wet: .15, prof: 'tip' }); }
+    for (let j = 0; j < 7; j++) { const sp = (j - 3) * .36, L = (16 + 10 * (1 - Math.abs(j - 3) / 3)) * hs, dx = tdx * Math.cos(sp) - tdy * Math.sin(sp), dy = tdx * Math.sin(sp) + tdy * Math.cos(sp), curlk = (j - 3) * .45 * hs; St([[tip[0] - tdx * 3 * hs, tip[1] - tdy * 3 * hs], [tip[0] + dx * L * .45 + drift[0] * .3, tip[1] + dy * L * .45 + drift[1] * .3], [tip[0] + dx * L + tnx * curlk * 6 + drift[0] * .8 + wav(j) * 1.5, tip[1] + dy * L + tny * curlk * 6 + drift[1] * .8]], { w: (3.4 - .3 * Math.abs(j - 3)) * hs, tone: .74 * K, dry: .66, wet: .15, prof: 'tip' }); }
     // 6. legs: four small clawed legs (upper + lower), tucked when flying
     const legK = clamp(S.legs);
     for (const [uL, bend, phase] of [[.13, 1, 0], [.17, 1, Math.PI], [.52, -1, Math.PI], [.56, -1, 0]]) {
       const k = Math.round(uL * (n - 1)), hw = w0 * WID(uL, S) / 2, hip = up(k, hw * .5);
-      const l1 = w0 * .62, l2 = w0 * .6;
+      const l1 = w0 * .8, l2 = w0 * .78;
       const walk = S.gait ? Math.sin(S.gait + phase) : 0, lift = S.gait ? Math.max(0, Math.cos(S.gait + phase)) * w0 * .25 : 0;
       const standFoot = [hip[0] + (bend > 0 ? 5 : -4) * hs + walk * S.stride, S.ground * hs - lift];
       const tuckFoot = [hip[0] - 5 * hs + (bend > 0 ? 0 : -3 * hs), hip[1] + l1 * .8];
       const foot = [lerp(tuckFoot[0], standFoot[0], legK), lerp(tuckFoot[1], standFoot[1], legK)];
       const [h, kn, f] = ik(hip, foot, l1, l2, bend);
-      const far = phase > 1, tone = (far ? .62 : .88) * K;
-      St([h, kn], { w: 4.4 * hs, tone, dry: .4, wet: .2, prof: 'press' }); St([kn, f], { w: 3.4 * hs, tone, dry: .42, wet: .15, prof: 'even' });
-      for (let c = 0; c < 3; c++) { const an = -.7 + c * .55 + (legK < .5 ? 1.0 : .05); St([[f[0] - 1 * hs, f[1]], [f[0] + Math.cos(an) * 4.8 * hs, f[1] + Math.sin(an) * 4.8 * hs]], { w: 2 * hs, tone: .92 * K * (far ? .75 : 1), dry: .3, prof: 'nail' }); }
+      const far = phase > 1, tone = (far ? .3 : .82) * K;
+      St([h, kn], { w: 5 * hs, tone, darkDir: [bend, 0], side: .8, brWet: !far, body: .3, dry: .42, wet: .6, prof: 'press' }); St([kn, f], { w: 3 * hs, tone, dry: .45, wet: .15, prof: 'even' });
+      for (let c = 0; c < 3; c++) { const an = -.7 + c * .55 + (legK < .5 ? 1.0 : .05); St([[f[0] - 1 * hs, f[1]], [f[0] + Math.cos(an) * 4.8 * hs, f[1] + Math.sin(an) * 4.8 * hs]], { w: 2 * hs, tone: .92 * K * (far ? .4 : 1), dry: .3, prof: 'nail' }); }
     }
     // 7. head: a rounded skull running into a long snout; local head frame at the neck, forward +x, tilted
-    const ht = S.headTilt, Hh = q => rot([q[0] * hs, q[1] * hs], [0, 0], ht);
+    const ht = S.headTilt, hs0 = hs * .72, Hh = q => rot([q[0] * hs0, q[1] * hs0], [0, 0], ht);
     const headPoly = [[-9, -9], [-4, -14], [5, -16], [14, -14.5], [22, -11.5], [29, -8.5], [35, -5.5], [38, -2], [37, 1.5], [31, 3.5], [22, 4.5], [12, 5.5], [2, 6], [-6, 4.5], [-10, 0]].map(Hh);
     M(headPoly, .64 * K, .6);
     if (Ex.puff > .05) M([[8, -2], [16, -6], [24, -3], [26, 4], [18, 8], [9, 7]].map(q => Hh([q[0] + 2, q[1] + 2 * Ex.puff])), .3 * K * Ex.puff, .5);
@@ -155,13 +155,13 @@ export function dragon(A, T, S0, X = {}) {
     }
     // mane: a brush of dry strokes streaming back from the crown and neck, bristling (raised) with the mood
     const nd = [P[2][0] - P[0][0], P[2][1] - P[0][1]], nl = Math.hypot(nd[0], nd[1]) || 1, bx = nd[0] / nl, by = nd[1] / nl;   // the neck direction (backwards)
-    for (let j = 0; j < 9; j++) {
-      const b = Hh([-5 - j * 1.1, -13 + j * 2.4]), L = (24 + 6 * Math.sin(j * 1.9)) * hs, raise = Ex.mane * (-.55 + j * .05);
+    for (let j = 0; j < 7; j++) {
+      const b = Hh([-5 - j * 1.2, -14 + j * 3.2]), L = (17 + 6 * Math.sin(j * 1.9)) * hs, raise = Ex.mane * (-.6 + j * .06) - .15 + j * .04;
       const dxm = bx * Math.cos(raise) - by * Math.sin(raise), dym = bx * Math.sin(raise) + by * Math.cos(raise), sw = wav(j * .8) * 2 * hs;
-      St([b, [b[0] + dxm * L * .5 + drift[0] * .4, b[1] + dym * L * .5 - 2 * hs + sw * .5 + drift[1] * .3], [b[0] + dxm * L + drift[0] * .9, b[1] + dym * L + sw + drift[1] * .8]], { w: 3.6 * hs, tone: .7 * K, dry: .62, wet: .15, prof: 'tip' });
+      St([b, [b[0] + dxm * L * .5 + drift[0] * .4, b[1] + dym * L * .5 - 2 * hs + sw * .5 + drift[1] * .3], [b[0] + dxm * L + drift[0] * .9, b[1] + dym * L + sw + drift[1] * .8]], { w: 3.2 * hs, tone: .56 * K, dry: .66, wet: .12, prof: 'tip' });
     }
     // 8. eye: a paper hole, lids, the brow, the vermilion pupil (last: 点睛)
-    const ec = Hh([13, -6]), er = 5.6 * hs * (Ex.eye || 1);
+    const ec = Hh([13, -6]), er = 4.6 * hs * (Ex.eye || 1);
     const browC = Hh([12, -13.5 - Ex.browY * 2.6]);
     const B = q => rot(q, browC, Ex.brow * .8);
     St([B(Hh([4, -12.5 - Ex.browY * 2.6])), B(Hh([12, -14.2 - Ex.browY * 2.6])), B(Hh([21, -12 - Ex.browY * 2.6]))], { w: 4 * hs, tone: .94 * K, dry: .3, wet: .15, prof: 'nail' });
