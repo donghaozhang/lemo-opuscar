@@ -172,3 +172,17 @@ runs under the shout card into the dash.
 - `subtitles.srt` lists every card's text, Chinese only (the English studio line excepted).
 - Tint plan: night = cool silver (sepia 0.12), work = neutral, hurry/fire = colder and harsher (damage up, burn from
   the edges), tender = warmer, dawn/end = warmest and cleanest (sepia 0.34).
+
+## 10. Against the library demo (written after reading `DEMO.md`)
+
+| | Demo (*The Runaway Loaf*) | This film | Differs? |
+|---|---|---|---|
+| Structure | chase comedy: object escapes → chain gag → tender gift | work loop → the reel itself burns → rescue → the reel you watched | yes |
+| Opening | curtains part on a dark screen, projector spins up, title, iris on the loaf | film already running; an English title card pulled away like a blind by a robot on the card | yes |
+| Signature shot | locked-off chain gag (see-saw → melon → constable) | the can in the air in silence while our own print burns in, the catch, the burn retreating | yes |
+| Camera path | iris, locked full, tracking, extreme wide, push-in, iris close | iris open, locked full + half iris, iris insert, push-in on the jam, tracking, locked wide, push-in, pull-back reveal | partly (shared period grammar) |
+| Score shape | Maestoso → Andante → Hurry → Misterioso → Agitato → silence → reed organ → Tenderly | Introduction → Misterioso → Allegretto stride → Hurry galop → Agitato → two silences → Tenderly waltz → Maestoso with one note per lamp, plus a trap box | partly (cue-sheet idiom is the style) |
+| Ending | iris closes on the girl's wink | lamps come on row by row at dawn, a card telling the audience the reel was the last one | yes |
+
+Four of six clearly differ. Changed in production: the page insert was lengthened (13 beats) so the correction stays
+on screen ≥ 3 s; the jam got a slow push-in; the dawn shot starts close on the seal and pulls back for the lamps.
