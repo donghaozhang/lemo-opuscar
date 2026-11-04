@@ -172,3 +172,17 @@ J/L cuts: rain runs over the cut into every battle (L); stair footsteps start on
 - Own engine in the project folder (indexed framebuffer, LUT, Bayer, mosaic, swirl, glyph atlas, UI, rig, parametric faces, scenes, timeline), written for this film. The demo will be read after this treatment only for technique.
 - Score: own numpy chip synth (pulse / triangle / LFSR noise / short sampled-style drums synthesised), SNES-style echo; all melodies original except the public-domain birthday tune sung by the text blips.
 - Checks: cue check (every visual hit vs. its grid time), readcheck, loudness (−14 LUFS, TP ≤ −1 dBTP), blackdetect, CJK glyph check (every character on screen exists in the atlas, no tofu), contact sheets at 1 fps × 2 passes.
+
+## 12. Compared with the style's demo (after the treatment)
+
+| Axis | Demo (*The Last Save Point*) | This film | Same? |
+|---|---|---|---|
+| Structure | memory through three colour-depth eras | one quest run: overworld + four encounters + cut-scene ending | differs |
+| Opening | long side-scroll down a colonnade | sleeping rider jolted by a phone ping; the order on the phone | differs |
+| Signature shot | integer tilt up a great door | push *up the stairwell well* (28 nested floors) | differs (the demo's tilt was the overlap; changed before building) |
+| Camera path | corridor → memories → door | street → top-down overworld → battle screens → stairwell → doorway two-shots | differs |
+| Score shape | motif losing layers per palette step | five themes (overworld / battle / boss / tender / fanfare); the overworld phrase left on the dominant resolves in the coda | differs |
+| Ending | CONTINUE end card | save point + level up 「温暖 +1」, rain stops by palette swap, ride away, 「完」 | differs |
+
+6 of 6 differ. Shared only by the style itself: indexed palette, dialog box as subtitle, encounter swirl, protected colour.
+- Section 5/44 note: the last shot was rebuilt as a side view of the street after the rain (stars, the warm window, the dog) — it read far better than the top-down map; the bookend is now with shot 1.
