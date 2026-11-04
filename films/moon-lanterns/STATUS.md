@@ -23,3 +23,4 @@
 - 2026-11-04 13:02 all 33 shots built and checked on stills; staging fixes; next: score and Foley (mix.py)
 - 2026-11-04 13:17 score, Foley and mix written (mix.py, 84 cues at 0 ms); first full render started (4 workers, 3396 frames)
 - 2026-11-04 13:27 full render running: frames 600/3396 (per-worker progress, logged every 60 frames)
+- 2026-11-04 13:37 full render running: frames 1200/3396 (per-worker progress, logged every 60 frames)
