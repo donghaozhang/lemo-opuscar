@@ -193,7 +193,7 @@ export function buildTown() {
   H({ x: 20, z: -38, w: 5.2, d: 5.2, h: 5.2, windows: [[0, 2.4], [0, 4.0]], alt: 1 });
   // the clinic door (opens at night), its warm interior and the sign
   const doorG2 = new THREE.Group(); const doorM = box(1.1, 2.1, .1, MM.plankDark); doorM.position.set(.55, 0, 0); doorG2.add(doorM); doorG2.position.set(2.5 - .55, 0, -37.5 + 2.6 + .06); scene.add(doorG2);
-  const interior = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 2.1), new THREE.MeshBasicMaterial({ color: '#ffd8a0' })); interior.position.set(2.5, 1.05, -37.5 + 2.6 - .02); interior.visible = false; scene.add(interior);
+  const interior = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 2.1), new THREE.MeshBasicMaterial({ color: '#e8b070' })); interior.position.set(2.5, 1.05, -37.5 + 2.6 - .02); interior.visible = false; scene.add(interior);
   // the sign 卫生所 above the door (text drawn with the CJK font, thresholded to pixels, on a white board)
   { const c = document.createElement('canvas'); c.width = 64; c.height = 20; const g = c.getContext('2d'); g.fillStyle = '#eeeae0'; g.fillRect(0, 0, 64, 20); g.fillStyle = '#b02020'; g.font = "700 15px 'Noto Serif SC'"; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('卫生所', 32, 11);
     const tx = new THREE.CanvasTexture(c); tx.magFilter = tx.minFilter = THREE.NearestFilter; tx.colorSpace = THREE.SRGBColorSpace;
@@ -372,7 +372,7 @@ export function buildTown() {
     let focusP = null, aper = 300, tiltC = null, extra = { t };
     let lit = 0; lanG.visible = true; lantern.visible = true;    // the lantern's level
     let lanPos = null;                  // where the lantern is (null = on the boat's pole)
-    let fl = 0, fillGut = 0;
+    let fl = 0, fillGut = 0; fill.color.set('#bcc8e8');
     const bp = boatPose(t); boat.position.set(bp.x, WATER + .25 + bp.bob, bp.z); boat.rotation.set(Math.sin(t * 1.7) * .02 * (t > T.castOff && t < T.arrive ? 2.5 : 1), bp.heading, Math.sin(t * 1.3) * .015);
     boat.userData.oar.rotation.x = -.45 + Math.sin(t * 2.6 * 1.57) * .35; boat.userData.oar.rotation.z = .25;
     const onBoat = (lx, ly, lz) => new THREE.Vector3(lx, ly, lz).applyAxisAngle(new THREE.Vector3(0, 1, 0), bp.heading).add(boat.position);
@@ -546,7 +546,7 @@ export function buildTown() {
       // the clinic door and its light
       const dk = ss(seg(t, T.door, T.door + .7)) * (1 - ss(seg(t, T.doorClose, T.doorClose + .6)) * .85);
       doorG2.rotation.y = -1.9 * ss(seg(t, T.door, T.door + .7)) * (1 - ss(seg(t, T.doorClose, T.doorClose + .6)) * .9); interior.visible = dk > .02;
-      doorL.intensity = dk * 36; doorL.position.set(2.5, 1.4, -34.0); doorG.visible = dk > .02; doorG.material.opacity = dk; doorG.position.set(2.5, 1.5, -34.6);
+      doorL.intensity = dk * 20; doorL.position.set(2.5, 1.4, -33.6); doorG.visible = dk > .02; doorG.material.opacity = dk * .6; doorG.position.set(2.5, 1.5, -34.6);
       // cameras
       if (id === 's15') { const Cm = CAMS.s15; cam.position.set(...Cm.p(t)); cam.fov = Cm.fov[0]; cam.lookAt(...Cm.l(t)); focusP = new THREE.Vector3(.5, 0, -4); aper = 380; tiltC = .5; }
       else if (id === 's16') { const u = ss(seg(t, 73.5, 77.5)); cam.position.set(lerp(3.4, 2.0, u), lerp(1.6, .95, u), lerp(-6.2, -4.6, u)); cam.fov = 30; const hp = C.lz3.headPos(); cam.lookAt(lerp(-.1, hp.x, u), lerp(.3, hp.y - .1, u), lerp(-2.9, hp.z, u)); focusP = hp; aper = lerp(200, 120, u); }
@@ -558,12 +558,12 @@ export function buildTown() {
       else if (id === 's22') { const hp = C.xs3.headPos(); cam.position.set(hp.x + .8, hp.y + .25, hp.z + 1.15); cam.fov = 27; cam.lookAt(hp.x, hp.y - .02, hp.z); focusP = hp; aper = 90; fill.intensity = 2.2; fill.position.copy(hp).add(new THREE.Vector3(.4, .6, 1.2)); }
       else if (id === 's23') { const hp = C.lz3.headPos(); cam.position.set(standP.x + 1.75, hp.y + .25, standP.z + 1.25); cam.fov = 27; cam.lookAt(hp.x, hp.y - .05, hp.z); focusP = hp; aper = 110; }
       else if (id === 's24') { const Cm = CAMS.s24; cam.position.set(...Cm.p(t)); cam.fov = lerp(Cm.fov[0], Cm.fov[1], seg(t, 102.6, 106.6)); cam.lookAt(...Cm.l(t)); focusP = onBoat(0, .5, 0); aper = 420; }
-      else if (id === 's25') { const hp = C.lz3.at(20, 30, true); cam.position.copy(hp).add(new THREE.Vector3(1.3, .45, 1.1)); cam.fov = 30; cam.lookAt(hp); focusP = hp; aper = 90; lanG.visible = false; lantern.visible = false; }
+      else if (id === 's25') { const hp = C.lz3.at(20, 30, true); cam.position.copy(hp).add(new THREE.Vector3(1.3, .45, 1.1)); cam.fov = 30; cam.lookAt(hp); focusP = hp; aper = 90; lanG.visible = false; lantern.visible = false; fill.intensity = 2.6; fill.color.set('#ffc890'); fill.position.copy(hp).add(new THREE.Vector3(.6, .5, .9)); }
       else if (id === 's26') { cam.position.copy(onBoat(-5.6, .3, .6)); cam.fov = 30; cam.lookAt(onBoat(0, .9, 1.2)); focusP = onBoat(0, .9, 1.4); aper = 260; fill.intensity = 1.1; fill.position.copy(onBoat(-1.4, 1.6, 2.4)); }
       else if (id === 's27' || id === 's28') { const hp = C.lz3.headPos(true), lp = onBoat(-.6, 1.3, 2.15); cam.position.copy(onBoat(1.9, 2.0, 4.3)); cam.fov = 28; cam.lookAt(lp.clone().lerp(hp, .7)); focusP = lp.clone().lerp(hp, .6); aper = 110; }
       else if (id === 's29') { cam.position.set(8.8, 4.4, -19.0); cam.fov = 38; cam.lookAt(2.6, .2, -30); focusP = new THREE.Vector3(2.5, .3, -29); aper = 230; }
       else if (id === 's30') { const hp = C.lz3.headPos(true); cam.position.copy(hp).add(new THREE.Vector3(1.5, .2, 1.1)); cam.fov = 28; cam.lookAt(hp.x, hp.y - .05, hp.z); focusP = hp; aper = 110; }
-      if (id !== 's22' && id !== 's26') { fill.intensity = (lit * .5 + .55) * (onPier ? 1 : .9); fill.position.copy((onPier ? standP : onBoat(.3, .34, 2.3))).add(new THREE.Vector3(.5, 1.5, 1.8)); }
+      if (id !== 's22' && id !== 's26' && id !== 's25') { fill.intensity = (lit * .5 + .55) * (onPier ? 1 : .9); fill.position.copy((onPier ? standP : onBoat(.3, .34, 2.3))).add(new THREE.Vector3(.5, 1.5, 1.8)); }
       // rain follows the camera's target
       const fp = focusP || new THREE.Vector3(0, 0, -6); RB[0] = fp.x - 22; RB[3] = fp.x + 22; RB[1] = fp.y - 3; RB[4] = fp.y + 18; RB[2] = fp.z - 22; RB[5] = fp.z + 14; RAIN.userData.update(t, [-7 - windK * 6, 0]);
       splashBox = [fp.x - 10, WATER + .02, fp.z - 10, fp.x + 10, 0, fp.z + 8]; splash.userData.update(t);
@@ -615,7 +615,7 @@ export function buildTown() {
       else if (id === 's33') { cam.position.set(4.4, 2.5, -7.2); cam.fov = 31; cam.lookAt(-.4, -.2, -1.3); focusP = C.xs.root.position.clone().setY(C.xs.root.position.y + .4); aper = 220; }
       else if (id === 's34') { const hp = C.lz3.headPos(true); cam.position.copy(hp).add(new THREE.Vector3(1.5, .25, 1.2)); cam.fov = 27; cam.lookAt(hp.x, hp.y - .05, hp.z); focusP = hp; aper = 110; fill.intensity = 1.3; fill.position.copy(hp).add(new THREE.Vector3(.8, .5, 1.0)); }
       else if (id === 's35') { cam.position.set(4.7, 1.0, .3); cam.fov = 32; cam.lookAt(1.8, .55, -2.5); focusP = new THREE.Vector3(1.8, .5, -2.5); aper = 150; }
-      else if (id === 's36') { const p = pbBig.position; cam.position.set(p.x + .45, p.y + .22, p.z + .85); cam.fov = 27; cam.lookAt(p); focusP = p.clone(); aper = 60; }
+      else if (id === 's36') { const p = pbBig.position; C.xs3.root.visible = false; cam.position.set(p.x + .3, p.y + .2, p.z + 1.0); cam.fov = 27; cam.lookAt(p.x, p.y + .02, p.z); focusP = p.clone(); aper = 60; }
       else if (id === 's37') { const u = ss(seg(t, T.kneel, T.boatDown2 + .6)); const p = pbBig.userData.p || new THREE.Vector3(3.7, WATER, -2.6); cam.position.set(lerp(6.0, p.x + 1.9, u), lerp(2.3, WATER + .42, u), lerp(1.2, p.z - 2.5, u)); cam.fov = 30; cam.lookAt(lerp(2.6, p.x, u), lerp(.1, p.y, u), lerp(-2.3, p.z, u)); focusP = u < .5 ? lzP.clone().setY(lzP.y + .3) : p.clone(); aper = lerp(180, 90, u); }
       else if (id === 's38') { const p = pbBig.userData.p || new THREE.Vector3(14, WATER, -2.6); cam.position.set(p.x - 3.2 + seg(t, 147.1, 150) * .4, WATER + .45, p.z - 2.5); cam.fov = 30; cam.lookAt(p.x + 1.8, p.y, p.z + 1.0); focusP = p.clone(); aper = 120; }
       if (id !== 's34') { fill.intensity = .6; fill.position.copy(lzP).add(new THREE.Vector3(.4, 1.5, 2.0)); }
