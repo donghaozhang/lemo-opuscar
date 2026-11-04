@@ -206,7 +206,18 @@ Characters needed in the CJK subset: 最后一班渡船 清晨正午黄昏夜黎
 
 ## 10. Not the demo again
 
-To be filled after `DEMO.md` is read: structure, opening, signature shot, camera path, score shape, ending compared; at least four of six must differ.
+Compared with the library's demo (*The Lampbearer*) after reading `DEMO.md`:
+
+| | The demo | This film |
+|---|---|---|
+| Structure | a quest: a light handed over, carried through two biomes to a landmark | a day-cycle in one set, five chapters by hour, the crossings as episodes, a storm as the turn |
+| Opening | a chapter card, then a wide where the landmark light fails | a water-level insert: a paper boat set down, then a crane up to the dawn wide and the title |
+| Signature shot | the lamp room ignition, a rising pull-back | the very high wide of one lantern in the black storm river, then the heartbeat close-up |
+| Camera path | harbour → forest lateral track → cliff dive → lamp room → harbour mirror | a single diorama; rack focus to the bridge, top-down, through-the-piers tracking, pier close-ups, a water-level ending |
+| Score | a licensed track cut inside at downbeats | an original score on a beat grid in folk instruments, five moods, two silences, a heartbeat |
+| Ending | the opening set transformed, title and tagline | the paper boat drifting under the new bridge at dawn, the band narrowing; no title at the end |
+
+Six of six differ. What was learnt from the demo code: the pixel pipeline (ramps, Bayer dither, selout outline), lit billboards with cut-out shadows, the light-0.45-m-toward-the-lens rule for a carried lantern, the flash curve, the tilt-shift folded into the DOF's signed circle of confusion, the sea shader's light columns.
 
 ## 11. Production notes
 

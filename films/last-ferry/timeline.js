@@ -69,10 +69,10 @@ export const shot = id => SHOTS.find(s => s.id === id);
 
 // —— Events —— (named hits; every one is on a beat of its section)
 export const T = {
-  boatDown: B('morning', 3.6),             // 3.0: the paper boat touches the water
-  title: B('morning', 10), titleOut: B('morning', 15.6),
-  dlgXs1: B('morning', 16.5), dlgXs1Out: B('morning', 22.8),
-  dlgLz1: B('morning', 23.5), dlgLz1Out: B('morning', 27.8),
+  boatDown: B('morning', 3.5),             // 3.0: the paper boat touches the water
+  title: B('morning', 10), titleOut: B('morning', 15.5),
+  dlgXs1: B('morning', 16.5), dlgXs1Out: B('morning', 22.75),
+  dlgLz1: B('morning', 23.5), dlgLz1Out: B('morning', 27.75),
   rackBridge: B('morning', 29),            // focus hands over to the bridge
   hull: B('morning', 32),                  // the hull knocks the far steps
   kidsOff: B('morning', 32.5),             // children hop off (3 steps)
@@ -84,9 +84,9 @@ export const T = {
   candyToss: B('noon', 25.5), candyLand: B('noon', 27),
   winOn: [4, 5, 6, 7, 8, 9, 10, 11].map(b => B('dusk', b)),  // windows pop on, one per beat
   honk: [B('dusk', 9), B('dusk', 10.5), B('dusk', 12)], flap: B('dusk', 10.5), hop: B('dusk', 13),
-  dlgOb1: B('dusk', 14.4), dlgOb1Out: B('dusk', 18.8),
+  dlgOb1: B('dusk', 14.5), dlgOb1Out: B('dusk', 18.75),
   match1: B('dusk', 19.25), lit1: B('dusk', 19.5),  // the lantern is lit at dusk
-  dlgLz2: B('dusk', 19.8), dlgLz2Out: B('dusk', 23.9),
+  dlgLz2: B('dusk', 19.75), dlgLz2Out: B('dusk', 23.75),
   honkLight: B('dusk', 23),
   rope: B('night_quiet', 3),               // the rope goes round the post
   sit: B('night_quiet', 5.5),
@@ -94,7 +94,7 @@ export const T = {
   wind: B('storm', 0), flash1: B('storm', 1), rain: B('storm', 2.5),
   flash2: B('storm', 9), flash3: B('storm', 21), flash4: B('crossing', 3), flash5: B('crossing', 19), flash6: B('crossing', 34),
   run: B('storm', 6),                      // the mother runs along the lane
-  dlgMo1: B('storm', 12.5), dlgMo1Out: B('storm', 20.8),
+  dlgMo1: B('storm', 12.5), dlgMo1Out: B('storm', 20.75),
   lookBridge: B('storm', 31), lookLantern: B('storm', 32), match2: B('storm', 33), lit2: B('storm', 33.5),
   dlgLz3: B('storm', 34), dlgLz3Out: B('crossing', 2),
   castOff: B('crossing', 0),
