@@ -124,8 +124,14 @@ export class Scene {
         for (let j = k + 1; j < this.layers.length; j++) {
           const Fj = this.layers[j]; const gap = Fj.z - Ly.z; if (gap > .06) break; if (!Fj.shadow || Fj.alpha <= 0) continue;
           const a = .55 * (1 - gap / .06) * Fj.alpha, blur = (1.2 + gap * 220) * (pr.s / 4500); if (a < .03) continue;
+          // the casting sheet's silhouettes go into one scratch canvas, blurred once (not once per piece)
+          const Sh = scratch(3).getContext('2d'); Sh.setTransform(1, 0, 0, 1, 0, 0); Sh.globalCompositeOperation = 'source-over'; Sh.globalAlpha = 1; Sh.filter = 'none';
+          const m = Math.ceil(blur * 3); Sh.clearRect(bx - m, by - m, bw + 2 * m, bh + 2 * m);
+          Sh.save(); Sh.beginPath(); Sh.rect(bx - m, by - m, bw + 2 * m, bh + 2 * m); Sh.clip();
+          let any = false; for (const it of Fj.items) { if (!it.vis || it.alpha <= 0) continue; this.item(Sh, it, pr, true, -gap * .5); any = true; }
+          Sh.restore(); if (!any) continue;
           L.save(); L.beginPath(); L.rect(bx, by, bw, bh); L.clip(); L.globalAlpha = a; L.filter = `blur(${blur.toFixed(1)}px)`;
-          for (const it of Fj.items) { if (!it.vis || it.alpha <= 0) continue; this.item(L, it, pr, true, -gap * .5); }
+          L.drawImage(scratch(3), bx - m, by - m, bw + 2 * m, bh + 2 * m, bx - m, by - m, bw + 2 * m, bh + 2 * m);
           L.restore();
         }
         L.globalCompositeOperation = 'source-over';
