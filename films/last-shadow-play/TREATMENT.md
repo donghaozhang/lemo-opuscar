@@ -258,14 +258,21 @@ Ducking: music under key foley −4 dB; the whole bed hard-cut at the two silenc
 
 ## 10. Not the demo
 
-Written before reading `DEMO.md`. To check after: opening (a match in the dark), signature shot (the staff pulled to
-the lamp, whip pan), camera path (square → front/back intercut → dawn tilt), score shape (festive → silence →
-comeback → silence → tender), ending (the sun through the cloth), structure (a show within the film, front and back).
+Written before reading `DEMO.md`. Checked after reading it: the demo opens on the audience seat with a match flaring behind
+the cloth, so our opening moved to a close-up of the hand and the match backstage, followed by the oil jug and the phone (not
+the stage). Signature shot: ours is the staff pulled toward the lamp and the whip pan along its giant shadow (the demo's is a
+crash zoom on an entrance and a whip pan along an arrow). Camera path: square → front/back intercut with match cuts → dawn
+tilt (the demo: audience seat → push → locked wide → truck round to the back → dive into the flame). Score shape: festive →
+hard silence → heartbeat → comeback → hard silence → tender flute and sanxian → dawn (the demo: one hard stop for a silent
+choice). Ending: the sun through the cloth and the boy alone (the demo: a dive into the lamp flame and an end card).
+Structure: a show within the film, two puppeteers, the magic (the demo: one archer, ten lamps). Six of six differ. The
+contact sheet next to the demo poster: a village square with lanterns and a crowd around a small booth, two people
+backstage with carved faces, the Monkey King and the demon on the cloth; nothing of the demo's figures, suns or hut.
 
 ## 11. Checks before delivery
 
 Model sheet and expression sheet in `stills/`; style frames; contact sheets at 1 fps after each full render (two
 passes at least); 0.2 s strips of the fall, the grab, the hand-over; `cuecheck` 0 ms; `readcheck`; `ebur128` −14 LUFS,
 true peak ≤ −1 dBTP; `blackdetect` (only shot 1 and shot 39 may be near-black, and both have a practical light
-in them); CJK glyph check on every frame with text; `grep` for the LemoLab sign-off; the demo poster next to the
+in them); CJK glyph check on every frame with text; `grep` for the library's demo sign-off; the demo poster next to the
 contact sheet.
