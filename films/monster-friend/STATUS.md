@@ -10,3 +10,4 @@ Sample libraries: vsco2ce, vcsl (fetched earlier), freepats (ukulele, nylon guit
 | UTC | step | note |
 |---|---|---|
 | 12:23 | brief + treatment | TREATMENT.md written (8 pages, 36 shots, cue map, sound table); fonts installed |
+12:34 UTC · model sheet and expression sheet rendered (stills/modelsheet.jpg, stills/expressions.jpg); eyes, brows and 13+13 expressions checked
