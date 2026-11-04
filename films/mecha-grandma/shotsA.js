@@ -171,7 +171,7 @@ export function chat(S) {
   // her (or his) hand holding the phone
   const handC = two ? pal.jskin : pal.gskin;
   cel(g, path([[700, 1100], [720, 860], [800, 820], [880, 860], [900, 1100]]), { f: handC.f, s: handC.s, so: [-8, -4], l: handC.l, lw: 3 });
-  const B = two ? [{ who: 'me', text: TXT.chat2[0], t: .25 }, { who: 'them', text: TXT.chat2[1], t: 1.2 }]
+  const B = two ? [{ who: 'me', text: TXT.chat2[0], t: .25 }, { who: 'them', text: TXT.chat2[1], t: .9 }]
     : [{ who: 'me', text: TXT.chat1[0], t: .2 }, { who: 'them', text: TXT.chat1[1], t: 1.0 }, { who: 'them', text: TXT.chat1[2], t: 1.6 }, { who: 'them', text: TXT.chat1[3], t: 2.2 }];
   const out = phoneChat(g, e, 960, 560, 1.3, two ? '外婆' : '阿杰', B, lt);
   for (const k of [-1, 1]) cel(g, path([[960 + k * 250, 760], [960 + k * 200, 700], [960 + k * 236, 680], [960 + k * 280, 740]]), { f: handC.f, s: handC.s, so: [-4, -4], l: handC.l, lw: 3 });

@@ -14,6 +14,7 @@ window.render = async t => {
   g.fillStyle = '#000'; g.fillRect(0, 0, W, H); e.fillStyle = '#000'; e.fillRect(0, 0, W, H); ov.clearRect(0, 0, W, H);
   let over = {};
   if (qs.has('scene')) { const [f, fn] = qs.get('scene').split('.'); const m = mods[f] || (mods[f] = await import('./' + f + '.js')); over = (await m[fn](g, e, t, ov)) || {}; }
+  else if (qs.has('textsOnly')) return;
   else over = film.renderFilm(g, e, ov, t) || {};
   const fr = Math.round(t * 24);
   post.render(sc, gc, fr, ovc, qs.get('raw') ? { bloom: 0, halo: 0, soft: 0, flick: 0, lift: 0, contrast: 0, fade: 0, sat: 1, tint: [1, 1, 1], scan: 0, grille: 0, bleed: 1, rshift: 0, glow: 0, corner: 0, noiseA: 0, power: 1, track: 0, expo: 1 } : over);

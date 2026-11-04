@@ -10,7 +10,7 @@ const SECS = [          // [name, bpm, bars, mood]
   ['DRONE',  132, 8,   'comic suspense → "ta-da" → groove'],
   ['CLIMB',   92, 5,   'half-time tension: pad, toms, arpeggio, wind'],
   ['WINDOW',  70, 5,   'hush: e-piano single notes → SILENCE → one chord'],
-  ['DAWN',    96, 7,   'warm city-pop finale, semitone lift'],
+  ['DAWN',    96, 7.5, 'warm city-pop finale, semitone lift'],
   ['END',     96, 2,   'button: brass + bell'],
 ];
 export const SEC = {};
@@ -24,7 +24,7 @@ export const q12 = t => Math.floor(t * 12 + 1e-6) / 12, q8 = t => Math.floor(t *
 // shots: [section, start bar, painter, options]
 export const SHOTS = [
   ['OPEN', 0, 'crane'], ['OPEN', 3, 'title'],
-  ['HOME', 0, 'apartment'], ['HOME', 1, 'photo'], ['HOME', 1.75, 'phoneBuzz'], ['HOME', 2.5, 'chat', { which: 1 }], ['HOME', 4.25, 'decide'],
+  ['HOME', 0, 'apartment'], ['HOME', 1, 'photo'], ['HOME', 1.85, 'phoneBuzz'], ['HOME', 2.5, 'chat', { which: 1 }], ['HOME', 4.25, 'decide'],
   ['HOME', 5.25, 'kitchen'], ['HOME', 5.75, 'knot'], ['HOME', 6.25, 'liftBox'],
   ['GARAGE', 0, 'garageWide'], ['GARAGE', 1, 'unveil'], ['GARAGE', 2, 'cockpitIn'], ['GARAGE', 3, 'level', { tap: true }], ['GARAGE', 3.5, 'cough'],
   ['GARAGE', 4.5, 'eyesOn'], ['GARAGE', 5, 'stepOut'],
@@ -34,7 +34,7 @@ export const SHOTS = [
   ['DRONE', 0, 'droneIn'], ['DRONE', 1, 'hud', { which: 1 }], ['DRONE', 2.5, 'smack'], ['DRONE', 3.5, 'showBox'], ['DRONE', 4.5, 'hud', { which: 2 }], ['DRONE', 6.25, 'escort'],
   ['CLIMB', 0, 'towerLow'], ['CLIMB', 1, 'climb'], ['CLIMB', 2, 'gust'], ['CLIMB', 2.5, 'level', { gust: true }], ['CLIMB', 3, 'climbFace'], ['CLIMB', 4, 'arrive'],
   ['WINDOW', 0, 'desk'], ['WINDOW', 1, 'jieClose'], ['WINDOW', 1.5, 'tap'], ['WINDOW', 2, 'theHand'], ['WINDOW', 3, 'eyesECU'], ['WINDOW', 3.75, 'wave'], ['WINDOW', 4.25, 'laugh'],
-  ['DAWN', 0, 'palm'], ['DAWN', 1.5, 'dumpling'], ['DAWN', 2, 'grandmaLaugh'], ['DAWN', 2.5, 'pullBack'], ['DAWN', 4.5, 'snap'], ['DAWN', 5.25, 'oldPhoto'], ['DAWN', 6, 'chat', { which: 2 }],
+  ['DAWN', 0, 'palm'], ['DAWN', 1.5, 'dumpling'], ['DAWN', 2, 'grandmaLaugh'], ['DAWN', 2.5, 'pullBack'], ['DAWN', 4.5, 'snap'], ['DAWN', 5.25, 'oldPhoto'], ['DAWN', 6.2, 'chat', { which: 2 }],
   ['END', 0, 'endCard'],
 ].map(([sec, b, name, opt]) => ({ sec, b, name, opt: opt || {}, t0: at(sec, b) }));
 SHOTS.forEach((s, i) => { s.t1 = i + 1 < SHOTS.length ? SHOTS[i + 1].t0 : DUR; s.i = i; });
@@ -43,7 +43,7 @@ export const shotAt = tt => { let s = SHOTS[0]; for (const x of SHOTS) { if (x.t
 const h = at;
 export const HIT = {
   power: 0.05, title: h('OPEN', 3), titleGlint: h('OPEN', 4),
-  photoSlide: h('HOME', 1.2), buzz: h('HOME', 1.85), msg1: h('HOME', 2.6), msg2: h('HOME', 2.95), msg3: h('HOME', 3.2), msg4: h('HOME', 3.45),
+  photoSlide: h('HOME', 1.2), buzz: h('HOME', 1.95), msg1: h('HOME', 2.6), msg2: h('HOME', 2.95), msg3: h('HOME', 3.2), msg4: h('HOME', 3.45),
   decide: h('HOME', 4.75), glasses: h('HOME', 5.0), lid: h('HOME', 5.5), knot: h('HOME', 6.0), lift: h('HOME', 6.5),
   flash1: h('GARAGE', .5), tug: h('GARAGE', 1.25), unveil: h('GARAGE', 1.5), sit: h('GARAGE', 2.25), tapLevel: h('GARAGE', 3.25),
   cough1: h('GARAGE', 3.75), cough2: h('GARAGE', 4.0), smack: h('GARAGE', 4.25), eyesOn: h('GARAGE', 4.5), door: h('GARAGE', 5.0), step1: h('GARAGE', 5.5),
