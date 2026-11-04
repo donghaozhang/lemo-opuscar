@@ -127,7 +127,7 @@ export function laoJiao(g, st) {
   g.restore();
   // two long arms from the upper stem; hand targets in local coordinates (IK)
   const sh = [neck[0] * .82, neck[1] * .82 + 6];
-  const arm = (tgt, bend, seed) => { const a1 = ik(sh, tgt, 62, 62, 1), a2 = ik(sh, tgt, 62, 62, -1); const [e, h] = a1[0][1] > a2[0][1] ? a1 : a2;   // elbow hangs down tube(g, [sh, e, h], 8, .5, seed); form(g, circ(e[0], e[1], 4.5, 12), { v: .5, line: 1.2 }); return [e, h]; };
+  const arm = (tgt, bend, seed) => { const a1 = ik(sh, tgt, 62, 62, 1), a2 = ik(sh, tgt, 62, 62, -1); const [e, h] = a1[0][1] > a2[0][1] ? a1 : a2; /* elbow hangs down */ tube(g, [sh, e, h], 8, .5, seed); form(g, circ(e[0], e[1], 4.5, 12), { v: .5, line: 1.2 }); return [e, h]; };
   // stamp arm (behind)
   const [se, shd] = arm(st.stamp ?? [d * -26, sh[1] + 100], d > 0 ? 1 : -1, 11);
   form(g, [[shd[0] - 4, shd[1] - 2], [shd[0] + 4, shd[1] - 2], [shd[0] + 4, shd[1] + 12], [shd[0] - 4, shd[1] + 12]], { v: .5, line: 1.4 });
