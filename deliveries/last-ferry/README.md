@@ -1,0 +1,21 @@
+# 《最后一班渡船》 The Last Ferry
+
+**The film.** 150 s, 1920×1080, 24 fps, Simplified Chinese chapter cards and dialogue boxes, no voice-over. A Jiangnan water town in autumn, seen as a lit pixel diorama from a high three-quarter camera through a tilt-shift band, five chapters by hour (清晨 · 正午 · 黄昏 · 夜 · 黎明). On the last day before the new bridge opens, the old ferryman 老周 makes his final crossings: the schoolchildren at dawn (小石 at the bow drops a paper boat on the water, as every day; the new bridge stands fenced beside the ferry with one span still missing), a wedding party under red umbrellas at noon, an old couple with a goose at dusk, when 老周 lights his lantern for what he calls the last crossing. At night he ties up, blows the lantern out and looks at the dark bridge. A storm breaks; 小石's mother runs to the pier with the boy burning with fever; the clinic is across the river and the bridge cannot be crossed, so 老周 relights the lantern and rows them through the storm, the lantern nearly dying mid-river while the music drops to a heartbeat. The clinic door opens in warm light. At dawn the bridge opens with firecrackers and a red ribbon and the whole town crosses it; 老周 sits alone in his moored boat until 小石, well again, runs down to the old pier with a paper boat that says 谢谢周爷爷. He sets it on the water and it drifts under the new bridge into the morning light.
+
+**How it was made.** Everything is code, in the `films/last-ferry/` source folder of the `cloud/film-10-ferry` branch: a three.js diorama of primitives wrapped in procedurally drawn pixel textures; pixel characters drawn per pixel from pose tables at two densities (one for the wide shots, three times finer for the close-ups so eyes, lids, brows and expressions read; model sheet and expression sheet in `stills/`); a physical depth of field with the tilt-shift folded into it, bloom and a filmic grade; rendered frame by frame in headless Chrome on software OpenGL (no GPU) at 1× with 4-sample MSAA. One timeline file (`timeline.js`) carries every shot cut, the beat grid, every hit and the dialogue, so the picture, the score, the foley, the subtitles and the checks read the same numbers. The original score (dizi, erhu, guzheng, pipa, strings, timpani, frame drum; five moods, a hard stop at the blow-out, a heartbeat while the lantern dies, two real silences) was written on that grid with the library's sampler (CC0 sample libraries) and physical-model plucked strings; the foley and ambience were synthesized on the page's own event list; the mix was mastered to −14 LUFS. Fonts: Noto Serif SC (OFL, subset), Cinzel (OFL). Full credits and licences in the source folder's `CREDITS`. Two full renders with a 1 fps contact-sheet review and 0.2 s action strips after each (`stills/pass1_*`, `stills/pass2_*`, `stills/strip_*`), then partial re-renders spliced in for the last fixes.
+
+**Checks run and results.**
+
+| Check | Result |
+|---|---|
+| Loudness (ffmpeg ebur128 on `final.mp4` and `final-720p.mp4`) | I = −14.0 LUFS, LRA 10.1 LU, true peak −1.0 dBFS (both files) |
+| Black frames (`blackdetect d=0.1 pic_th=0.98`, both files) | BLACKLINE |
+| Silence (`silencedetect −50 dB, 2 s`) | none over 2 s; the two designed silences are ambience-only beds (78.6–81.6 s and 121.1–124.6 s) |
+| Cue check (`tools/cuecheck.py`: every cut, hit, dialogue box and designed foley event against the beat grid) | 188 cues, worst offset 0.5 ms, 0 off the quarter-beat grid |
+| Reading time (`core/render/readcheck.mjs`, 4.5 CJK chars/s + 1.5 s) | 14 of 14 on-screen texts pass (title, 5 chapter cards, 8 dialogue boxes) |
+| CJK glyphs (`tools/cjkcheck.py`: every character drawn vs. the subset fonts' cmap) | 56 characters needed, 0 missing; frames with text checked by eye in both review passes |
+| Duration and frames | 150.000 s, 3600 frames, 24 fps, both files |
+| File sizes | `final.mp4` SIZE1080 (1920×1080, limit 95 MB); `final-720p.mp4` SIZE720 (1280×720, limit 28 MB) |
+| Sign-off grep (`lemo ?lab`, `opus 5.5`) over source and deliveries | nothing outside `CREDITS` |
+
+Files: `final.mp4`, `final-720p.mp4`, `poster.jpg` (the lantern lit at dusk), `subtitles.srt` (the dialogue boxes and the title, exported from the same table that drives the overlay).
