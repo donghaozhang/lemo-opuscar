@@ -53,7 +53,7 @@ export const HIT = H;
 // —— shots: [id, start, transition into it] ——
 export const SHOTS = [
   ['s01', beat('A', 0), 'cut'], ['s02', beat('A', 6), 'through'], ['s03', beat('A', 12), 'dissolve'], ['s04', beat('A', 16), 'dissolve'],
-  ['s05', beat('A', 20), 'dissolve'], ['s06', beat('A', 23), 'cut'], ['s07', beat('A', 27), 'dissolve'], ['s08', beat('A', 32), 'dissolve'],
+  ['s05', beat('A', 20), 'dissolve'], ['s06', beat('A', 23), 'cut'], ['s07', beat('A', 27), 'cut'], ['s08', beat('A', 32), 'dissolve'],
   ['s09', beat('A', 37), 'dissolve'],
   ['s10', beat('B', 0), 'dissolve'], ['s11', beat('B', 5), 'curtain'], ['s12', beat('B', 8), 'dissolve'], ['s13', beat('B', 12), 'cut'],
   ['s14', beat('B', 15), 'cut'], ['s15', beat('B', 18.5), 'dissolve'], ['s16', beat('B', 22.5), 'dissolve'], ['s17', beat('B', 26.5), 'dissolve'],

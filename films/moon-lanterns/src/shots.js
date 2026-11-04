@@ -113,9 +113,9 @@ SHOT.s06 = () => {
 SHOT.s07 = () => {
   const I = scene('intDay', () => SC.interior('day')), { S, it } = I; S.tag = 's07';
   const yue = figure(S, it.yueL, { kind: 'girl', ppm: 12000, facing: -1 });
-  const ears = [0, .45, .9].map(e => piece({ w: .03, h: .03 + .011, ppm: 12000, color: '#c8261e', finish: { px: 2, rim: .35 }, ax: 0, ay: (.03 + .011) / 2, draw: x => { x.fillStyle = '#2a1008'; x.fillRect(-.0002, -.011, .0004, .011); x.fillStyle = '#c8261e'; x.save(); x.translate(0, -.011); Wd.rabbit(x, .0034, { earR: e }); x.restore(); }, glow: x => { x.save(); x.translate(0, -.011); Wd.rabbitGlow(x, .0034, { earR: e }); x.restore(); } }));
+  const ears = [0, .45, .9].map(e => piece({ w: .04, h: .04 + .011, ppm: 12000, color: '#c8261e', finish: { px: 2, rim: .35 }, ax: 0, ay: (.04 + .011) / 2, draw: x => { x.fillStyle = '#2a1008'; x.fillRect(-.0002, -.011, .0004, .011); x.fillStyle = '#c8261e'; x.save(); x.translate(0, -.011); Wd.rabbit(x, .0046, { earR: e }); x.restore(); }, glow: x => { x.save(); x.translate(0, -.011); Wd.rabbitGlow(x, .0046, { earR: e }); x.restore(); } }));
   const lan = hold(S, it.yueL, yue, 'near', ears[0], () => 0);
-  const camf = cam(S, [[22.4, [-.11, -.03, .21, .29]], [26.8, [-.105, -.028, .2, .28]]]);
+  const camf = cam(S, [[22.4, [-.125, -.03, .19, .27]], [H.lanternLift, [-.125, -.03, .19, .27]], [H.earFlop, [-.118, -.02, .165, .245]], [26.8, [-.118, -.02, .165, .245]]]);
   return { S, update(t) {
     S.showOnly(['s07']); I.update(t); camf(t); it.yue.show(false); it.mother.held = null;
     const tie = k(t, H.string - .5, H.string), lift = back(seg(t, H.lanternLift, H.lanternLift + .5), 1.3), pt = k(t, H.point, H.point + .4), fix = k(t, H.earFix - .3, H.earFix);
