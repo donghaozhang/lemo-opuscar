@@ -77,7 +77,7 @@ def footstep(kind='wood', v=1.0):
     if kind == 'boat': return norm(lp(noise(d), 700) * np.exp(-x / .02) + np.sin(2 * np.pi * 110 * x) * np.exp(-x / .03) * .7) * v
     return norm(bp(noise(d), 400, 2500) * np.exp(-x / .018) + np.sin(2 * np.pi * 180 * x) * np.exp(-x / .02) * .5) * v
 def umbrella(v=1.0):   # a snap of cloth + the ribs locking
-    d = .3; x = t_(d); return norm(bp(noise(d), 1200, 6000) * np.exp(-x / .03) + lp(noise(d), 800) * np.exp(-x / .08) * np.minimum(1, x / .02) * .7 + click(1.3, .5)[:len(x)] * 0) * v
+    d = .3; x = t_(d); return norm(bp(noise(d), 1200, 6000) * np.exp(-x / .03) + lp(noise(d), 800) * np.exp(-x / .08) * np.minimum(1, x / .02) * .7) * v
 def candy(v=1.0):
     d = .12; x = t_(d); return norm(hp(noise(d), 2500) * np.exp(-x / .006) + np.sin(2 * np.pi * 1800 * x) * np.exp(-x / .01) * .4) * v
 def win_on(v=1.0):   # a window warming up: a soft tink
@@ -104,14 +104,14 @@ def breath_in(v=1.0):
 def blow(v=1.0):
     d = .6; x = t_(d); return norm(bp(noise(d), 400, 1800) * env(d, .03, .3)) * v
 def rope(v=1.0):
-    d = .5; x = t_(d); return norm(creak(1.0)[:len(x)] * 0 + bp(noise(d), 300, 1500) * (np.abs(np.sin(2 * np.pi * 17 * x)) ** 2) * env(d, .05, .15)) * v
+    d = .5; x = t_(d); return norm(bp(noise(d), 300, 1500) * (np.abs(np.sin(2 * np.pi * 17 * x)) ** 2) * env(d, .05, .15)) * v
 def cloth(v=1.0):
     d = .35; x = t_(d); return norm(bp(noise(d), 500, 3000) * env(d, .05, .2)) * v
 def thunder(v=1.0, d=3.8):
     x = t_(d); crack = hp(noise(d), 1500) * np.exp(-x / .08) * .6; body = lp(brown(d), 180) * np.exp(-x / 1.2) * np.minimum(1, x / .12); rum = lp(noise(d), 90) * np.exp(-x / 1.8) * 2
     return norm(crack + body + rum) * v
 def castoff(v=1.0):
-    d = 1.4; x = t_(d); return norm(lp(noise(d), 500) * np.exp(-x / .4) * np.minimum(1, x / .1) + hull(.6)[:len(x)] * 0 + np.sin(2 * np.pi * 80 * x) * np.exp(-x / .3) * .5) * v
+    d = 1.4; x = t_(d); return norm(lp(noise(d), 500) * np.exp(-x / .4) * np.minimum(1, x / .1) + np.sin(2 * np.pi * 80 * x) * np.exp(-x / .3) * .5) * v
 def gutter(v=1.0):   # the flame guttering in the rain: a hiss with sputters
     d = 2.2; x = t_(d); sp = np.zeros(len(x)); idx = rng.integers(0, len(x), 60); sp[idx] = 1; return norm(bp(noise(d), 2000, 7000) * (.4 + .6 * np.abs(np.sin(2 * np.pi * 7 * x))) * env(d, .1, .6) + lp(sp, 3000) * 2) * v
 def door(v=1.0):
@@ -186,6 +186,8 @@ duck = uniform_filter1d(duck_mask, int(.3 * SR)); mus *= (1 - .3 * np.clip(duck 
 def lvl(x, db):
     act = np.abs(x).sum(1) > 1e-4; r = np.sqrt(np.mean(x[act] ** 2)) if act.any() else 1; return x * (10 ** (db / 20)) / (r + 1e-9)
 musS = lvl(mus, -20); ambS = lvl(amb, -30); fxS = lvl(fx, -27)
+# the beds drop under the heartbeat (the lantern dies) and thin into the second silence
+ambS *= curve([(0, 1), (112.3, 1), (112.9, .35), (115.3, .35), (116.4, 1), (121.1, 1), (122.5, .6), (150, .6)])[:, None]
 mix = musS + ambS + fxS
 pk = np.abs(mix).max(); print('peak %.1f dB' % (20 * np.log10(pk)))
 for ch in range(2): mix[:, ch] = limit(mix[:, ch], .92)

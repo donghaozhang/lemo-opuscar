@@ -1,0 +1,518 @@
+{
+ "DUR": 150,
+ "FPS": 24,
+ "SECS": [
+  {
+   "id": "morning",
+   "t": 0,
+   "bpm": 72,
+   "beats": 36
+  },
+  {
+   "id": "noon",
+   "t": 30,
+   "bpm": 120,
+   "beats": 40
+  },
+  {
+   "id": "dusk",
+   "t": 50,
+   "bpm": 80,
+   "beats": 24
+  },
+  {
+   "id": "night_quiet",
+   "t": 68,
+   "bpm": 60,
+   "beats": 13
+  },
+  {
+   "id": "storm",
+   "t": 81,
+   "bpm": 100,
+   "beats": 36
+  },
+  {
+   "id": "crossing",
+   "t": 102.6,
+   "bpm": 120,
+   "beats": 44
+  },
+  {
+   "id": "dawn",
+   "t": 124.6,
+   "bpm": 80,
+   "beats": 34
+  }
+ ],
+ "SHOTS": [
+  {
+   "id": "card1",
+   "a": 0,
+   "b": 2.5,
+   "card": "清晨",
+   "num": "I"
+  },
+  {
+   "id": "s1",
+   "a": 2.5,
+   "b": 5.8333,
+   "set": "town",
+   "desc": "water insert: the paper boat set down"
+  },
+  {
+   "id": "s2",
+   "a": 5.8333,
+   "b": 13.3333,
+   "set": "town",
+   "desc": "crane up to the dawn wide, title"
+  },
+  {
+   "id": "s3",
+   "a": 13.3333,
+   "b": 19.1667,
+   "set": "town",
+   "desc": "medium-high on the ferry, Xiao Shi asks"
+  },
+  {
+   "id": "s4",
+   "a": 19.1667,
+   "b": 23.3333,
+   "set": "town",
+   "desc": "close on Lao Zhou"
+  },
+  {
+   "id": "s5",
+   "a": 23.3333,
+   "b": 26.6667,
+   "set": "town",
+   "desc": "rack focus to the bridge gap"
+  },
+  {
+   "id": "s6",
+   "a": 26.6667,
+   "b": 30,
+   "set": "town",
+   "desc": "far pier: children off, the wave"
+  },
+  {
+   "id": "card2",
+   "a": 30,
+   "b": 32.5,
+   "card": "正午",
+   "num": "II"
+  },
+  {
+   "id": "s7",
+   "a": 32.5,
+   "b": 36.5,
+   "set": "town",
+   "desc": "noon wide: umbrellas pop open, boarding"
+  },
+  {
+   "id": "s8",
+   "a": 36.5,
+   "b": 41,
+   "set": "town",
+   "desc": "lateral tracking with the red cluster"
+  },
+  {
+   "id": "s9",
+   "a": 41,
+   "b": 45.5,
+   "set": "town",
+   "desc": "medium: the bride, the candy in the hat"
+  },
+  {
+   "id": "s10",
+   "a": 45.5,
+   "b": 50,
+   "set": "town",
+   "desc": "top-down: the ferry and the gap"
+  },
+  {
+   "id": "card3",
+   "a": 50,
+   "b": 52.25,
+   "card": "黄昏",
+   "num": "III"
+  },
+  {
+   "id": "s11",
+   "a": 52.25,
+   "b": 56,
+   "set": "town",
+   "desc": "dusk wide: windows pop on"
+  },
+  {
+   "id": "s12",
+   "a": 56,
+   "b": 60.5,
+   "set": "town",
+   "desc": "the goose refuses to board"
+  },
+  {
+   "id": "s13",
+   "a": 60.5,
+   "b": 64.25,
+   "set": "town",
+   "desc": "two-shot mid-river: the last crossing?"
+  },
+  {
+   "id": "s14",
+   "a": 64.25,
+   "b": 68,
+   "set": "town",
+   "desc": "close: the lantern is lit, shadows jump"
+  },
+  {
+   "id": "card4",
+   "a": 68,
+   "b": 70,
+   "card": "夜",
+   "num": "IV"
+  },
+  {
+   "id": "s15",
+   "a": 70,
+   "b": 73.5,
+   "set": "town",
+   "desc": "night wide: tying up"
+  },
+  {
+   "id": "s16",
+   "a": 73.5,
+   "b": 77.5,
+   "set": "town",
+   "desc": "he sits on the pier, push in"
+  },
+  {
+   "id": "s17",
+   "a": 77.5,
+   "b": 81,
+   "set": "town",
+   "desc": "close: he blows out the lantern"
+  },
+  {
+   "id": "s18",
+   "a": 81,
+   "b": 84.6,
+   "set": "town",
+   "desc": "wide: wind, first flash, rain"
+  },
+  {
+   "id": "s19",
+   "a": 84.6,
+   "b": 88.2,
+   "set": "town",
+   "desc": "lateral: the mother runs with the boy"
+  },
+  {
+   "id": "s20",
+   "a": 88.2,
+   "b": 93.6,
+   "set": "town",
+   "desc": "two-shot on the pier: the ask"
+  },
+  {
+   "id": "s21",
+   "a": 93.6,
+   "b": 95.4,
+   "set": "town",
+   "desc": "insert in a flash: the missing span"
+  },
+  {
+   "id": "s22",
+   "a": 95.4,
+   "b": 98.4,
+   "set": "town",
+   "desc": "close: the boy, fevered"
+  },
+  {
+   "id": "s23",
+   "a": 98.4,
+   "b": 102.6,
+   "set": "town",
+   "desc": "close: Lao Zhou decides, relights"
+  },
+  {
+   "id": "s24",
+   "a": 102.6,
+   "b": 106.6,
+   "set": "town",
+   "desc": "signature wide: one light in the storm"
+  },
+  {
+   "id": "s25",
+   "a": 106.6,
+   "b": 108.6,
+   "set": "town",
+   "desc": "insert: hands on the oar"
+  },
+  {
+   "id": "s26",
+   "a": 108.6,
+   "b": 111.1,
+   "set": "town",
+   "desc": "low medium: the boat crabbing"
+  },
+  {
+   "id": "s27",
+   "a": 111.1,
+   "b": 115.1,
+   "set": "town",
+   "desc": "close: the lantern gutters, heartbeat"
+  },
+  {
+   "id": "s28",
+   "a": 115.1,
+   "b": 117.6,
+   "set": "town",
+   "desc": "close: the hat cups the lantern"
+  },
+  {
+   "id": "s29",
+   "a": 117.6,
+   "b": 121.1,
+   "set": "town",
+   "desc": "far steps: the clinic door opens"
+  },
+  {
+   "id": "s30",
+   "a": 121.1,
+   "b": 124.6,
+   "set": "town",
+   "desc": "close: Lao Zhou breathing, rain thinning"
+  },
+  {
+   "id": "card5",
+   "a": 124.6,
+   "b": 126.85,
+   "card": "黎明",
+   "num": "V"
+  },
+  {
+   "id": "s31",
+   "a": 126.85,
+   "b": 130.6,
+   "set": "town",
+   "desc": "dawn wide: the bridge opens"
+  },
+  {
+   "id": "s32",
+   "a": 130.6,
+   "b": 134.35,
+   "set": "town",
+   "desc": "Lao Zhou alone, rack focus"
+  },
+  {
+   "id": "s33",
+   "a": 134.35,
+   "b": 136.6,
+   "set": "town",
+   "desc": "the yellow cap runs down the steps"
+  },
+  {
+   "id": "s34",
+   "a": 136.6,
+   "b": 138.1,
+   "set": "town",
+   "desc": "close: his reaction"
+  },
+  {
+   "id": "s35",
+   "a": 138.1,
+   "b": 141.1,
+   "set": "town",
+   "desc": "two-shot: the gift"
+  },
+  {
+   "id": "s36",
+   "a": 141.1,
+   "b": 143.35,
+   "set": "town",
+   "desc": "insert: the written boat"
+  },
+  {
+   "id": "s37",
+   "a": 143.35,
+   "b": 147.1,
+   "set": "town",
+   "desc": "he sets it on the water; it drifts under the bridge"
+  },
+  {
+   "id": "s38",
+   "a": 147.1,
+   "b": 150,
+   "set": "town",
+   "desc": "into the light; the band narrows; fade"
+  }
+ ],
+ "T": {
+  "boatDown": 2.9167,
+  "title": 8.3333,
+  "titleOut": 12.9167,
+  "dlgXs1": 13.75,
+  "dlgXs1Out": 18.9583,
+  "dlgLz1": 19.5833,
+  "dlgLz1Out": 23.125,
+  "rackBridge": 24.1667,
+  "hull": 26.6667,
+  "kidsOff": 27.0833,
+  "wave": 28.3333,
+  "umb": [
+   33,
+   33.5,
+   34,
+   34.5
+  ],
+  "gust": 35.5,
+  "gustBack": 36.25,
+  "board": 36,
+  "dlgBr1": 41.5,
+  "dlgBr1Out": 45.25,
+  "candyToss": 42.75,
+  "candyLand": 43.5,
+  "winOn": [
+   53,
+   53.75,
+   54.5,
+   55.25,
+   56,
+   56.75,
+   57.5,
+   58.25
+  ],
+  "honk": [
+   56.75,
+   57.875,
+   59
+  ],
+  "flap": 57.875,
+  "hop": 59.75,
+  "dlgOb1": 60.875,
+  "dlgOb1Out": 64.0625,
+  "match1": 64.4375,
+  "lit1": 64.625,
+  "dlgLz2": 64.8125,
+  "dlgLz2Out": 67.8125,
+  "honkLight": 67.25,
+  "rope": 71,
+  "sit": 73.5,
+  "breath": 78,
+  "blow": 78.5,
+  "wind": 81,
+  "flash1": 81.6,
+  "rain": 82.5,
+  "flash2": 86.4,
+  "flash3": 93.6,
+  "flash4": 104.1,
+  "flash5": 112.1,
+  "flash6": 119.6,
+  "run": 84.6,
+  "dlgMo1": 88.5,
+  "dlgMo1Out": 93.45,
+  "lookBridge": 99.6,
+  "lookLantern": 100.2,
+  "match2": 100.8,
+  "lit2": 101.1,
+  "dlgLz3": 101.4,
+  "dlgLz3Out": 103.6,
+  "castOff": 102.6,
+  "gutter": 111.1,
+  "dark": 112.6,
+  "heart": [
+   112.6,
+   113.6,
+   114.6
+  ],
+  "cup": 115.1,
+  "revive": 115.6,
+  "strings": 116.1,
+  "arrive": 117.6,
+  "door": 118.6,
+  "upSteps": 119.6,
+  "doorClose": 120.6,
+  "silence2": 121.1,
+  "birds": 124.6,
+  "cracker": 127.6,
+  "crackerEnd": 129.1,
+  "ribbon": 129.1,
+  "crowd": 129.475,
+  "xsRun": 134.35,
+  "look": 136.6,
+  "dlgXs2": 138.2875,
+  "dlgXs2Out": 141.1,
+  "kneel": 143.725,
+  "boatDown2": 144.85,
+  "underBridge": 147.1,
+  "fade": 148.6
+ },
+ "LINES": [
+  {
+   "id": "xs1",
+   "who": "小石",
+   "face": "xs_ask",
+   "t": 13.75,
+   "out": 18.9583,
+   "text": "周爷爷，明天还有船吗？"
+  },
+  {
+   "id": "lz1",
+   "who": "老周",
+   "face": "lz_smile",
+   "t": 19.5833,
+   "out": 23.125,
+   "text": "明天就走桥啦。"
+  },
+  {
+   "id": "br1",
+   "who": "新娘",
+   "face": "br_joy",
+   "t": 41.5,
+   "out": 45.25,
+   "text": "周伯，吃喜糖！"
+  },
+  {
+   "id": "ob1",
+   "who": "老伯",
+   "face": "ob_ask",
+   "t": 60.875,
+   "out": 64.0625,
+   "text": "老周，末班了？"
+  },
+  {
+   "id": "lz2",
+   "who": "老周",
+   "face": "lz_calm",
+   "t": 64.8125,
+   "out": 67.8125,
+   "text": "嗯，末班船。"
+  },
+  {
+   "id": "mo1",
+   "who": "母亲",
+   "face": "mo_fear",
+   "t": 88.5,
+   "out": 93.45,
+   "text": "周师傅，小石烧得厉害！"
+  },
+  {
+   "id": "lz3",
+   "who": "老周",
+   "face": "lz_firm",
+   "t": 101.4,
+   "out": 103.6,
+   "text": "上船。"
+  },
+  {
+   "id": "xs2",
+   "who": "小石",
+   "face": "xs_shy",
+   "t": 138.2875,
+   "out": 141.1,
+   "text": "周爷爷，给你。"
+  }
+ ],
+ "TITLE": "最后一班渡船"
+}

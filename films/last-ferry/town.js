@@ -306,7 +306,7 @@ export function buildTown() {
 
   // ———————————————————————— light states per chapter ————————————————————————
   const LS = {
-    morning: { sunC: '#ffd9b0', sunI: 2.1, sunD: [30, 11, -8], hemS: '#b4c6e0', hemG: '#6a6a70', hemI: 1.35, fog: '#c8d4e0', fogD: .009, skyT: '#7a9cc8', skyM: '#c9d6e4', skyH: '#f0d8c0', win: 0, lamp: 0, exp: 1.2, warm: .05, sat: 1.0, water: ['#2a4a4c', '#3c6660', '#8ab4ac'], mist: 1, mistC: [.85, .9, 1], stars: 0 },
+    morning: { sunC: '#ffd9b0', sunI: 2.1, sunD: [30, 11, -8], hemS: '#b4c6e0', hemG: '#6a6a70', hemI: 1.35, fog: '#c8d4e0', fogD: .009, skyT: '#7a9cc8', skyM: '#c9d6e4', skyH: '#f0d8c0', win: 0, lamp: 0, exp: 1.2, warm: .05, sat: 1.0, water: ['#2e4a4a', '#426460', '#7a9c96'], mist: 1, mistC: [.85, .9, 1], stars: 0 },
     noon:    { sunC: '#fff4e0', sunI: 2.3, sunD: [10, 40, 16], hemS: '#bcd0f0', hemG: '#6a6a60', hemI: 1.05, fog: '#d8e4ec', fogD: .005, skyT: '#4e86d0', skyM: '#9cc0ec', skyH: '#e8f0f4', win: 0, lamp: 0, exp: 1.15, warm: 0, sat: 1.08, water: ['#1e4a4c', '#2e6a66', '#7ab0a8'], mist: .15, mistC: [1, 1, 1], stars: 0 },
     dusk:    { sunC: '#ff9a50', sunI: 1.6, sunD: [-40, 9, 8], hemS: '#7a6aa8', hemG: '#3a2a3a', hemI: 1.1, fog: '#5a4a7a', fogD: .009, skyT: '#2a2a60', skyM: '#7a4a8a', skyH: '#ff9a60', win: 2.2, lamp: 1, exp: 1.1, warm: .12, sat: 1.05, water: ['#1a2a44', '#2e3e5c', '#c07050'], mist: .4, mistC: [.9, .7, .8], stars: .2 },
     night:   { sunC: '#6f86c0', sunI: .6, sunD: [-16, 30, -22], hemS: '#34447a', hemG: '#0a0a14', hemI: .8, fog: '#121a30', fogD: .017, skyT: '#050818', skyM: '#0e1a3a', skyH: '#24344e', win: 2.4, lamp: 1, exp: 1.1, warm: .0, sat: 1.0, water: ['#050c18', '#0e2232', '#3a6286'], mist: .3, mistC: [.6, .7, 1], stars: 1 },
@@ -355,7 +355,7 @@ export function buildTown() {
   // ———————————————————————— camera tracks ————————————————————————
   const CAMS = {
     s2:  { p: track([[T.boatDown + 2.2, [-.4, -.6, -6.3]], [9.0, [-9, 9, -1]], [13.3, [-17, 19, 24]]]), l: track([[T.boatDown + 2.2, [.9, -1.2, -7.9]], [9.0, [2, 0, -8]], [13.3, [3, 0, -10]]]), fov: [30, 36] },
-    s7:  { p: track([[32.5, [-9, 14, 12]], [36.5, [-7.5, 13, 10.5]]]), l: track([[32.5, [2.5, 0, -5]], [36.5, [2.5, 0, -5.5]]]), fov: [33, 33] },
+    s7:  { p: track([[32.5, [-6.5, 9.5, 7]], [36.5, [-5.5, 9, 6]]]), l: track([[32.5, [1.5, -.3, -4.5]], [36.5, [1.8, -.3, -4.8]]]), fov: [32, 32] },
     s10: { p: track([[45.5, [7, 32, -18]], [50, [7, 29, -17]]]), l: track([[45.5, [7, 0, -19]], [50, [7, 0, -18.5]]]), fov: [40, 38] },
     s11: { p: track([[52.25, [-15, 17, 21]], [56, [-12.5, 15.5, 18.5]]]), l: track([[52.25, [0, 0, -7]], [56, [1, 0, -7]]]), fov: [34, 34] },
     s15: { p: track([[70, [-12, 14, 15.5]], [73.5, [-11, 13.5, 14.5]]]), l: track([[70, [2, 0, -6]], [73.5, [2.2, 0, -6]]]), fov: [34, 34] },
@@ -372,7 +372,7 @@ export function buildTown() {
     let focusP = null, aper = 300, tiltC = null, extra = { t };
     let lit = 0; lanG.visible = true; lantern.visible = true;    // the lantern's level
     let lanPos = null;                  // where the lantern is (null = on the boat's pole)
-    let fl = 0;
+    let fl = 0, fillGut = 0;
     const bp = boatPose(t); boat.position.set(bp.x, WATER + .25 + bp.bob, bp.z); boat.rotation.set(Math.sin(t * 1.7) * .02 * (t > T.castOff && t < T.arrive ? 2.5 : 1), bp.heading, Math.sin(t * 1.3) * .015);
     boat.userData.oar.rotation.x = -.45 + Math.sin(t * 2.6 * 1.57) * .35; boat.userData.oar.rotation.z = .25;
     const onBoat = (lx, ly, lz) => new THREE.Vector3(lx, ly, lz).applyAxisAngle(new THREE.Vector3(0, 1, 0), bp.heading).add(boat.position);
@@ -387,7 +387,8 @@ export function buildTown() {
       const darkK = t < T.castOff ? ss(seg(t, T.blow, T.blow + .4)) * (1 - ss(seg(t, T.wind, T.rain + 2)) * .6) * (1 - ss(seg(t, T.lit2, T.lit2 + 1.2))) : 0;   // after the blow-out the world drops; the storm's flashes and the relight bring it back
       const gutK = ss(seg(t, T.gutter, T.dark)) * (1 - ss(seg(t, T.revive, T.revive + 1.2)));                              // the lantern-dies beat: ambient to a quarter
       const amb = (1 - darkK * .5) * (1 - gutK * .7);
-      LSt = applyLight(LS.night, LS.storm, stormK, { ...extra, hemK: amb, sunK: amb, skyK: (1 - darkK * .5) * (1 - gutK * .6) + fl * 2.2, winK: 1 - gutK * .7, lampK: 1 - gutK * .5 + (t > T.castOff ? -.3 : 0) });
+      LSt = applyLight(LS.night, LS.storm, stormK, { ...extra, hemK: amb, sunK: amb, skyK: (1 - darkK * .5) * (1 - gutK * .6) + fl * 2.2, winK: (1 - gutK * .7) * (1 - stormK * .4), lampK: 1 - gutK * .5 + (t > T.castOff ? -.3 : 0) });
+      fillGut = gutK;
       hemi.intensity += fl * 1.8; bolt.intensity = fl * 10; sun.intensity += fl * .5;
       barge.userData.lamp.material.emissiveIntensity = Math.floor(t * 1.2) % 2 ? 5 : .2; barge.userData.lg.material.opacity = Math.floor(t * 1.2) % 2 ? 1 : .1;
       RAIN.visible = true; const rk = ss(seg(t, T.rain, T.rain + 2.5)) * (1 - ss(seg(t, T.silence2, 124.6)));
@@ -431,20 +432,20 @@ export function buildTown() {
         show(C.lz, lzP, lzF, cam, flipLz); show(C.xs, xsP, xsF, cam, flipXs); show(C.k1, k1P, idle2(t, 1.1, 'sit', 'sit1'), cam, true); show(C.k2, k2P, idle2(t + .4, 1.3, 'sit', 'sit1'), cam); show(C.k3, k3P, idle2(t + .9, 1.2, 'sit', 'sit1'), cam, true);
       }
       // the paper boats on the water
-      pboats.forEach((b, i) => { const p = paperDrift(i, t); if (p) { b.visible = true; b.position.copy(p); b.rotation.y = Math.atan2(cam.position.x - p.x, cam.position.z - p.z) + .3; } });
+      pboats.forEach((b, i) => { b.scale.setScalar(1); const p = paperDrift(i, t); if (p) { b.visible = true; b.position.copy(p); b.rotation.y = Math.atan2(cam.position.x - p.x, cam.position.z - p.z) + .3; } });
       if (id === 's1') {   // water insert: the hand lowers the boat (the boat sprite descends into frame), it touches, ripples; the ferry hull passes above-right
-        const p0 = paperDrift(0, Math.max(t, T.boatDown)); const u = seg(t, T.boatDown - .9, T.boatDown); const p = p0.clone(); p.y += (1 - eo(u)) * .55; pboats[0].visible = true; pboats[0].position.copy(p); pboats[0].rotation.y = .7;
+        const p0 = paperDrift(0, Math.max(t, T.boatDown)); const u = seg(t, T.boatDown - .9, T.boatDown); const p = p0.clone(); p.y += (1 - eo(u)) * .55; pboats[0].visible = true; pboats[0].position.copy(p); pboats[0].rotation.y = .7; pboats[0].scale.setScalar(2.0);
         cam.position.set(p0.x - .75, WATER + .42, p0.z + .95); cam.fov = 30; cam.lookAt(p0.x + .1, WATER - .02, p0.z - .15); focusP = p.clone(); aper = 60;
         C.xs.root.visible = C.lz.root.visible = C.k1.root.visible = C.k2.root.visible = C.k3.root.visible = true;   // the ferry above-left, out of focus
       } else if (id === 's2') {
         const Cm = CAMS.s2; cam.position.set(...Cm.p(t)); cam.fov = lerp(Cm.fov[0], Cm.fov[1], ss(seg(t, 7, 13))); cam.lookAt(...Cm.l(t));
         const u = ss(seg(t, 6.5, 10.5)); focusP = (u < .5 ? pboats[0].position.clone() : lzP.clone().setY(lzP.y + .6)); aper = lerp(90, 420, u); tiltC = u > .6 ? null : null;
       } else if (id === 's3') {
-        cam.position.copy(onBoat(5.0, 3.1, 1.9 - seg(t, 13.3, 19.2) * .5)); cam.fov = 30; cam.lookAt(onBoat(0, .75, -.1)); focusP = onBoat(.1, .9, 0); aper = 240;
+        cam.position.copy(onBoat(5.4, 3.2, 2.8 - seg(t, 13.3, 19.2) * .5)); cam.fov = 32; cam.lookAt(onBoat(0, .75, .5)); focusP = onBoat(.1, .9, .4); aper = 240;
       } else if (id === 's4') {
         C.lz.root.visible = false; show(C.lz3, lzP, lzF, cam, false); const hp = C.lz3.headPos(); cam.position.copy(onBoat(2.1 + seg(t, 19.2, 23.3) * -.15, 1.85, 3.3)); cam.fov = 27; cam.lookAt(hp.x, hp.y - .04, hp.z); focusP = hp; aper = 110;
       } else if (id === 's5') {
-        const u = ss(seg(t, T.rackBridge - .4, T.rackBridge + .9)); const gap = new THREE.Vector3(BX, DECK + .3, -12.5); cam.position.copy(onBoat(-2.4, 1.7, 1.6)); cam.fov = 38; cam.lookAt(xsP.clone().setY(xsP.y + .8).lerp(gap, .5)); aper = lerp(200, 170, u);
+        const u = ss(seg(t, T.rackBridge - .4, T.rackBridge + .9)); const gap = new THREE.Vector3(BX, DECK + .3, -12.5); cam.position.copy(onBoat(-1.7, 1.5, -3.9)); cam.fov = 38; cam.lookAt(xsP.clone().setY(xsP.y + .8).lerp(gap, .45)); aper = lerp(200, 170, u);
         post.dof.focus = lerp(cam.position.distanceTo(xsP.clone().setY(xsP.y + .5)), cam.position.distanceTo(gap), u); focusP = null;
       }
       fill.position.copy(lzP).add(new THREE.Vector3(.4, 1.5, 2.2)); fill.intensity = .9;
@@ -471,8 +472,8 @@ export function buildTown() {
       show(C.lz, lzP, lzF, cam, true);
       if (id === 's9' && t > T.candyToss && t < T.candyLand) { const u = seg(t, T.candyToss, T.candyLand); const a = C.br.at(26, 12, true), b = C.lz.at(14, 10, true); candy.visible = true; candy.position.lerpVectors(a, b, u); candy.position.y += Math.sin(u * Math.PI) * .9; candy.rotation.set(t * 9, t * 7, 0); }
       if (id === 's7') { const Cm = CAMS.s7; cam.position.set(...Cm.p(t)); cam.fov = Cm.fov[0]; cam.lookAt(...Cm.l(t)); focusP = new THREE.Vector3(0, 0, -4); aper = 380; tiltC = .5; }
-      else if (id === 's8') { cam.position.set(19.5, 4.1, bp.z + 3.2); cam.fov = 28; cam.lookAt(bp.x, .5, bp.z - .6); focusP = onBoat(0, .8, 0); aper = 330; }
-      else if (id === 's9') { cam.position.copy(onBoat(5.0, 2.9, 2.2)); cam.fov = 30; cam.lookAt(onBoat(0, .8, -.3)); focusP = onBoat(0, .9, 0); aper = 240; }
+      else if (id === 's8') { cam.position.set(19.5, 4.1, bp.z + 1.2); cam.fov = 28; cam.lookAt(bp.x, .5, bp.z - .4); focusP = onBoat(0, .8, 0); aper = 330; }
+      else if (id === 's9') { cam.position.copy(onBoat(5.4, 3.0, 2.8)); cam.fov = 33; cam.lookAt(onBoat(0, .8, .6)); focusP = onBoat(0, .9, .4); aper = 240; }
       else if (id === 's10') { const Cm = CAMS.s10; cam.position.set(...Cm.p(t)); cam.fov = lerp(Cm.fov[0], Cm.fov[1], seg(t, 45.5, 50)); cam.up.set(0, 0, -1); cam.lookAt(...Cm.l(t)); cam.up.set(0, 1, 0); focusP = onBoat(0, .4, 0); aper = 420; tiltC = .52; }
       fill.intensity = 0;
     }
@@ -497,7 +498,7 @@ export function buildTown() {
       if (id === 's11') { const Cm = CAMS.s11; cam.position.set(...Cm.p(t)); cam.fov = Cm.fov[0]; cam.lookAt(...Cm.l(t)); focusP = new THREE.Vector3(0, 0, -4); aper = 380; tiltC = .5; }
       else if (id === 's12') { cam.position.set(3.6, 2.1, -8.2 + seg(t, 56, 60.5) * .4); cam.fov = 31; cam.lookAt(-.1, -.1, -4.4); focusP = gP.clone().setY(gP.y + .3); aper = 220; }
       else if (id === 's13') { cam.position.copy(onBoat(-3.0, 2.1, -3.4)); cam.fov = 31; cam.lookAt(onBoat(.1, 1.0, .9)); focusP = onBoat(0, 1.0, .6); aper = 170; fill.intensity = 1.2; }
-      else if (id === 's14') { const lp = onBoat(-.6, 1.25, 2.15); cam.position.copy(onBoat(-2.0, 1.75, 4.2)); cam.fov = 30; cam.lookAt(onBoat(-.15, 1.3, 2.2)); focusP = lp; aper = 110; }
+      else if (id === 's14') { const lp = onBoat(-.6, 1.25, 2.15); cam.position.copy(onBoat(-2.0, 1.75, 4.2)); cam.fov = 30; cam.lookAt(onBoat(-.15, 1.15, 2.2)); focusP = lp; aper = 110; }
       if (id !== 's13') { fill.position.copy(lzP).add(new THREE.Vector3(.4, 1.5, 2.2)); fill.intensity = .8; } else fill.position.copy(lzP).add(new THREE.Vector3(-1.2, 1.5, 1.2));
     }
     // ———————————————— NIGHT ————————————————
@@ -566,7 +567,7 @@ export function buildTown() {
       // rain follows the camera's target
       const fp = focusP || new THREE.Vector3(0, 0, -6); RB[0] = fp.x - 22; RB[3] = fp.x + 22; RB[1] = fp.y - 3; RB[4] = fp.y + 18; RB[2] = fp.z - 22; RB[5] = fp.z + 14; RAIN.userData.update(t, [-7 - windK * 6, 0]);
       splashBox = [fp.x - 10, WATER + .02, fp.z - 10, fp.x + 10, 0, fp.z + 8]; splash.userData.update(t);
-      lanL.intensity = lit > 0 ? Math.max(.12, 3.4 * Math.pow(lit, 1.3)) * fk : 0;
+      lanL.intensity = lit > 0 ? Math.max(.12, (onPier ? 5.0 : 3.8) * Math.pow(lit, 1.3)) * fk : 0; fill.intensity *= (1 - fillGut * .7);
     }
     // ———————————————— DAWN ————————————————
     else {
@@ -612,12 +613,12 @@ export function buildTown() {
       if (id === 's31') { const Cm = CAMS.s31; cam.position.set(...Cm.p(t)); cam.fov = lerp(Cm.fov[0], Cm.fov[1], seg(t, 126.85, 130.6)); cam.lookAt(...Cm.l(t)); focusP = new THREE.Vector3(BX, 1, 12); aper = 400; tiltC = .5; }
       else if (id === 's32') { cam.position.set(-3.4, 2.1, .2); cam.fov = 30; cam.lookAt(lzP.x + .2, .25, lzP.z - .1); const u = ss(seg(t, 131.6, 132.6)) * (1 - ss(seg(t, 133.3, 134.2))); post.dof.focus = lerp(cam.position.distanceTo(lzP), cam.position.distanceTo(new THREE.Vector3(BX, DECK, 0)), u); focusP = null; aper = 200; }
       else if (id === 's33') { cam.position.set(4.4, 2.5, -7.2); cam.fov = 31; cam.lookAt(-.4, -.2, -1.3); focusP = C.xs.root.position.clone().setY(C.xs.root.position.y + .4); aper = 220; }
-      else if (id === 's34') { const hp = C.lz3.headPos(true); cam.position.copy(hp).add(new THREE.Vector3(1.5, .25, 1.2)); cam.fov = 27; cam.lookAt(hp.x, hp.y - .05, hp.z); focusP = hp; aper = 110; }
+      else if (id === 's34') { const hp = C.lz3.headPos(true); cam.position.copy(hp).add(new THREE.Vector3(1.5, .25, 1.2)); cam.fov = 27; cam.lookAt(hp.x, hp.y - .05, hp.z); focusP = hp; aper = 110; fill.intensity = 1.3; fill.position.copy(hp).add(new THREE.Vector3(.8, .5, 1.0)); }
       else if (id === 's35') { cam.position.set(4.7, 1.0, .3); cam.fov = 32; cam.lookAt(1.8, .55, -2.5); focusP = new THREE.Vector3(1.8, .5, -2.5); aper = 150; }
       else if (id === 's36') { const p = pbBig.position; cam.position.set(p.x + .45, p.y + .22, p.z + .85); cam.fov = 27; cam.lookAt(p); focusP = p.clone(); aper = 60; }
       else if (id === 's37') { const u = ss(seg(t, T.kneel, T.boatDown2 + .6)); const p = pbBig.userData.p || new THREE.Vector3(3.7, WATER, -2.6); cam.position.set(lerp(6.0, p.x + 1.9, u), lerp(2.3, WATER + .42, u), lerp(1.2, p.z - 2.5, u)); cam.fov = 30; cam.lookAt(lerp(2.6, p.x, u), lerp(.1, p.y, u), lerp(-2.3, p.z, u)); focusP = u < .5 ? lzP.clone().setY(lzP.y + .3) : p.clone(); aper = lerp(180, 90, u); }
       else if (id === 's38') { const p = pbBig.userData.p || new THREE.Vector3(14, WATER, -2.6); cam.position.set(p.x - 3.2 + seg(t, 147.1, 150) * .4, WATER + .45, p.z - 2.5); cam.fov = 30; cam.lookAt(p.x + 1.8, p.y, p.z + 1.0); focusP = p.clone(); aper = 120; }
-      fill.intensity = .6; fill.position.copy(lzP).add(new THREE.Vector3(.4, 1.5, 2.0));
+      if (id !== 's34') { fill.intensity = .6; fill.position.copy(lzP).add(new THREE.Vector3(.4, 1.5, 2.0)); }
     }
 
     // —— the lantern: on the boat's pole unless set down; its light, glow and level ——
@@ -627,7 +628,7 @@ export function buildTown() {
     const lc = lp.clone().add(new THREE.Vector3(0, 14 * SPX * .45, 0)), toCam = cam.position.clone().sub(lc).setY(0).normalize().multiplyScalar(.45);
     lanL.position.copy(lc).add(toCam); if (t < 68) lanL.intensity = lit > 0 ? 3.2 * Math.pow(lit, 1.3) * flick(t, 4) : 0; if (t >= 124.6) lanL.intensity = 0;
     const gd = clamp(cam.position.distanceTo(lc) / 9, .22, 2.6); lanG.position.copy(lc); lanG.material.opacity = lit > 0 ? Math.min(.85, .2 + lit * .7) : 0; lanG.scale.setScalar(gd * (.3 + lit * .7 + (t > T.lit1 && t < T.lit1 + .5 ? (1 - (t - T.lit1) / .5) * 1.2 : 0) + (t > T.lit2 && t < T.lit2 + .5 ? (1 - (t - T.lit2) / .5) * 1.2 : 0)));
-    lantern.material.emissiveIntensity = 2.6 * (lit > 0 ? 1 : 0);
+    lantern.material.emissiveIntensity = (cam.position.distanceTo(lc) < 4 ? 1.9 : 2.6) * (lit > 0 ? 1 : 0);
     // reflections on the water
     const lights = [{ p: lc, c: new THREE.Color('#ffb050'), i: lit * .9 }];
     if (t >= 50 && t < 124.6) { lamps.forEach(l => lights.push({ p: l.g.position.clone().add(new THREE.Vector3(-.6, 2.9, 0)), c: new THREE.Color('#ffae55'), i: .6 * (l.L.intensity > 0 ? 1 : 0) })); lights.push({ p: new THREE.Vector3(2.5, 1.4, -34.5), c: new THREE.Color('#ffd090'), i: doorL.intensity / 36 }); winL.slice(0, 3).forEach(l => lights.push({ p: l.position, c: new THREE.Color('#ff9d4a'), i: l.intensity > 0 ? .25 : 0 })); }
