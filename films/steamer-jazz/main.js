@@ -222,7 +222,7 @@ ev(at('s03', 2.0), 'window');
 ev(SH.s04.t0, 'bed', { name: 'stove', t1: SH.s16.t0, gain: .5 });
 [0, .42, .83].forEach(x => ev(at('s04', x), 'dough'));
 ev(at('s04', 1.3), 'yawn'); hit('yawn', at('s04', 1.3));
-CARD('s05', .05, 2.5, '闹钟忘了上弦', { y: 960 });
+CARD('s05', .05, 3.0, '闹钟忘了上弦', { y: 960 });
 ev(at('s05', .9), 'whoosh', { g: .4 });
 ev(SEQ.nod, 'flop'); hit('nod', SEQ.nod);
 [.4, 2.0].forEach(x => ev(at('s06', x + .8), 'snore')); ev(at('s07', .3), 'snore');
@@ -346,7 +346,7 @@ const SHOTS = {
   // medium: the pin rolls the dough flat
   s11(t, lt) {
     setCam({ x: 1330, y: 880, z: 2.3 });
-    kitchen(t, { noDough: 1, amp: .05 });
+    kitchen(t, { noDough: 1, noWang: 1, amp: .05 });
     const b = beats(tq(t)), w = 40 + Math.min(1, lt / 3) * 90;
     shape(spline([[1190 - w, 962], [1190 - w + 10, 950], [1190 + w - 10, 950], [1190 + w, 962]], true, 4), { fill: P.white });
     GRADE = NIGHT_KIT(t);
@@ -354,7 +354,7 @@ const SHOTS = {
   // medium: the cleaver chops the filling on eighths
   s12(t, lt) {
     setCam({ x: 1430, y: 870, z: 2.6 });
-    kitchen(t, { noCleaver: 1, amp: .05 });
+    kitchen(t, { noCleaver: 1, noWang: 1, amp: .05 });
     const e = (lt * 4) % 1, up = e < .5 ? Math.sin(e * 2 * Math.PI / 2) : 0;
     shape(spline([[1350, 962], [1370, 944], [1420, 938], [1470, 946], [1490, 962]], true, 5), { fill: P.dmid });
     C.cleaver({ x: 1430, y: 960 - up * 40, k: .5, ex: 'grin', tilt: up * .25 });
@@ -364,7 +364,7 @@ const SHOTS = {
   // medium: the cleaver's gloves pleat a bun, one pleat per beat; the buns hop into the steamer
   s13(t, lt) {
     setCam({ x: 1380, y: 900, z: 2.2 });
-    kitchen(t, { amp: .05 });
+    kitchen(t, { amp: .05, noWang: 1 });
     const b = Math.floor(lt * 2);
     const bx = 1320, by = 958;
     if (lt < 3.0) { push(); translate(bx, by); scale(1 + .05 * Math.sin(lt * 12)); C.bun(0, 0, 1.1, {}); pop(); for (const s of [-1, 1]) glove(bx + s * 70, by - 40 - (b % 2 ? 10 : 0), s > 0 ? Math.PI : 0, b % 2 ? 'grab' : 'open', .9, { flip: s < 0 }); }
@@ -409,8 +409,8 @@ const SHOTS = {
   },
   // peak: pull back, everything (background included) dances ×3; the dough rope morphs into a trombone
   s18(t, lt) {
-    const z = lerp(1.1, .62, ss(seg(lt, 0, 1.6)));
-    setCam({ x: 1300, y: 780, z });
+    const z = lerp(1.25, .82, ss(seg(lt, 0, 1.6)));
+    setCam({ x: 1420, y: 860, z });
     const b = beats(tq(t)), sq = Math.cos(TAU * b) * .025;
     kitchen(t, { amp: .15, hop: 22, squash: sq, extra: () => {
       // dough rope → trombone (transformation), played by the pin
@@ -437,7 +437,7 @@ const SHOTS = {
     setCam({ x: lerp(2150, 1700, ss(seg(lt, 0, 3))), y: 1000, z: 1.6 }); kitchen(t, { amp: .05 });
     const st = Math.floor(lt * 2), ph = (lt * 2) % 1, x = lerp(2340, 1580, Math.min(1, (st + ss(ph)) / 6));
     const grab = t >= SEQ.ratGrab;
-    C.rat({ x: lt < 2.5 ? x : lerp(1580, 1700, seg(lt, 2.5, 4)), y: lt < 2.0 ? 1180 : 1180 - Math.sin(seg(lt, 2.0, 2.5) * Math.PI) * 220 - (lt > 2.8 ? 0 : 0) - (lt > 2.55 && lt < 2.8 ? 0 : 0), k: .5, ex: grab ? 'happy' : 'sly', tail: 'q', legs: [{ x: -22, y: -Math.abs(Math.sin(ph * Math.PI)) * 18 }, { x: 22, y: -Math.abs(Math.cos(ph * Math.PI)) * 18 }], arms: grab ? [{ x: -50, y: -60, hand: 'open', hk: .7 }, { x: 60, y: -150, hand: 'grab', hk: .7 }] : null });
+    C.rat({ x: lt < 2.5 ? x : lerp(1580, 1700, seg(lt, 2.5, 4)), y: lt < 2.0 ? 1180 : 1180 - Math.sin(seg(lt, 2.0, 2.5) * Math.PI) * 220, k: .68, ex: grab ? 'happy' : 'sly', tail: 'q', legs: [{ x: -22, y: -Math.abs(Math.sin(ph * Math.PI)) * 18 }, { x: 22, y: -Math.abs(Math.cos(ph * Math.PI)) * 18 }], arms: grab ? [{ x: -50, y: -60, hand: 'open', hk: .7 }, { x: 60, y: -150, hand: 'grab', hk: .7 }] : null });
     if (grab) C.bun(lerp(1580, 1700, seg(lt, 2.5, 4)) + 34, 1180 - 70 - 30, .55, { best: true });
     GRADE = NIGHT_KIT(t);
   },
@@ -533,7 +533,8 @@ const SHOTS = {
   s31(t, lt) {
     setCam({ x: 1500, y: 560, z: 1.6 }); bg('lane');
     C.bun(1700, 640, 1.5, { best: true });
-    push(); stroke(spline([[1700, 580], [1660, 520], [1600, 500], [1520, 520], [1440, 560], [1360, 590]].map((p, i) => [p[0], p[1] + Math.sin(t * 3 + i) * 8]), false, 6), T.S.lw * 1.6); pop();
+    const k_ = ss(seg(lt, 0, 1.6)), pts = [[1700, 600], [1660, 520], [1600, 490], [1520, 500], [1440, 540], [1360, 580]].slice(0, 2 + Math.floor(k_ * 4)).map((p, i) => [p[0], p[1] + Math.sin(t * 3 + i) * 8]);
+    shape(ribbon(spline(pts, false, 6), 26, 8), { fill: P.white, lw: T.S.lw * .8 });
     snow(t, .6);
     GRADE = NIGHT_LANE(t);
   },
@@ -640,16 +641,16 @@ const SHOTS = {
   },
   // final gag: the rat in an apron kneads at the table in time with the band, winks
   s43(t, lt) {
-    setCam({ x: 1150, y: 870, z: 1.9 }); kitchen(t, { noWang: 1, noDough: 1, amp: .08 });
+    setCam({ x: 1150, y: 800, z: 2.5 }); kitchen(t, { noWang: 1, noDough: 1, noPin: 1, amp: .08 });
     const b = beats(tq(t)), k = Math.floor(b) % 2;
     shape(spline([[1080, 962], [1090, 928 - k * 8], [1150, 914 + k * 6], [1210, 928 - k * 8], [1220, 962]], true, 6), { fill: P.white });
-    C.rat({ x: 1150, y: 960, k: .62, apron: 1, ex: lt > 3.4 ? 'wink' : 'happy', tail: 'curl', arms: [{ x: -40, y: -50 + k * 20, hand: 'fist', front: true }, { x: 50, y: -50 + (1 - k) * 20, hand: 'fist', front: true }], sy: 1 + (k ? .06 : -.04) });
+    C.rat({ x: 1150, y: 960, k: .88, apron: 1, ex: lt > 3.4 ? 'wink' : 'happy', tail: 'curl', arms: [{ x: -40, y: -50 + k * 20, hand: 'fist', front: true }, { x: 50, y: -50 + (1 - k) * 20, hand: 'fist', front: true }], sy: 1 + (k ? .06 : -.04) });
     GRADE = { exp: 1, lights: [{ x: KIT.window.x + 190, y: 410, r: 700, a: .35 }] };
   },
   // the dough rises into 「完」; the iris closes on it
   s44(t, lt) {
-    setCam({ x: 1150, y: 870, z: 1.9 }); kitchen(t, { noWang: 1, noDough: 1, amp: .08 });
-    C.rat({ x: 1010, y: 960, k: .62, apron: 1, ex: 'joy', tail: 'curl', arms: [{ x: 80, y: -170, hand: 'open', front: true }, { x: -50, y: -60, hand: 'open' }] });
+    setCam({ x: 1150, y: 800, z: 2.5 }); kitchen(t, { noWang: 1, noDough: 1, noPin: 1, amp: .08 });
+    C.rat({ x: 1030, y: 960, k: .88, apron: 1, ex: 'joy', tail: 'curl', arms: [{ x: 80, y: -170, hand: 'open', front: true }, { x: -50, y: -60, hand: 'open' }] });
     GRADE = { exp: 1, lights: [{ x: KIT.window.x + 190, y: 410, r: 700, a: .35 }] }; applyGrade(); GRADE = null;
     const k = ss(seg(lt, .3, 1.1));
     const R = fat('完', 1060 + 0, 560 - k * 60, 300 * (.3 + .7 * k), { face: P.white });
