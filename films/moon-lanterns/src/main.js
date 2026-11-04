@@ -54,6 +54,7 @@ window.EV = Object.entries(T.HIT).flatMap(([k, v]) => (Array.isArray(v) ? v.map(
 window.TEXTS = t => {
   const out = [];
   for (const s of T.STRIPS) {
+    if (t + FROM < s.t0 || t + FROM > s.t1) continue;
     const i = plan.findIndex(p => t + FROM >= p.start && t + FROM < p.end); if (i < 0) continue;
     const sh = get(i); if (!sh.textBox) continue; const b = sh.textBox(s.id, t + FROM); if (!b) continue;
     out.push({ id: s.id, text: s.text, x0: b[0], y0: b[1], x1: b[2], y1: b[3] });
