@@ -21,3 +21,4 @@ SwiftShader (software), 4 cores. Sample libraries vsco2ce + vcsl fetched. Music 
 | 11:07 | review pass 2 | render 2 reviewed (stills/r2_sheet*.jpg): coverage and close-ups read; readcheck OK (7/7), −14.0 LUFS / −3.3 dBTP, no black frames; fix round: pupil size, painter's back; final render next |
 | 11:18 | final render | frames 540 / 3168 |
 | 11:28 | final render | frames 1140 / 3168 |
+| 11:38 | final render | frames 1800 / 3168 |
