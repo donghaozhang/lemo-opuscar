@@ -351,7 +351,7 @@ SH.screen1 = (t, u) => {
   const sw = t >= HITS.screenSwap[0], gl = t > 43.95 && t < 44.25;
   translator(960, 560, 4.4, { t, beep: talk('TR', t).talking ? 1 : 0, screen: () => {
     if (t > 43.25) text('修理飞船', 0, sw ? -32 : -18, { font: `${sw ? 16 : 22}px ${FONT}`, fill: sw ? '#a87a3a' : C.scrTx });
-    if (sw) { stroke([[-34, -32], [34, -32]], 3, { line: '#ff4a3a' }); text('→ 最辣的', 0, -6, { font: `24px ${FONT}`, fill: '#ffd25a' }); }
+    if (sw) { stroke([[-34, -32], [34, -32]], 3, { line: '#ff4a3a' }); text('最辣的', 8, -6, { font: `24px ${FONT}`, fill: '#ffd25a' }); stroke([[-46, -6], [-32, -6]], 3, { line: '#ffd25a' }); stroke([[-37, -11], [-32, -6], [-37, -1]], 3, { line: '#ffd25a' }); }
     if (gl) for (let i = 0; i < 6; i++) fillOnly(rect(-50 + hash(K12(t) + i) * 80, -46 + i * 9, 20 + hash(i) * 30, 5), '#ff4a3a', { boil: 0 });
   } });
   bigArm([1900, 1300], [1250, 860], 1, C.pSkin, C.pSkin, { ang: Math.PI * 1.1, fist: true });
@@ -751,7 +751,7 @@ function tag(t) {
     g.font = `38px ${FONT}`; const w = g.measureText(T.text).width;
     g.fillStyle = 'rgba(20,14,32,.78)'; g.fillRect(50, 46, w + 60, 64);
     g.strokeStyle = T.col; g.lineWidth = 4; g.strokeRect(50, 46, w + 60, 64);
-    g.fillStyle = T.col; g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillText(s + (K12(t) % 2 ? '▌' : ''), 80, 80);
+    g.fillStyle = T.col; g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillText(s, 80, 80); if (K12(t) % 2) g.fillRect(84 + g.measureText(s).width, 62, 16, 36);
   }
 }
 
@@ -775,7 +775,7 @@ window.TEXTS = t => {
   if (s === 'cellRoof') box('e0', '能量 0%', 760, 260, 1160, 340);
   if (s === 'cellTable') box('e1', '能量', 1480, 270, 1640, 330);
   if (s === 'screen1' && t > 43.25) box('scrA', '修理飞船', 600, 200, 1300, 500);
-  if (s === 'screen1' && t >= HITS.screenSwap[0]) box('scrB', '→ 最辣的', 600, 300, 1300, 600);
+  if (s === 'screen1' && t >= HITS.screenSwap[0]) box('scrB', '最辣的', 600, 300, 1300, 600);
   if (s === 'menu') { box('menu0', '菜单', 700, 100, 1200, 260); if (t > 49.8) box('menu1', '最辣', 700, 600, 1300, 1000); }
   if (s === 'screen2' && t > 137.6) box('scr2', '再来一盘 × 200', 600, 200, 1300, 600);
   if (s === 'endCard' && t > 140.5) box('end', TITLE, 200, 300, 1720, 560);

@@ -1,0 +1,13 @@
+外星人来吃火锅 — third-party assets
+
+Fonts (SIL Open Font License 1.1), via Google Fonts, subset to the characters used (tools/fonts.sh):
+- ZCOOL KuaiLe (站酷快乐体) by ZCOOL — titles, signs, menu, subtitles, tags
+- VT323 by Peter Hull — one numeral line on the translator screen
+
+Code adapted (technique only) from this library's scifi-toon demo:
+- toon.js (vector engine: screen-space line boil, constant line width)
+- music/instr.py (theremin, analog bass, square pluck, drum machine, Karplus-Strong synthesis)
+- core/audio/sfx.py helpers (library core)
+
+Everything else — characters, sets, props, voices (formant-synthesised gibberish), score and foley — was made in code for this film.
+No samples, no text-to-speech, no stock footage, no images.

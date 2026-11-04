@@ -4,3 +4,4 @@
 - 2026-11-04 12:05 UTC · TREATMENT.md written (3 structures, shot list of 48 shots, cue map, sound table).
 - 12:17 UTC · model + expression sheets (stills/), engine, cast, sets, all 49 shots blocked; first still pass clean
 - 12:25 UTC · voices (formant gibberish), score (music/score.py), foley + beds (mix.py), cuecheck ok (20 hits, 0 ms)
+- 12:31 UTC · first full render done (3490 frames, 210 s; −14.2 LUFS); review pass 1

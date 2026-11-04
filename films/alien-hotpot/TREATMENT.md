@@ -163,3 +163,22 @@ Voices: gibberish made by a formant synthesiser (glottal pulse train through two
 ## 10. What differs from the demo (filled in after reading DEMO.md)
 
 See the end of this file.
+
+### Not the demo again (written after reading DEMO.md)
+
+| | Demo (*Coffee Run*) | This film |
+|---|---|---|
+| Structure | errand through parallel worlds, rule of three → montage | one place over one night and a morning; a three-act sitcom episode |
+| Opening | cold open on an empty coffee pot, dialogue | rain city wide with a falling streak nobody notices; no dialogue for 28 s |
+| Signature shot | rush-zoom portal swirl wipes | the cold-silence close-up of Pip, colour climbing up from the scarf, steam from every vent |
+| Camera path | lab → worlds → lab, same framing per world | city → alley → interior coverage (OTS, CUs, inserts, whip pan) → street → city → morning alley |
+| Score shape | 120 bpm theme + one motif per world | tempo arc 80 → 160 → 120 → 100 → 120 → 60 → 120, four hard silences, A minor theme turning A major at the fuel moment |
+| Ending | decaf reversal, callback line, end card | a fleet queuing with tiny bowls; the translator's 「再来一盘 × 200」 in silence |
+
+All six differ. The one shared grammar is the style's own (duo contrast, reaction close-ups, a cold pause).
+
+### Decisions made without the owner (cloud brief)
+
+- Font: Huninn (jf 粉圓) has no simplified glyphs (锅 认 证 转 让 庆 missing), so the film uses ZCOOL KuaiLe, a rounded heavy OFL face with full coverage, thickened with a same-colour round stroke.
+- Film length 145.4 s (the order scene grew by one bar so that every on-screen text holds long enough to read).
+- Auntie Liu never speaks words: two hummed lines (「嗯。」, 「七上八下。」) are a closed-mouth hum, subtitled.
