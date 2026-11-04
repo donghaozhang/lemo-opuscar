@@ -10,7 +10,9 @@ export const hash = n => { n = Math.sin(n * 127.1 + 311.7) * 43758.5453; return 
 
 // Keyframe track: keys = [[t, v, ease?], ...] (v a number or an array). Eased (smoothstep by default) between keys,
 // held before the first and after the last key. ease 'snap' jumps at the key (a deliberate two-frame pop).
-const EASE = { ss, eio, eo, ei, lin: x => clamp(x), snap: x => (x >= 1 ? 1 : 0) };
+export const back = x => { x = clamp(x); const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };      // overshoot
+export const spring = x => { x = clamp(x); return 1 - Math.exp(-6 * x) * Math.cos(x * 14); };                                        // wobble to rest
+const EASE = { ss, eio, eo, ei, back, spring, lin: x => clamp(x), snap: x => (x >= 1 ? 1 : 0) };
 export function K(keys, t) {
   if (t <= keys[0][0]) return keys[0][1];
   for (let i = 1; i < keys.length; i++) {

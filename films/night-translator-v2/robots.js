@@ -35,7 +35,12 @@ function grip(g, h, a, open, v, s = 1) {
 //     armL / armR: { t: [x, y] hand target in local units (null = hanging), open } ; hidden: draw nothing below y = cut
 export function xiaoYi(g, st) {
   const s = st.s ?? 1;
-  g.save(); g.translate(st.x, st.y); g.scale(s * (st.flip ?? 1), s);
+  g.save(); g.translate(st.x, st.y + (st.dy ?? 0)); g.scale(s * (st.flip ?? 1), s);
+  // contact shadow on the floor (stays on the floor when the body leaves it)
+  if ((st.shadow ?? 1) > 0 && !st.spin) { g.save(); g.globalAlpha *= .3 * (st.shadow ?? 1) / (1 + Math.abs(st.dy ?? 0) / 60); g.fillStyle = '#000'; g.beginPath(); g.ellipse(0, -(st.dy ?? 0) / s + 1, 42, 7, 0, 0, 7); g.fill(); g.restore(); }
+  if (st.spin) { g.translate(0, -88); g.rotate(st.spin); g.translate(0, 88); }
+  // idle breathing (1.6 s cycle) and a slow antenna sway, added on top of the acting
+  if (st.t != null) { const b = Math.sin(st.t * Math.PI * 2 / 1.6); st = { ...st, squash: (st.squash ?? 1) * (1 + .016 * b), ant: (st.ant ?? 0) + .12 * Math.sin(st.t * 2.3) }; }
   const hub = [0, -18];
   // wheel + spokes (rotation = distance / radius, set by the shot)
   form(g, circ(0, -18, 18, 28), { v: .2, line: 2.2, grad: .1 });
@@ -75,9 +80,10 @@ export function xiaoYi(g, st) {
   const ex = clamp(st.ex ?? 0, -1, 1), ey = clamp(st.ey ?? 0, -1, 1), bl = clamp(st.blink ?? 0);
   for (const k of [-1, 1]) {
     const c = [B[0] + k * 17, B[1] - 12];
-    form(g, circ(c[0], c[1], 11, 24), { v: .25, line: 2 });
-    form(g, circ(c[0], c[1], 8.5, 22), { v: .98, line: 0, grad: .05 });
-    form(g, circ(c[0] + ex * 3.6, c[1] + ey * 3.6, 3.6, 14), { v: .06, line: 0, grad: 0 });
+    const wd = st.wide ?? 1;
+    form(g, circ(c[0], c[1], 11 * wd, 24), { v: .25, line: 2 });
+    form(g, circ(c[0], c[1], 8.5 * wd, 22), { v: .98, line: 0, grad: .05 });
+    form(g, circ(c[0] + ex * 3.6 * wd, c[1] + ey * 3.6 * wd, 3.6 / Math.sqrt(wd), 14), { v: .06, line: 0, grad: 0 });
     if (bl > .02) { const h = 17 * bl; form(g, [[c[0] - 9, c[1] - 9], [c[0] + 9, c[1] - 9], [c[0] + 9, c[1] - 9 + h], [c[0] - 9, c[1] - 9 + h]], { v: .7, line: 1.4, grad: 0 }); }
     const br = (st.brow ?? 0) * .38 * k;                     // + worried (inner end up)
     const b0 = rot([c[0] - 10, c[1] - 17], [c[0], c[1] - 17], br), b1 = rot([c[0] + 10, c[1] - 17], [c[0], c[1] - 17], br);
@@ -100,7 +106,9 @@ export function xyLocal(st, p) {
 //     pen: hand target (local) for the pen arm, stamp: hand target for the stamp arm, penRed (pen tip drawn red), hold: 'bucket'|'xy'|null
 export function laoJiao(g, st) {
   const s = st.s ?? 1, d = st.dir ?? -1;
+  if (st.t != null) st = { ...st, lean: (st.lean ?? 0) + .012 * Math.sin(st.t * Math.PI * 2 / 2.3) };
   g.save(); g.translate(st.x, st.y); g.scale(s, s);
+  if ((st.shadow ?? 1) > 0) { g.save(); g.globalAlpha *= .3; g.fillStyle = '#000'; g.beginPath(); g.ellipse(0, 1, 62, 9, 0, 0, 7); g.fill(); g.restore(); }
   // casters + base
   for (const cx of [-34, 0, 34]) form(g, circ(cx, -8, 8, 18), { v: .25, line: 1.8 });
   form(g, [[-46, -14], [46, -14], [30, -34], [-30, -34]], { v: .3, line: 2.4, grad: .2, shade: 6 });
@@ -137,8 +145,8 @@ export function laoJiao(g, st) {
   const [pe, ph] = arm(st.pen ?? [d * 40, sh[1] + 96], d > 0 ? -1 : 1, 13);
   const pa = Math.atan2(ph[1] - pe[1], ph[0] - pe[0]) + (st.penTilt ?? .5) * d;
   const nib = [ph[0] + Math.cos(pa) * 26, ph[1] + Math.sin(pa) * 26], back = [ph[0] - Math.cos(pa) * 10, ph[1] - Math.sin(pa) * 10];
-  tube(g, [back, nib], 5, .55, 17);
-  red(g, m => { m.beginPath(); m.arc(nib[0], nib[1], 4.2, 0, 7); m.fill(); }, .38, () => { g.beginPath(); g.arc(nib[0], nib[1], 4.2, 0, 7); g.fill(); });
+  if (!st.noPen) tube(g, [back, nib], 5, .55, 17);
+  if (!st.noPen) red(g, m => { m.beginPath(); m.arc(nib[0], nib[1], 4.2, 0, 7); m.fill(); }, .38, () => { g.beginPath(); g.arc(nib[0], nib[1], 4.2, 0, 7); g.fill(); });
   grip(g, ph, pa, .1, .4, .9);
   g.restore();
   return { neck, sh };

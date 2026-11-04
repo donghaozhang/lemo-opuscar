@@ -16,7 +16,7 @@ const FS = `#version 300 es
 precision highp float; in vec2 uv; out vec4 o;
 uniform sampler2D T, B, C; uniform vec2 R; uniform float frame, seed;
 uniform float uStr, uGrain, uFlick, uScr, uBurn, uVig, uHal, uSepia, uBlack, uWhite, uCon, uExpo, uHasC;
-uniform vec2 uWeave;
+uniform vec2 uWeave; uniform vec3 uTint; uniform float uTintAmt;
 float h21(vec2 p){ p = fract(p*vec2(123.34,456.21)); p += dot(p,p+45.32); return fract(p.x*p.y); }
 float h11(float x){ return fract(sin(x*127.1+311.7)*43758.5453); }
 float vn(vec2 p){ vec2 i=floor(p), f=fract(p); vec2 u=f*f*(3.-2.*f);
@@ -77,6 +77,8 @@ void main(){
   sep = mix(sep, vec3(.97,.92,.82), smoothstep(.5, 1., L));
   vec3 outc = mix(silver, sep, uSepia);
   outc += vec3(.035,.012,-.01) * burn;                     // burned edges go brown
+  // period tinting: the whole print dyed (highlights take the dye; blacks stay black)
+  outc = mix(outc, outc * uTint, uTintAmt);
   // the one colour: keep hue where the mask says so (same grain + exposure)
   if (uHasC > .5) {
     vec4 cm = texture(C, st);
@@ -104,7 +106,7 @@ export class FilmPost {
     const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
     const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     this.tex = [0, 1, 2].map(() => { const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); return t; });
-    this.U = {}; for (const n of ['T', 'B', 'C', 'R', 'frame', 'seed', 'uStr', 'uGrain', 'uFlick', 'uScr', 'uBurn', 'uVig', 'uHal', 'uSepia', 'uBlack', 'uWhite', 'uCon', 'uExpo', 'uHasC', 'uWeave']) this.U[n] = gl.getUniformLocation(pr, n);
+    this.U = {}; for (const n of ['T', 'B', 'C', 'R', 'frame', 'seed', 'uStr', 'uGrain', 'uFlick', 'uScr', 'uBurn', 'uVig', 'uHal', 'uSepia', 'uBlack', 'uWhite', 'uCon', 'uExpo', 'uHasC', 'uWeave', 'uTint', 'uTintAmt']) this.U[n] = gl.getUniformLocation(pr, n);
     this.small = document.createElement('canvas'); this.small.width = Math.round(w / 8); this.small.height = Math.round(h / 8);
     this.sg = this.small.getContext('2d', { willReadFrequently: true });
     this.mean = .5;
@@ -143,6 +145,7 @@ export class FilmPost {
     gl.uniform1f(U.uBlack, p.black ?? .055); gl.uniform1f(U.uWhite, p.white ?? .93); gl.uniform1f(U.uCon, p.contrast ?? 1);
     gl.uniform1f(U.uExpo, (p.exposure ?? 1) * this.flickerAt(frame, p)); gl.uniform1f(U.uHasC, colorMask ? 1 : 0);
     const [wx, wy] = this.weaveAt(frame, p); gl.uniform2f(U.uWeave, wx, wy);
+    const ti = p.tint || [1, 1, 1]; gl.uniform3f(U.uTint, ti[0], ti[1], ti[2]); gl.uniform1f(U.uTintAmt, p.tintAmt ?? 0);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     return this.canvas;
   }

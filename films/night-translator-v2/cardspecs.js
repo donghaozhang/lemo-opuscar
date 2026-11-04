@@ -1,32 +1,22 @@
-// Intertitle cards. level: 0 = one heavy rule (a shout, text shakes), 1 = double rule + stepped corners + fans
-// (narration), 2 = + vines and small flowers (tender). CJK in Noto Serif SC; Latin in Playfair Display SC / Old Standard TT.
-export const ZH = 'Noto Serif SC';
+// v2 intertitles. kind: 'narr' (deco double rule), 'say' (dialogue cartouche with speaker), 'shout' (heavy rule, shakes),
+// 'tender' (vines), 'end' (完 + credits), and the three genre reel cards (the films' own English titles).
+export const ZH = 'Noto Serif SC', BRUSH = 'Ma Shan Zheng';
 export const CARDS = {
-  GOAL:  { level: 1, seed: 3, lines: [{ text: '天亮之前，', font: ZH, size: 96, weight: 700 }, { text: '全部译完。', font: ZH, size: 96, weight: 700 }], gap: 1.45 },
-  SHOUT: { level: 0, seed: 5, shake: 1.6, lines: [{ text: '硝酸胶片——', font: ZH, size: 104, weight: 900 }, { text: '一点就着！', font: ZH, size: 104, weight: 900 }], gap: 1.42 },
-  LAST:  { level: 2, seed: 7, lines: [{ text: '您刚才看的，', font: ZH, size: 84, weight: 700 }, { text: '就是最后一卷。', font: ZH, size: 84, weight: 700 }], gap: 1.55 },
-  END:   { level: 2, seed: 9, lines: [{ text: '完', font: ZH, size: 210, weight: 900 }, { text: 'THE END', font: 'Playfair Display SC', size: 50, weight: 700, spacing: 14 }], gap: 1.3 },
+  SAY:   { kind: 'say', who: '老校', lines: [{ text: '天亮之前——', size: 82 }, { text: '一个字也不许错。', size: 96 }] },
+  SHOUT: { kind: 'shout', level: 0, seed: 5, shake: 1.6, lines: [{ text: '硝酸胶片——', font: ZH, size: 104, weight: 900 }, { text: '一点就着！', font: ZH, size: 104, weight: 900 }], gap: 1.42 },
+  SAY2:  { kind: 'say', who: '老校', lines: [{ text: '……不错。', size: 120 }] },
+  LAST:  { kind: 'tender', level: 2, seed: 7, lines: [{ text: '您刚看的这一卷——', font: ZH, size: 80, weight: 700 }, { text: '正是第一千卷。', font: ZH, size: 92, weight: 700 }], gap: 1.6 },
+  END:   { kind: 'end' },
 };
-// The title card (drawn by film.js with the blind gag)
+export const END_LINES = [{ text: '完', font: ZH, size: 220, weight: 900 }, { text: 'THE END', font: 'Playfair Display SC', size: 46, weight: 700, spacing: 14 },
+  { text: '翻译　小译　·　校对　老校', font: ZH, size: 40, weight: 700 }];
 export const TITLE_EN = [{ text: 'THE NIGHT TRANSLATOR', font: 'Playfair Display SC', size: 86, weight: 900, spacing: 4 },
   { text: 'a Photoplay in One Reel', font: 'Old Standard TT', size: 46, italic: true }];
-export const TITLE_ZH = [{ text: '《深夜翻译官》', font: ZH, size: 138, weight: 900 },
-  { text: '一卷默片', font: ZH, size: 50, weight: 700, spacing: 18 }];
-// The returned page (insert)
-export const PAGE_EN = 'Break a leg!';
-export const PAGE_BAD = '摔断一条腿！';
-export const PAGE_FIX = '祝你演出顺利！';
-// Props lettering
-export const PROPS = { seal: '译毕', bucket: '消防', todo: '待译', done: '已译', can: 'No. 1000', archive: '片库' };
-
-// Subtitles (.srt) = the cards, as they appear on screen
-export const SUBS = [
-  ['titleZh', '《深夜翻译官》'],
-  ['GOAL', '天亮之前，全部译完。'],
-  ['pageEn', 'Break a leg!'],
-  ['pageBad', '摔断一条腿！'],
-  ['pageFix', '祝你演出顺利！'],
-  ['SHOUT', '硝酸胶片——一点就着！'],
-  ['LAST', '您刚才看的，就是最后一卷。'],
-  ['END', '完'],
-];
+export const TITLE_ZH = [{ text: '《深夜翻译官》', font: ZH, size: 138, weight: 900 }, { text: '一卷默片', font: ZH, size: 50, weight: 700, spacing: 18 }];
+// the three reels: their own English card, the literal translation, the red correction
+export const REELS = {
+  WEST: { head: 'Reel 117 · "Six-Gun Sunset" · Title 4', card: ['HOLD YOUR', 'HORSES!'], en: 'Hold your horses!', bad: '抓住你的马！', fix: '别急！' },
+  ROMA: { head: 'Reel 512 · "Moonlight Waltz" · Title 9', card: ["I'm head", 'over heels!'], en: "I'm head over heels!", bad: '我头在脚跟上！', fix: '我神魂颠倒！' },
+  MONS: { head: 'Reel 864 · "The Thing from the Fog" · Title 2', card: ["It's raining", 'cats and dogs!'], en: "It's raining cats and dogs!", bad: '天上下猫下狗！', fix: '倾盆大雨！' },
+};
+export const PROPS = { seal: '译毕', bucket: '消防', can: 'No. 1000' };

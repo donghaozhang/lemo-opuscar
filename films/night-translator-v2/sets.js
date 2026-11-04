@@ -91,23 +91,36 @@ export function archive(g, o = {}) {
     g.save(); g.globalAlpha = dawn * .32; g.fillStyle = grey(1);
     g.beginPath(); g.moveTo(wx0, wy1); g.lineTo(wx1, wy1); g.lineTo(1120, FLOOR + 60); g.lineTo(700, FLOOR + 60); g.closePath(); g.fill(); g.restore();
   }
+  // moonbeam through the window when the lamp is off (cold open, establishing)
+  if ((o.moon ?? 0) > .01) {
+    g.save(); g.globalAlpha = o.moon * .26; const gr = g.createLinearGradient(720, wy1, 1000, FLOOR); gr.addColorStop(0, grey(1, 1)); gr.addColorStop(1, grey(1, .2)); g.fillStyle = gr;
+    g.beginPath(); g.moveTo(wx0 + 20, wy1); g.lineTo(wx1 - 20, wy1); g.lineTo(1230, FLOOR + 80); g.lineTo(860, FLOOR + 80); g.closePath(); g.fill(); g.restore();
+  }
   // shelves
   shelfBlock(g, SHELF.L[0], SHELF.L[1], 'L', { lit: o.lit, base: wall - .04, slotFill: o.slotFill });
   shelfBlock(g, SHELF.R[0], SHELF.R[1], 'R', { lit: o.lit, base: wall - .04, slotFill: o.slotFill });
+  if ((o.slotGlow ?? 0) > .01) { const [sx, sy] = slotPos(); g.save(); g.globalAlpha = o.slotGlow; glow(g, sx, sy, 70, 1); g.restore(); }
+  // the fire bucket on its hook at the end of the left shelves (planted for the fire)
+  form(g, rect(358, 520, 22, 30), { v: .3, line: 1.2 });
+  form(g, rect(330, 470, 78, 40), { v: .9, line: 1.6, grad: 0 });
+  red(g, m => { m.font = '700 26px "Noto Serif SC"'; m.textAlign = 'center'; m.textBaseline = 'middle'; m.fillText('消防', 369, 491); });
+  if (!o.bucketGone) bucket(g, 369, 580, { s: .55 });
   // floor
   form(g, rect(-200, FLOOR, 1840, 400), { v: lerp(.34, .55, dawn), line: 2, grad: .1 });
   for (let i = -6; i < 16; i++) stroke(g, [[720 + i * 110 * .7, FLOOR + 4], [720 + i * 160, 1080]], 1.2, { taper: 0, alpha: .5 });
   // clock
   clock(g, 720, 474, 38, o.hours ?? 12);
   // desk lamp: cord, shade, pool of light on the bench and floor
-  const lamp = o.lampOn ?? 1;
-  stroke(g, [[700, -10], [700, 556]], 1.6, { taper: 0 });
+  const lamp = o.lampOn ?? 1, sw = o.lampSwing ?? 0, LX = 700 + Math.sin(sw) * 566, LY = -10 + Math.cos(sw) * 566;
+  g.save(); g.translate(LX, LY + 10); g.rotate(-sw); g.translate(-700, -566);
+  stroke(g, [[700, -10 - 600], [700, 556]], 1.6, { taper: 0 });
   form(g, [[668, 590], [732, 590], [714, 556], [686, 556]], { v: .2, line: 2 });
   form(g, ellipsePts(700, 592, 32, 6, 0, 20), { v: .5 + lamp * .48, line: 1.2, grad: 0 });
-  g.save(); g.globalAlpha = .55 * lamp; glow(g, 700, 800, 330, .9); g.restore();
+  g.restore();
+  g.save(); g.globalAlpha = .55 * lamp; glow(g, 700 + Math.sin(sw) * 900, 800, 330, .9); g.restore();
   // a wall sconce behind the proof stand: Lao Jiao reads as a dark silhouette against its light
-  form(g, rect(1000, 560, 16, 30), { v: .3, line: 1.4 }); form(g, circ(1008, 556, 9, 14), { v: .98, line: 1, grad: 0 });
-  g.save(); g.globalAlpha = .7 * lamp; glow(g, 1000, 600, 260, .95); g.restore();
+  form(g, rect(1000, 560, 16, 30), { v: .3, line: 1.4 }); form(g, circ(1008, 556, 9, 14), { v: .5 + .48 * (o.sconce ?? lamp), line: 1, grad: 0 });
+  g.save(); g.globalAlpha = .7 * (o.sconce ?? lamp); glow(g, 1000, 600, 260, .95); g.restore();
   // pneumatic tube (desk → proof stand), brass
   const tube = catmull([[760, 800], [764, 660], [790, 600], [850, 600], [884, 640], [884, 690]], false, 8);
   tubeShape(g, tube, 14, .62);
@@ -274,6 +287,7 @@ export function aisleEnd(g, o = {}) {
   }
 }
 export function bucket(g, x, y, o = {}) {
+  if (o.s && o.s !== 1) { g.save(); g.translate(x, y); g.scale(o.s, o.s); bucket(g, 0, 0, { ...o, s: 1 }); g.restore(); return; }
   // a cone-bottomed fire bucket with a bail handle; (x, y) = rim centre
   form(g, [[x - 52, y], [x + 52, y], [x + 40, y + 70], [x, y + 98], [x - 40, y + 70]], { v: .55, line: 2.4, grad: .25, shade: 8 });
   form(g, ellipsePts(x, y, 52, 11, 0, 30), { v: o.water ? .62 : .2, line: 2 });
