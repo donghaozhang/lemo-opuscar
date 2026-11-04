@@ -6,3 +6,4 @@
 2026-11-04T10:54Z all 56 shots drawn (first pass); style frames + per-shot contact sheets in stills/
 2026-11-04T11:02Z cue map exported (CUEMAP.md, events.json); original score rendered (music/score.py: shamisen, shakuhachi, koto, taiko, shime, hyoshigi, rin)
 2026-11-04T11:03Z first full render started (3471 frames, 3 workers)
+2026-11-04T11:18Z first full render done (412 s render); review pass 1 written (REVIEW.md), fixes applied; second render starting

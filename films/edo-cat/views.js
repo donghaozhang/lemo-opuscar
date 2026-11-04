@@ -260,7 +260,8 @@ function snowLayer(x, part) {
     // pine at left with snow pads (needle colour; snow = paper)
     pine(x, 180, SN.ground, 2.6, { seed: 5, lean: .25, lines: false, minI: 3 });
     // roof: dark tile under-slope; snow (paper) left unprinted on top
-    x.fillStyle = '#4c5560'; x.beginPath(); poly(x, [[300, roofTop(300) + 62], [1650, roofTop(1650) + 62], [1880, roofTop(1650) + 40], [1880, roofTop(1650) + 120], [1600, roofTop(1600) + 118], [300, roofTop(300) + 112]]); x.fill();
+    x.fillStyle = '#4c5560'; x.beginPath(); poly(x, [[300, roofTop(300) + 62], [1650, roofTop(1650) + 62], [1880, roofTop(1650) + 40], [1880, roofTop(1650) + 175], [1600, roofTop(1600) + 172], [300, roofTop(300) + 168]]); x.fill();
+    x.fillStyle = PAL.woodD; x.beginPath(); poly(x, [[300, roofTop(300) + 168], [1600, roofTop(1600) + 172], [1880, roofTop(1650) + 175], [1880, roofTop(1650) + 200], [1600, roofTop(1600) + 197], [300, roofTop(300) + 193]]); x.fill();
     // hall wall + pillars below the eave
     rect(x, PAL.plaster, 700, SN.eave + 40, 1880, SN.ground); for (let X = 760; X < 1880; X += 220) rect(x, '#8a3a2c', X, SN.eave + 40, X + 26, SN.ground);
     rect(x, PAL.woodD, 700, SN.eave + 40, 1880, SN.eave + 80);
@@ -277,8 +278,9 @@ function snowLayer(x, part) {
   if (part === 'key') {
     pine(x, 180, SN.ground, 2.6, { seed: 5, lean: .25, fills: false, minI: 3 });
     K(x, [[300, roofTop(300)], [1000, roofTop(1000) - 4], [1650, roofTop(1650)], [1880, roofTop(1650) - 30]], 2.6, { taper: [0, 0] });
-    K(x, [[300, roofTop(300) + 112], [1600, roofTop(1600) + 118], [1880, roofTop(1650) + 120]], 2.8, { taper: [0, 0] });
-    for (let i = 1; i < 26; i++) { const X = 300 + i * 52; x.strokeStyle = S; x.lineWidth = 1.2; x.beginPath(); x.moveTo(X, roofTop(X) + 66); x.lineTo(X + 18, roofTop(X) + 110); x.stroke(); }
+    K(x, [[300, roofTop(300) + 168], [1600, roofTop(1600) + 172], [1880, roofTop(1650) + 175]], 2.8, { taper: [0, 0] });
+    K(x, [[300, roofTop(300) + 193], [1600, roofTop(1600) + 197], [1880, roofTop(1650) + 200]], 2.8, { taper: [0, 0] });
+    for (let i = 1; i < 52; i++) { const X = 300 + i * 30; if (X > 1860) break; x.strokeStyle = S; x.lineWidth = 1.3; x.beginPath(); x.moveTo(X, roofTop(X) + 64); x.lineTo(X + 8, roofTop(X) + 166); x.stroke(); }
     // ridge ornament
     x.fillStyle = S; x.beginPath(); poly(x, [[300, SN.ridge], [270, SN.ridge - 60], [330, SN.ridge - 30], [345, SN.ridge + 10]]); x.fill();
     K(x, [[700, SN.eave + 40], [1880, SN.eave + 40]], 2.4); K(x, [[700, SN.eave + 80], [1880, SN.eave + 80]], 2);

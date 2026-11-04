@@ -1,0 +1,13 @@
+江户猫追鱼记 (The Edo Cat and the Fish) — third-party assets
+
+Fonts (SIL Open Font License 1.1), subset to the characters used (fonts/subset.py):
+  Ma Shan Zheng — https://github.com/google/fonts/tree/main/ofl/mashanzheng (fonts/OFL-mashanzheng.txt)
+  Noto Serif SC — https://github.com/google/fonts/tree/main/ofl/notoserifsc (fonts/OFL-notoserifsc.txt)
+
+Instrument samples (used inside the synthesised taiko, shime-daiko, hyoshigi and the shakuhachi model):
+  VCSL (Versilian Community Sample Library) — CC0 1.0 — recorder, gran_cassa, toms, frame_drum, woodblock
+  VSCO 2 Community Edition — CC0 1.0 — flute
+  FreePats — CC0 1.0 — world percussion (claves)
+
+Everything else (pictures, characters, score, foley, ambience) is drawn and synthesised in code for this film.
+Shamisen and koto: physical models (core/audio/pluck.py). No voice, no stock footage, no generated video.

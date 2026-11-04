@@ -419,8 +419,9 @@ const s32 = sheet('s32', {
   cam: push(1.02, 1),
   paint(ctx, t, R, lt) {
     // the arched leap held over the peak: the back arch rhymes with the mountain
-    const u = seg(lt, 0, 1.8), cx = lerp(1500, 420, ss(u)), cy = 700 - Math.sin(u * Math.PI) * 120;
-    R.fig(A => catSide(A, cx, cy, 620, -1, { ...gait('run', .5), arch: .2, eye: .9, brow: -.4 }, { t: q8(lt) }));
+    // the leap peaks right over the summit: the arched back rhymes with the slopes of the mountain
+    const u = seg(lt, 0, 1.8), cx = lerp(1700, 260, u), cy = 520 - Math.sin(u * Math.PI) * 260;
+    R.fig(A => catSide(A, cx, cy, 560, -1, { ...gait('run', .5), arch: .22, eye: .9, brow: -.4, ear: -.3 }, { t: q8(lt) }));
     kasumiLive(ctx, 960, 870, 1800, 40);
   },
 });

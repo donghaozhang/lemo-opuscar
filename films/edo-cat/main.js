@@ -110,8 +110,10 @@ const SCROLL = {
   s35(t, lt, d) { const u = ease(seg(lt, .1, d - .9)); return { cx: VC('pass')[0], cy: lerp(540, -540, u) }; },
   s39(t, lt, d) { const u = ease(seg(lt, 1.0, d - .3)), z = lerp(1, .82, Math.sin(Math.PI * u)); return { cx: lerp(VC('pass')[0], VC('sea')[0], u), cy: lerp(-560, 540, ss(seg(lt, .8, d - .2))), z }; },
   s40() { return { cx: VC('sea')[0] + 0, cy: 540 }; },
-  s45(t, lt, d) { const u = ease(seg(lt, .2, 2.0)); return { cx: VC('sea')[0] - 40 * u, cy: lerp(540, 250, u), z: lerp(1, .9, u) }; },
-  s46(t, lt, d) { const u = ease(seg(lt, 0, 1.4)); return { cx: VC('sea')[0] - 40 * (1 - u), cy: lerp(250, 540, u), z: lerp(.9, 1, u) }; },
+  s45(t, lt, d) {   // tilt up past the border with the fish, then push in on the catch (the cat ≈ a third of the frame), hold
+    const u = ease(seg(lt, .2, 1.5)), p = ease(seg(lt, 1.3, 2.1)), c = at('sea', 980, -70);
+    return { cx: lerp(VC('sea')[0] - 40 * u, c[0], p), cy: lerp(lerp(540, 250, u), c[1], p), z: lerp(lerp(1, .9, u), 1.85, p) }; },
+  s46(t, lt, d) { const u = ease(seg(lt, 0, 1.5)), c = at('sea', 980, -70); return { cx: lerp(c[0], VC('sea')[0], u), cy: lerp(c[1], 540, u), z: lerp(1.85, 1, u) }; },
   s47(t, lt, d) { const u = ease(seg(lt, 0, d)); return { cx: lerp(VC('sea')[0], VC('bridge')[0], u), cy: 540, z: 1 - .12 * Math.sin(Math.PI * u) }; },
   s48() { return { cx: VC('bridge')[0], cy: 540 }; },
   s55(t, lt, d) { const z = lerp(1.08, 1, ss(lt / d)); return { cx: VC('bridge')[0] + 120 * (1 - ss(lt / d)), cy: 540 - 40 * (1 - ss(lt / d)), z }; },
@@ -192,7 +194,7 @@ function titleCard(t, M) {
 // dusk cartouche (s48) and the end slip (s56) on the bridge print
 function duskCards(t, M) {
   const Mi = [M[0], M[1], M[2], M[3], M[4] + M[0] * SLOT.bridge, M[5]];
-  const c0 = SH.s48.t0 + 3.2, c1 = SH.s49.t0;
+  const c0 = SH.s48.t0 + 1.5, c1 = SH.s49.t0;
   if (t >= c0 && t < c1) { const p = clamp((t - c0) / .3); ctx.save(); ctx.setTransform(...Mi); let b; stampFn(ctx, x => { b = cartouche(x, 130, 70, '七 暮归', { series: SERIES, w: 86, size: 52, ssize: 25 }); }, p, [0, -14]); if (b) drawSeal(ctx, '猫', 130, b.y0 + b.h + 44, 56, clamp((t - c0 - .4) / .3), { seed: 11 }); ctx.restore(); if (p >= 1 && b) { TEXTS.push({ id: 'cart-dusk-s', text: SERIES, ...scr(Mi, b.x0, b.y0, b.x0 + b.w, b.y0 + b.h) }); TEXTS.push({ id: 'cart-dusk', text: '七 暮归', ...scr(Mi, b.x0, b.y0, b.x0 + b.w, b.y0 + b.h) }); } }
   const e0 = SH.s56.t0 + 1.6;
   if (t >= e0) { const p = clamp((t - e0) / .35); ctx.save(); ctx.setTransform(...Mi); let b; stampFn(ctx, x => { b = cartouche(x, 1100, 600, '终', { series: '', w: 96, size: 66 }); }, p, [0, -14]); if (b) drawSeal(ctx, '猫鱼', 1100, b.y0 + b.h + 60, 84, clamp((t - e0 - .5) / .3), { seed: 31, normal: true }); ctx.restore(); if (p >= 1 && b) TEXTS.push({ id: 'end', text: '终', ...scr(Mi, b.x0, b.y0, b.x0 + b.w, b.y0 + b.h) }); }
