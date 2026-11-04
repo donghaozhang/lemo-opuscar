@@ -1,0 +1,72 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>sheets</title>
+<style>
+@font-face { font-family: MaShanZheng; src: url(../fonts/MaShanZheng-Regular.ttf); }
+@font-face { font-family: NotoSerifSC; src: url(../fonts/NotoSerifSC.ttf); font-weight: 200 900; }
+html, body { margin: 0; background: #000; overflow: hidden; }
+#c { position: absolute; left: 0; top: 0; }
+.lb { position: absolute; color: #e8dcc4; font: 500 24px NotoSerifSC; text-shadow: 0 1px 4px #000; }
+#t { position: absolute; left: 40px; top: 22px; color: #f1e6cf; font: 400 34px MaShanZheng; }
+</style></head><body><canvas id="c"></canvas><div id="t"></div>
+<script type="module">
+import { Scene, W, H } from '../src/engine.js';
+import { piece, cut } from '../src/paper.js';
+import { figure, rabbitLantern, poleLantern, walk, run, EXPR } from '../src/rig.js';
+import { TAU } from '/core/lib.js';
+const Q = new URLSearchParams(location.search), sheet = Q.get('sheet') || 'model';
+const c = document.getElementById('c'); c.width = W; c.height = H;
+await Promise.all([document.fonts.load('40px MaShanZheng', '中秋的灯'), document.fonts.load('500 24px NotoSerifSC', '阿月')]);
+const label = (x, y, s) => { const d = document.createElement('div'); d.className = 'lb'; d.style.left = x + 'px'; d.style.top = y + 'px'; d.textContent = s; document.body.appendChild(d); };
+const sc = new Scene({ light: { x: 0, y: .05, z: -.15, r: .5, col: '#ffd9a8', floor: .6 }, cam: { z: .9, focus: .86, aper: 2 }, amb: .07 });
+sc.bloom.k = .35; sc.bloom.k2 = .2;
+const back = sc.layer({ z: -.14, trans: .9, shadow: false });
+sc.add(back, piece({ w: 1.2, h: .7, color: '#7a8db8', ppm: 1500, draw: x => x.fillRect(-.6, -.35, 1.2, .7), finish: false }));
+const mid = sc.layer({ z: -.09, trans: .55, shadow: false });
+sc.add(mid, piece({ w: 1.2, h: .3, color: '#4a5a86', ppm: 1500, draw: x => x.fillRect(-.6, -.15, 1.2, .3), finish: false }), { y: -.2 });
+const fl = sc.layer({ z: -.04, trans: .12 });
+let T = '';
+if (sheet === 'model') {
+  T = '《中秋的灯》 model sheet · 人物设定';
+  sc.cam.z = .9; sc.cam.focus = .94; sc.cam.y = .0;
+  const row1 = .09, row2 = -.1, ppm = 9000;
+  // A-Yue: front, back-turn (facing left), with the rabbit lantern, walking, running, lifting high
+  const girls = [
+    ['阿月 正面', { facing: 1 }], ['侧转', { facing: -1 }], ['提灯', { facing: 1, hold: true, shN: .5, elN: -.9 }], ['走', { facing: 1, hold: true, ...walk(.2) }], ['跑', { facing: 1, hold: true, ...run(.3) }], ['举高', { facing: 1, hold: true, shN: 2.9, elN: .2, shF: 2.6, elF: .4, head: .25, expr: 'joy' }],
+  ];
+  girls.forEach(([name, P], i) => {
+    const x = -.33 + i * .132, F = figure(sc, fl, { kind: 'girl', ppm, facing: P.facing });
+    if (P.hold) rabbitLantern(sc, fl, F, 'near', .007, { rot: () => -.2 });
+    F.set({ x, y: row1 - .03, ...P, expr: P.expr || 'calm' });
+    const pr = sc.proj(-.04); label(pr.ox + x * pr.s - 40, pr.oy - (row1 + .075) * pr.s - 36, name);
+  });
+  const others = [['妈妈', 'mother', -1, { hold: 'round' }], ['爸爸 阿海', 'father', 1, { shN: .9, elN: -1.2, shF: .9, elF: -1.2 }], ['老人', 'oldman', 1, {}], ['男孩', 'boy', 1, { hold: 'star' }], ['阿婶', 'woman', -1, { hold: 'lotus' }], ['渔民', 'fisher', 1, { hold: 'fish' }], ['阿婆', 'granny', 1, { hold: 'carp' }]];
+  others.forEach(([name, kind, facing, P], i) => {
+    const x = -.36 + i * .12, F = figure(sc, fl, { kind, ppm, facing });
+    if (P.hold) { poleLantern(sc, fl, F, 'near', P.hold, .011, { rot: () => .1 }).gate = 1; }
+    F.set({ x, y: row2 - .04, expr: 'calm', ...P, ...(P.hold ? { shN: .4, elN: -1.3 } : {}) });
+    const pr = sc.proj(-.04); label(pr.ox + x * pr.s - 40, pr.oy - (row2 + .09) * pr.s - 36, name);
+  });
+  // palette swatches
+  const pal = [['#f6dca6', '午后窗'], ['#cf9458', '墙'], ['#5a3e74', '黄昏天'], ['#263044', '夜雾天'], ['#8a98ac', '雾'], ['#0a1330', '夜天'], ['#6a86c2', '远'], ['#3f5a92', '中'], ['#0e1532', '前'], ['#ffb862', '灯光'], ['#c8261e', '兔灯·红']];
+  pal.forEach(([col, n], i) => { const d = document.createElement('div'); d.style.cssText = `position:absolute;left:${1400 + (i % 6) * 84}px;top:${30 + Math.floor(i / 6) * 70}px;width:70px;height:40px;background:${col};border:1px solid #555`; document.body.appendChild(d); label(1400 + (i % 6) * 84, 70 + Math.floor(i / 6) * 70, n); });
+} else if (sheet === 'expr') {
+  T = '《中秋的灯》 expression sheet · 表情';
+  sc.cam.z = .19; sc.cam.focus = .23; sc.cam.y = .03; sc.cam.aper = 1; sc.light.r = .2;
+  const names = [['focus', '专注 ①'], ['delight', '欢喜 ②'], ['worry', '担心 ③'], ['hope', '期盼 ④'], ['despair', '伤心 ⑤'], ['joy', '含泪笑 ⑥'], ['alarm', '惊 (听见声音)'], ['calm', '平静']];
+  names.forEach(([e, n], i) => {
+    const col = i % 4, row = Math.floor(i / 4), x = -.063 + col * .042, y = row ? -.056 : -.006;
+    const F = figure(sc, fl, { kind: 'girl', ppm: 24000 }); F.set({ x, y, expr: e, facing: 1, head: 0 });
+    const pr = sc.proj(-.04); label(pr.ox + x * pr.s - 60, pr.oy - (y + .078) * pr.s - 34, n);
+  });
+} else if (sheet === 'actions') {
+  T = '《中秋的灯》 action test · 动作';
+  sc.cam.z = .8; sc.cam.focus = .84;
+  const poses = [['伸手', { shN: 1.4, elN: -.2, shF: .3, elF: -.4 }], ['举起', { shN: 2.9, elN: .1, shF: 2.9, elF: .1 }], ['坐下', { hipN: 1.5, kneeN: -1.5, hipF: 1.45, kneeF: -1.45, body: .1, head: -.2, y: -.028 }], ['跪', { hipN: 1.5, kneeN: -2.6, hipF: 1.4, kneeF: -2.6, y: -.03 }], ['弯腰看', { body: -.6, head: -.3, shN: -.9, elN: -.6, shF: -.9, elF: -.6 }], ['指', { shN: 1.6, elN: 0, shF: .1, elF: -.2, head: .2 }], ['蹦', { hipN: -.4, kneeN: .9, hipF: -.4, kneeF: .9, shN: 1.2, elN: -.4, shF: 1.2, elF: -.4, y: .012 }]];
+  poses.forEach(([n, P], i) => { const x = -.37 + i * .125, F = figure(sc, fl, { kind: 'girl', ppm: 9000 }); F.set({ x, y: .02, expr: 'calm', ...P, y: .02 + (P.y || 0) }); const pr = sc.proj(-.04); label(pr.ox + x * pr.s - 40, pr.oy - (.02 + .08) * pr.s - 36, n); });
+  // a run strip at 0.2 s intervals
+  for (let i = 0; i < 7; i++) { const x = -.37 + i * .125, F = figure(sc, fl, { kind: 'mother', ppm: 9000 }); rabbitLantern(sc, fl, F, 'near', .006, { rot: () => Math.sin(i) * .3 }); const r = run(i * .2 / .55); F.set({ x, y: -.19 + r.bob * .3, expr: 'worry', ...r }); }
+  label(60, 650, '妈妈 跑 · 每 0.2 s 一帧');
+}
+document.getElementById('t').textContent = T;
+window.DUR = 1; window.render = t => { sc.render(c, t); }; window.READY = true;
+</script></body></html>

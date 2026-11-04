@@ -1,0 +1,46 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>engine test</title>
+<style>
+@font-face { font-family: MaShanZheng; src: url(../fonts/MaShanZheng-Regular.ttf); }
+html, body { margin: 0; background: #000; overflow: hidden; }
+#c { position: absolute; left: 0; top: 0; }
+</style></head><body><canvas id="c"></canvas>
+<script type="module">
+import { Scene, W, H, lampStagger } from '../src/engine.js';
+import { piece, strip, cut } from '../src/paper.js';
+import { mulberry, TAU, seg, ss } from '/core/lib.js';
+const Q = new URLSearchParams(location.search);
+const c = document.getElementById('c'); c.width = W; c.height = H;
+await document.fonts.load('40px MaShanZheng', '中秋的灯');
+const sc = new Scene({ light: { x: .05, y: .06, z: -.15, r: .14, col: '#ffd9a8' }, cam: { z: .44, focus: .5, aper: 3 } });
+sc.box = Q.has('box') ? { lit: 1 } : null;
+// sky
+const sky = sc.layer({ z: -.142, trans: .95, shadow: false, recv: true });
+sc.add(sky, piece({ w: .9, h: .5, color: '#1a2a5a', ppm: 2000, draw: x => { x.fillRect(-.45, -.25, .9, .5); cut(x, () => { x.beginPath(); x.arc(.1, .09, .028, 0, TAU); x.fill(); const R = mulberry(4); for (let i = 0; i < 120; i++) { x.beginPath(); x.arc((R() - .5) * .9, (R() - .5) * .5, .0004 + R() * .0006, 0, TAU); x.fill(); } }); },
+  glow: x => { x.fillStyle = '#fff2cc'; x.beginPath(); x.arc(.1, .09, .028, 0, TAU); x.fill(); }, finish: false }), { x: 0, y: 0, gate: 1 });
+// far hills
+const far = sc.layer({ z: -.12, trans: .8 });
+sc.add(far, piece({ w: .8, h: .3, color: '#6a86c2', ppm: 3000, draw: x => { x.beginPath(); x.moveTo(-.4, -.15); for (let u = -.4; u <= .4; u += .002) x.lineTo(u, -.02 + .06 * Math.sin(u * 9) + .03 * Math.sin(u * 23 + 1)); x.lineTo(.4, -.15); x.closePath(); x.fill(); } }), { x: 0, y: 0 });
+// houses with windows
+const mid = sc.layer({ z: -.095, trans: .5 });
+const houses = piece({ w: .6, h: .25, color: '#3f5a92', ppm: 4000, draw: x => {
+  x.beginPath(); x.moveTo(-.3, -.125); x.lineTo(-.3, -.05); for (let i = 0; i < 9; i++) { const u = -.28 + i * .065, h = .04 + (i % 3) * .012; x.lineTo(u, -.05); x.lineTo(u, -.05 + h); x.lineTo(u + .025, -.05 + h + .02); x.lineTo(u + .05, -.05 + h); x.lineTo(u + .05, -.05); } x.lineTo(.3, -.05); x.lineTo(.3, -.125); x.closePath(); x.fill();
+  cut(x, () => { for (let i = 0; i < 9; i++) { const u = -.28 + i * .065; x.fillRect(u + .016, -.045, .008, .01); x.fillRect(u + .03, -.045, .008, .01); } });
+}, glow: x => { x.fillStyle = '#ffb862'; for (let i = 0; i < 9; i++) { const u = -.28 + i * .065; x.fillRect(u + .016, -.045, .008, .01); x.fillRect(u + .03, -.045, .008, .01); } } });
+const hs = sc.add(mid, houses, { x: 0, y: 0, gate: 1 });
+// front rocks
+const front = sc.layer({ z: -.04, trans: .08 });
+sc.add(front, piece({ w: .7, h: .2, color: '#0e1532', ppm: 5000, draw: x => { x.beginPath(); x.moveTo(-.35, -.1); x.lineTo(-.35, -.06); for (let u = -.35; u <= .35; u += .003) x.lineTo(u, -.07 + .02 * Math.sin(u * 40) + .012 * Math.sin(u * 95 + 2)); x.lineTo(.35, -.1); x.closePath(); x.fill(); } }), { x: 0, y: -.02 });
+// a title strip at the front sheet
+const ti = sc.add(sc.layer({ z: -.01, trans: .4, shadow: false }), strip({ w: .2, h: .045, text: '中秋的灯', size: .03, font: 'MaShanZheng', seal: [.082, -.012, .014, '月'], name: 'title' }), { x: .12, y: .09, reveal: { from: 'right', k: 1 } });
+window.DUR = 4;
+window.render = t => {
+  const n = sc.layers.length;
+  sc.layers.forEach((L, i) => { L.lit = lampStagger(t, .3, n, i); });
+  hs.gate = seg(t, 1.0, 1.6); ti.reveal.k = ss(seg(t, 1.5, 2.4));
+  sc.light.lit = ss(seg(t, .2, .9));
+  sc.cam.z = .44 - .02 * t;
+  const t0 = performance.now(); sc.render(c, t); window.MS = performance.now() - t0;
+};
+window.READY = true;
+</script></body></html>
