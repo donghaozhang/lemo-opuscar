@@ -15,6 +15,11 @@ export function test(comp, t, which, Q) {
   CAM.x = 960; CAM.y = 540; CAM.s = 1;
   if (which === 'model') modelPage(Q);
   else if (which === 'faces') facesPage(Q);
+  else if (which === 'glyphs') {   // every CJK character of the film in the lettering face, for the glyph check's visual scan
+    const cs = [...(Q.get('chars') || '')]; const cols = 16;
+    cs.forEach((ch, i) => label(ch, 120 + (i % cols) * 110, 160 + Math.floor(i / cols) * 120, 72));
+    label('ZCOOL KuaiLe · 字形检查', 960, 70, 36);
+  }
   else if (which === 'hide') { monster(C, { x: 960, y: 700, s: 1.3, pose: 'hide', expr: 'mischief', look: [.5, -.2], seed: 600 }); }
   comp.paperCam(0, 0, 1);
   comp.begin();

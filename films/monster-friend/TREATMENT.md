@@ -17,9 +17,10 @@ night as a wash over one corner). Elegant, but a day-night-day-night story needs
 who changes size and climbs off the page.
 
 A wins: page turns give the time jumps (night, next morning, play time, night again) and "drawn live" gives the monster's birth. Opening
-image: not the book, not the title: a purple crayon tip in extreme close-up mid-stroke, pulling back to reveal it is drawing a moving truck
-in a new city (we are already inside the book). Ending: the last page, 「我的朋友」, then a pull out past the page edge: the book on the
-desk by the sleeping boy, the lamp dark. Score shape: a lonely clarinet lilt, the music box for the magic, a bouncing ukulele for the
+image: not the book, not the title: a purple crayon tip in extreme close-up mid-stroke, pulling back to reveal it is colouring a purple
+moving truck in a new city (we are already inside the book). Ending: the last page, 「我的朋友」, held, and the purple crayon rolled in and
+set down at the page's corner: a bookend with the first image (the pull-out to a book on a desk was dropped: the page stays the stage to
+the end, which is the opposite of the demo's ending). Score shape: a lonely clarinet lilt, the music box for the magic, a bouncing ukulele for the
 trouble, a hush to one music box winding down for the brave moment, then the theme heard in full for the first time at the balloon and the
 two monsters, and a lullaby reprise to close.
 
@@ -66,12 +67,17 @@ the material.
 1. The new city: tall gable-fronted buildings in child perspective, a small moving truck, Dou Dou at a window with a box, a tiny red
    balloon drifting past high up, the title lettered in the sky.
 2. The kindergarten: a fence, a slide, a tree, children playing, a teacher waving; Dou Dou at the gate, head down.
-3. Night, the bedroom: a bed, a desk with a lamp (the practical light), the window, the crayon book open; the ultramarine wash is night.
-4. Morning, the street: Dou Dou walking with the backpack; the street draws itself ahead of him; a low morning sun in yellow.
-5. The classroom: a long table with children and crayon boxes (a slow truck along it), the window to the sandpit.
+3. Night, the bedroom: Dou Dou sitting up in bed with the open book on his knees, a ceiling lamp on a cord (the practical light: its cone
+   of light keeps the bed and the book as bare paper while the ultramarine wash is night everywhere else), the window with a crescent moon
+   and white-wax stars that only appear under the wash, a nightstand with a red ball. At 41 s he paints the night behind his monster: the
+   brush passes over the book's page and the white-wax eyes shine.
+4. Morning (one sheet two pages wide, no page turn inside it): the front door with the backpack on the step; the street that draws itself
+   ahead of him with a low yellow sun; then the classroom: a chalkboard, the long table with children and crayon boxes (a slow truck along
+   it), the window to the sandpit.
 6. The playground: the big tree at the right, Ni Ni under it, the balloon in the branches, bare paper at the left for the words.
 7. The same playground page continued: the huge monster, the balloon freed, the yellow monster, the play.
-8. Night again, the bedroom, then the last page: two children, two monsters, 「我的朋友」; the book on the desk.
+8. Night again, the bedroom (the same page under its wash; the lamp goes off as the book closes), then the last page: two children, two
+   monsters, 「我的朋友」, and the purple crayon set down.
 
 **Dou Dou (豆豆)**: round head about 2.5 heads tall, bowl-cut brown hair, orange shirt, blue shorts, mitten hands, tube limbs, a blue
 backpack. **Eyes**: white ovals with indigo pupils, a wax catchlight, lids that can close from the top (sleepy, blink), a lower lid for
@@ -127,10 +133,10 @@ Framing · angle · move · duration · why. Page turns (0.6 s each) are counted
 | S33 | 122.0–125.0 | Close two-shot: Dou Dou and Ni Ni, laughing, the balloon between them. Page turn. | Friends. |
 | S34 | 125.0–131.0 | Night again: the bedroom under the wash; the monster yawns, shrinks to fit, climbs back into the book; Dou Dou, in bed, waves; the book closes. Words 「晚上，怪兽回到了书里。」 | Home. |
 | S35 | 131.0–136.0 | Page turn to the last page: two children and two monsters drawn on one page; the words 「我的朋友」 lettered. | The last page is the title's answer. |
-| S36 | 136.0–140.0 | Pull out past the page edge: the book on the desk, the lamp dark, the boy asleep; the boil calms; end. | The page is an object. |
+| S36 | 136.0–140.0 | The last page held; the purple crayon rolls in from the right and is set down at the corner; the boil calms; end. | Bookend with S01: the crayon that started it is put down. |
 
 Camera moves: locked full page, push toward a character, locked medium close-up, tilt along a gaze, tight follow, held wide while the
-brush moves, slow truck, pull out past the page edge, page turns. Nothing holds beyond 4 s without something drawing, colouring or acting
+brush moves, slow truck, a push-in on the shrunk monster, page turns. Nothing holds beyond 4 s without something drawing, colouring or acting
 in it. Signature shot: S28, the monster growing to fill the page and lifting the boy. Match cuts: the crayon tip (S01) → the crayon in
 his hand (S26); the monster's eyes shining (S11) → the yellow monster's eyes (S31).
 
@@ -160,7 +166,7 @@ his hand (S26); the monster's eyes shining (S11) → the yellow monster's eyes (
 110.0 Ni Ni draws (110–113); eyes 113.2; shake 113.8; hop 114.4    115.0 play: chase 115–117, bounce 117.5, ride 118.5; cut-in two-shot 119–120.5; words
 122.0 close two-shot laughing; 125.0 PAGE TURN                     125.6 night wash; yawn 127; shrink 128; climbs in 128.6–130; book closes 130.6; words
 131.0 PAGE TURN to the last page; four figures drawn 131.6–134.5; 我的朋友 lettered 134.6–135.6
-136.0 pull out past the edge; the book on the desk; boil calms; 140.0 end
+136.0 the last page held; 137.0 the crayon set down; boil calms; 139.0 silence; 140.0 end
 ```
 
 ## 7. Cue map
@@ -175,7 +181,7 @@ Frame-exact tempos at 24 fps (72 bpm = 20 f, 84 = 17.14 f → use 90 = 16 f, 120
 | 早晨与捣蛋 trouble | 56–80 | 120 | 48 | ukulele strum in C, clarinet staccato bass, woodblock, shaker; toy piano on each crayon eaten; a glock gliss on the sneeze; stops dead at the bell | turn 56.0, zip 58.6, walk 59.0, table 63.0, unzip 65.0, crunches 66.5 67.3 68.1 68.9 69.5, twitch 70.0, sneeze 71.8, sandpit 73.0, pat 74.8, giggle 75.4, bell 78.8, turn 80.0 |
 | 树下 the hush | 80–100 | 60 (free) | 20 | recorder alone for the tableau and the tilt; from 90 the music box alone, winding down with a pitch droop at the shrink; a full beat of nothing at 95; a single ukulele note at 98.6 under 你好 | playground 80.6, tilt 84.0, nudge 87.6, freeze 90.0, shrink 91.0, breath 96.0, 你好 98.6 |
 | 气球与朋友 finale | 100–125 | 120 | 50 | the theme in full: ukulele strum + recorder melody + glockenspiel + clarinet counterline, shaker and woodblock; toy piano on the yellow monster's hop; a tutti on the ride | grow 100.0, lift 102.4, freed 103.6, laugh 104.8, burp 107.8, crayon pop 108.2, draw 110.0, hop 114.4, chase 115.0, bounce 117.5, ride 118.5, two-shot 119.0, turn 125.0 |
-| 晚安 lullaby | 125–140 | 60 | 15 | music box reprise of the theme, clarinet low, one glockenspiel note on 我的朋友, nothing after 138 | wash 125.6, yawn 127.0, shrink 128.0, in 130.0, closes 130.6, turn 131.0, letters 134.6, pull out 136.0 |
+| 晚安 lullaby | 125–140 | 60 | 15 | music box reprise of the theme, clarinet low, one glockenspiel note per character of 我的朋友, nothing after 138 | wash 125.6, yawn 127.0, shrink 128.0, in 130.0, closes 130.6, turn 131.0, letters 134.6, crayon down 137.0 |
 
 Key: A minor (lonely) → C major (the rest); the theme (eight bars) is hinted on the music box on page 3, held back, and heard in full with
 the ukulele and recorder at the balloon.
@@ -200,11 +206,12 @@ silences (48.6–50.0 after the first shrink, and the full beat at 95.0 before t
   character used is checked by `tools/glyphcheck.mjs`, with Ma Shan Zheng as the fallback face if a glyph were missing), 54 px, indigo,
   bottom-centre on a ragged knock-out patch of bare paper, each glyph tilted and offset, boiling on twos, written left to right in
   ~0.35 s. Hold ≥ max(1.8 s, characters ÷ 4.5 + 1.5 s). None during the wordless passages (the tilt, the grow, the play).
-- Lines: 「豆豆搬到了新城市。」(8–12) · 「新的幼儿园里，豆豆一个字也说不出来。」(21.5–26) · 「晚上，豆豆画了一只紫色的大怪兽。」(36–41) ·
-  「豆豆害怕，它就变小；豆豆勇敢，它就变大。」(50.5–56) · 「第二天，怪兽躲进了书包。只有豆豆能看见它。」(57–63) ·
-  「怪兽吃掉了蜡笔，打了一个彩色的喷嚏。」(72–76.5) · 「妮妮的气球挂在树上了。」(85–90) · 「豆豆吸了一口气。」(93–96) ·
-  「你好」(98.6–100, drawn in the air, not a subtitle) · 「妮妮用黄色的蜡笔，也画了一只怪兽。」(108.5–113) ·
-  「两只怪兽一起玩，两个朋友一起笑。」(116–122) · 「晚上，怪兽回到了书里。」(126–131) · 「我的朋友」(134.6–140, lettered on the page).
+- Lines (held for at least characters ÷ 4.5 + 1.5 s): 「豆豆搬到了新城市。」(8–11.4) · 「新的幼儿园里，豆豆一个字也说不出来。」(20–25.4) ·
+  「晚上，豆豆画了一只紫色的大怪兽。」(36–41) · 「豆豆害怕，它就变小；豆豆勇敢，它就变大。」(50.2–55.4) ·
+  「第二天，怪兽躲进了书包。只有豆豆能看见它。」(57–63) · 「怪兽吃掉了蜡笔，打了一个彩色的喷嚏。」(71.6–76.8) · 「妮妮的气球挂在树上了。」(85–90) ·
+  「豆豆吸了一口气。」(93–96) · 「你好」(98.6–100.6, drawn in the air in a purple crayon bubble, not a subtitle) ·
+  「妮妮用黄色的蜡笔，也画了一只怪兽。」(108.3–113.3) · 「两只怪兽一起玩，两个朋友一起笑。」(116–122) · 「晚上，怪兽回到了书里。」(126–131) ·
+  「我的朋友」(134.6–140, lettered on the page).
 - The title 《我的怪兽朋友》 is hand-lettered in the sky of page 1 (the font's glyphs drawn as crayon with pressure alpha, letter by
   letter, in indigo with a purple shadow offset), and leaves by the push toward the window and the page turn.
 - No library credit, no watermark: the owner's film.

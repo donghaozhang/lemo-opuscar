@@ -1,0 +1,15 @@
+《我的怪兽朋友》 My Monster Friend — third-party material
+
+Fonts (SIL Open Font License 1.1)
+- ZCOOL KuaiLe (站酷快乐体), via @fontsource/zcool-kuaile: the title, the book's printed words, the lettering
+- Ma Shan Zheng (马善政毛笔楷书), via @fontsource/ma-shan-zheng: loaded as the fallback face (not used in the final frames)
+- Long Cang (龙藏体), via @fontsource/long-cang: installed, not used
+
+Instrument samples (CC0 / public domain), through the library's sampler
+- FreePats project (freepats.zenvoid.org): ukulele, nylon-string guitar (guitar_nylon), kalimba (the toy piano's tine)
+- VS Chamber Orchestra: Community Edition (Versilian Studios, CC0): clarinet, clarinet staccato, glockenspiel, honky-tonk upright (the toy piano)
+- Versilian Community Sample Library (Versilian Studios, CC0): recorder, woodblock, shaker, triangle, sleigh bells, frame drum, claves
+- Music box: physically modelled (core/audio/pluck.py), no samples
+
+Foley and ambience: synthesised (mix.py). No voice, no text-to-speech. No library credit or watermark: the film is the owner's.
+The owner is responsible for the materials used in the film.
