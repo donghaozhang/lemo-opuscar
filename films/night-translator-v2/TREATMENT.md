@@ -168,3 +168,14 @@ Mix: −14 LUFS integrated, true peak ≤ −1 dBTP (measured on the final file)
 - Pages: 抓住你的马！→ 别急！ · 我头在脚跟上！→ 我神魂颠倒！ · 天上下猫下狗！→ 倾盆大雨！ (corrections in red brush).
 - Shout: 「硝酸胶片——一点就着！」
 - Last: 「您刚看的这一卷——正是第一千卷。」 End: 完 · THE END · 翻译 小译 · 校对 老校.
+
+## 9. Against the library demo (`styles/silent-film/DEMO.md`)
+
+| | Demo (*The Runaway Loaf*) | v2 | Differs? |
+|---|---|---|---|
+| Structure | chase comedy, one chain gag | rule of three (three genre reels), montage, fire set piece, teamwork, dawn | yes |
+| Opening | curtains part, projector spin-up, title | cold open in the dark (a can rolls into a sleeping robot), then the blind title gag | yes |
+| Signature shot | locked-off chain gag | the burning can in the air in silence while the print burns, and the catch | yes |
+| Camera path | iris, locked full, tracking, wide, push-in, iris | ~58 cuts: close-ups, inserts, tilt-up reveal, two tracking moves, match cut, pull-back | yes |
+| Score shape | piano + reed organ cue sheet | pit band with two leitmotifs, genre pastiches, waltz combining both themes | partly (cue-sheet idiom is the style) |
+| Ending | iris on a wink | lamps row by row, the meta card, credits on the end card | yes |
