@@ -18,3 +18,4 @@
 13:54Z final render: frames 3240/3488
 14:04Z final render: frames 3360/3488
 14:06Z final render done (3488 frames); master −14.0 LUFS / −1.1 dBFS; delivery encodes in progress (two-pass, size targets)
+14:16Z delivered to deliveries/moving-mountains/: final.mp4 86 MB, final-720p.mp4 26 MB, poster.jpg, subtitles.srt, README.md. Checks: −14.1 LUFS / −1.1 dBTP, no black frames, cue check 0 ms, readcheck 22/23 (one at 4.00 of 4.01 s by 0.1 s sampling; actual 4.04 s), glyphs 144/144.
