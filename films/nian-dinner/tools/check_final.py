@@ -6,7 +6,7 @@ FILM = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); mp4 = sys.ar
 TL = json.load(open(os.path.join(FILM, 'timeline.json')))
 ok = True
 r = subprocess.run(['ffmpeg', '-hide_banner', '-nostats', '-i', mp4, '-af', 'ebur128=peak=true', '-f', 'null', '-'], capture_output=True, text=True).stderr
-I = float(re.search(r'I:\s+([-\d.]+) LUFS', r).group(1)); LRA = float(re.search(r'LRA:\s+([-\d.]+) LU', r).group(1)); TP = float(re.search(r'Peak:\s+([-\d.]+) dBFS', r).group(1))
+I = float(re.findall(r'I:\s+([-\d.]+) LUFS', r)[-1]); LRA = float(re.findall(r'LRA:\s+([-\d.]+) LU', r)[-1]); TP = float(re.findall(r'Peak:\s+([-\d.]+) dBFS', r)[-1])   # the summary block is the last match
 print(f'loudness I {I:.1f} LUFS  LRA {LRA:.1f} LU  true peak {TP:.1f} dBTP  ->', 'OK' if -15 <= I <= -13 and TP <= -1.0 else 'FAIL'); ok &= -15 <= I <= -13 and TP <= -1.0
 r = subprocess.run(['ffmpeg', '-hide_banner', '-nostats', '-i', mp4, '-vf', 'blackdetect=d=0.08:pix_th=0.05', '-an', '-f', 'null', '-'], capture_output=True, text=True).stderr
 blk = [l for l in r.split('\n') if 'black_start' in l]; print('blackdetect:', blk or 'none'); ok &= not blk

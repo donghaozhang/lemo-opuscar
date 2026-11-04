@@ -230,14 +230,23 @@ gain = np.where(env > thr, (thr + (env - thr) / ratio) / np.maximum(env, 1e-9), 
 mix = mix * gain[:, None]
 mix = np.stack([limit(mix[:, c], .8) for c in range(2)], 1)[:int(DUR * SR)]
 os.makedirs(os.path.join(FILM, 'out'), exist_ok=True)
-# pre-normalise to −14 LUFS with the true peak held at −2.4 dBTP, so mux.sh's loudnorm applies ~0 dB and the AAC overshoot stays under −1 dBTP
-import subprocess, re as _re, tempfile
-tmp = os.path.join(FILM, 'out', 'mix_pre.wav'); sf.write(tmp, mix.astype(np.float32), SR)
-r = subprocess.run(['ffmpeg', '-hide_banner', '-nostats', '-i', tmp, '-af', 'loudnorm=I=-14:TP=-1.2:print_format=json', '-f', 'null', '-'], capture_output=True, text=True).stderr
-I = float(_re.search(r'"input_i"\s*:\s*"([-\d.]+)"', r).group(1)); TP = float(_re.search(r'"input_tp"\s*:\s*"([-\d.]+)"', r).group(1))
-gain = 10 ** ((-14 - I) / 20); mix = mix * gain
-mix = np.stack([limit(mix[:, c], 10 ** (-2.4 / 20), .006) for c in range(2)], 1)
-os.remove(tmp); print(f'pre-normalised: measured {I:.1f} LUFS / {TP:.1f} dBTP, gain {20 * np.log10(gain):+.1f} dB, limited at -2.4 dBFS')
+# pre-normalise to −14 LUFS with a TRUE-peak limiter at −2.0 dBTP (limiting on a 4× oversampled signal, so inter-sample peaks of the bright foley are caught);
+# the final mux (tools/mux_final.sh) then applies no loudness processing at all
+import subprocess, re as _re
+def measure(path):
+    r = subprocess.run(['ffmpeg', '-hide_banner', '-nostats', '-i', path, '-af', 'loudnorm=I=-14:TP=-1.2:print_format=json', '-f', 'null', '-'], capture_output=True, text=True).stderr
+    return float(_re.search(r'"input_i"\s*:\s*"([-\d.]+)"', r).group(1)), float(_re.search(r'"input_tp"\s*:\s*"([-\d.]+)"', r).group(1)), float(_re.search(r'"input_lra"\s*:\s*"([-\d.]+)"', r).group(1))
+def tp_limit(x, ceil_db):
+    up = soxr.resample(x.astype(np.float32), SR, SR * 4); c = 10 ** (ceil_db / 20)
+    up = np.stack([limit(up[:, ch], c, .003) for ch in range(2)], 1); return soxr.resample(up, SR * 4, SR)[:len(x)]
+mix = np.stack([lp(mix[:, ch], 15000, 4) for ch in range(2)], 1)   # the AAC encoder overshoots badly on content above 15 kHz: cut it before the limiter
+tmp = os.path.join(FILM, 'out', 'mix_pre.wav')
+for it in range(3):
+    sf.write(tmp, mix.astype(np.float32), SR); I, TP, LRA = measure(tmp)
+    print(f'pass {it}: {I:.2f} LUFS, {TP:.2f} dBTP, LRA {LRA:.1f}')
+    if abs(I + 14) < .15 and TP <= -2.4: break
+    mix = tp_limit(mix * 10 ** ((-14 - I) / 20), -2.6)
+os.remove(tmp)
 sf.write(os.path.join(FILM, 'out', 'mix.wav'), mix.astype(np.float32), SR)
 def rms(x, a, b): y = x[int(a * SR):int(b * SR)]; return 20 * np.log10(np.sqrt((y ** 2).mean()) + 1e-9)
 print('mix.wav', mix.shape, 'peak', np.abs(mix).max().round(3))

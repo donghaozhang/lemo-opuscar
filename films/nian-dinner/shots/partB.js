@@ -114,8 +114,8 @@ export function shotCreep(g, t) {
     front: gg => {
       let pose;
       if (!pre) pose = { ...NPOSE.crouch, ...runPose(ph, .5), lean: -.25, head: .25, eye: 'curious', bob: Math.abs(Math.cos(ph)) * 5 };
-      else if (!sneeze) { const k = seg(t, TT.twitch, TT.sneeze); pose = { ...NPOSE.crouch, head: .25 - .5 * k, eye: k > .5 ? 'sniff' : 'curious', jaw: .3 * k, lean: -.25 - .15 * k }; }   // anticipation: head goes back, mouth opens
-      else { const k = t - TT.sneeze; const fwd = k < .09 ? 1 : Math.max(0, 1 - (k - .09) * 3); pose = { ...NPOSE.crouch, head: .7 * fwd - .1, jaw: .6 * fwd, eye: k < .6 ? 'sneeze' : 'curious', lean: -.25 + .25 * fwd, shF: -.9 - .6 * fwd }; }
+      else if (!sneeze) { const k = seg(t, TT.twitch, TT.sneeze); pose = { ...NPOSE.crouch, head: .25 - .75 * k, eye: k > .5 ? 'sniff' : 'curious', jaw: .4 * k, lean: -.25 - .25 * k, bob: 30 * k }; }   // anticipation: head goes back, mouth opens, body rises
+      else { const k = t - TT.sneeze; const fwd = k < .09 ? 1 : Math.max(0, 1 - (k - .09) * 3); pose = { ...NPOSE.crouch, head: 1.0 * fwd - .1, jaw: .8 * fwd, eye: k < .6 ? 'sneeze' : 'curious', lean: -.25 + .4 * fwd, shF: -.9 - .8 * fwd, bob: -20 * fwd }; }
       drawNian(gg, mul(C, mul(T(nx, ny), mul(S(.92), T(0, -NJ.ground)))), pose, { shadow: 1.6 });
     } });
 }

@@ -114,6 +114,8 @@ const PC = {};
 function cutPieces() { if (PC.full) return PC; PC.full = nianCut(3, 1.6); PC.halfR = nianCut(3, 1.6); return PC; }
 // the unfold: the sheet is folded in half (right half over the left, back colour up); the flap swings open from the centre fold with fake perspective and shading, then a scale bump
 const [Fc, Fg] = canvas(W, H);
+// the back of the folded half: the cut's own alpha (holes stay holes) in the lighter back colour, pre-rendered once
+function backHalf() { if (PC.back) return PC.back; const q = cutPieces().full, [c, g] = canvas(q.c.width, q.c.height); g.drawImage(q.c, 0, 0); g.globalCompositeOperation = 'source-atop'; g.fillStyle = '#e98f86'; g.fillRect(0, 0, c.width, c.height); g.globalCompositeOperation = 'destination-in'; g.beginPath(); g.rect(0, 0, q.c.width / 2 + 0, q.c.height); g.fill(); return PC.back = c; }
 export function drawUnfold(g, M, t, t0, dur = .32) {
   const p = cutPieces().full, u = clamp((t - t0) / dur), s = -Math.cos(Math.PI * eo(u));   // -1 folded → 1 open
   // left half always visible
@@ -156,7 +158,9 @@ export function shotWalkOut(g, t) {
       // the paper-cut between her hands: folded (half, back colour) until the unfold
       const hm = r.joints.handF, hb = r.joints.handB, cx = (hm[0] + hb[0]) / 2, cy = (hm[1] + hb[1]) / 2 - 40 * C[0] * raise;
       const sc = C[0] * .62 * bump, M = [sc, 0, 0, sc, cx, cy - 150 * sc];
-      if (!unfolded) { const q = cutPieces().full; gg.save(); gg.setTransform(...M); gg.beginPath(); gg.rect(-CR - 20, -CR - 20, CR + 20, 2 * CR + 40); gg.clip(); paperShadow(gg, sc, 1.2); gg.drawImage(q.c, q.x0, q.y0, q.w, q.h); gg.restore(); gg.save(); gg.setTransform(...mul(M, [-1, 0, 0, 1, 0, 0])); gg.beginPath(); gg.rect(-CR - 20, -CR - 20, CR + 20, 2 * CR + 40); gg.clip(); gg.fillStyle = '#e98f86'; gg.globalCompositeOperation = 'source-over'; paperShadow(gg, sc, 1.6); gg.drawImage(q.c, q.x0, q.y0, q.w, q.h); gg.globalCompositeOperation = 'source-atop'; gg.fillStyle = 'rgba(255,225,205,.35)'; gg.fillRect(-CR * 2, -CR * 2, CR * 4, CR * 4); gg.restore(); }
+      if (!unfolded) { const q = cutPieces().full, bk = backHalf();
+        gg.save(); gg.setTransform(...M); gg.beginPath(); gg.rect(-CR - 20, -CR - 20, CR + 20, 2 * CR + 40); gg.clip(); paperShadow(gg, sc, 1.2); gg.drawImage(q.c, q.x0, q.y0, q.w, q.h); gg.restore();   // the left half, face up
+        gg.save(); gg.setTransform(...mul(M, [-1, 0, 0, 1, 0, 0])); paperShadow(gg, sc, 1.6); gg.drawImage(bk, q.x0, q.y0, q.w, q.h); gg.restore(); }   // the right half folded over it, back colour up (mirrored)
       else drawUnfold(gg, M, t, TT.unfold);
       if (unfolded && t < TT.unfold + .5) { const c = [cx, cy - 120 * sc]; flash(c[0], c[1], 500 * C[0], .5 * (1 - (t - TT.unfold) / .5), '255,210,160'); }
     } });
