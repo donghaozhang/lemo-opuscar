@@ -163,6 +163,7 @@ const FACE = {
 // ——— hair ———
 function hairG(g, P, view, layer, st) {          // silver hair swept back into a bun; glasses pushed up; red pin
   const q = view === 'q';
+  if (st.hardhat && layer === 'back') return;
   if (layer === 'back') {
     cel(g, q ? [[-70, -76], [-86, -44], [-84, -8], [-70, 6], [-56, -24], [10, -60], [40, -60], [56, -40], [52, -74], [10, -100], [-40, -98]]
       : [[-74, -70], [-84, -30], [-74, -4], [-62, -22], [62, -22], [74, -4], [84, -30], [74, -70], [0, -104]], { f: P.hair.s, s: mix(P.hair.s, '#000000', .2), so: [-6, -6], l: P.hair.l, lw: LH });
@@ -186,7 +187,7 @@ function hairG(g, P, view, layer, st) {          // silver hair swept back into 
   // a sheen
   g.save(); g.clip(path(cap)); halo(g, P, q ? -8 : 0, -10, q ? 64 : 70, 56, Math.PI * 1.15, Math.PI * 1.8, 6, 7); g.restore();
   // reading glasses pushed up into the hair
-  if (st.glasses !== 'down') {
+  if (st.glasses !== 'down' && !st.young && !st.hardhat) {
     const gy = q ? -70 : -74, gx = q ? [2, 36] : [-26, 26], rw = q ? [16, 11] : [17, 17];
     for (let i = 0; i < 2; i++) { const L = new Path2D(); L.ellipse(gx[i], gy, rw[i], rw[i] * .7, 0, 0, TAU); cel(g, L, { f: rgba('#dff4ff', .55), l: P.glasses.l, lw: LP * 1.1 }); g.strokeStyle = P.glasses.f; g.lineWidth = 2.2 * LWK.k; g.stroke(L); }
     line(g, [[gx[0] + rw[0], gy], [gx[1] - rw[1], gy]], P.glasses.f, 2.2);
@@ -245,7 +246,8 @@ export function head(g, PAL, who, o = {}) {
   const E = { ...EXPR[o.expr || 'neutral'], ...(o.E || {}) };
   if (o.look) E.look = o.look; if (o.open != null) E.open = o.open; if (o.mouth) E.mouth = o.mouth; if (o.lid != null) E.lid = o.lid;
   if (who === 'j' && E.circles == null) E.circles = o.circles ?? 0;
-  const old = who === 'g', hair = who === 'g' ? hairG : hairJ;
+  const old = who === 'g' && !o.young, hair = who === 'g' ? hairG : hairJ;
+  if (o.young) { P.hair = { f: '#3a2a40', s: '#22162a', h: '#7a6a90', l: '#140a1a' }; P.browCol = '#22162a'; }
   const lx = o.light?.[0] ?? -1, ly = o.light?.[1] ?? -.8;
   hair(g, P, view, 'back', o);
   if (o.body !== false) (who === 'g' ? bodyG : bodyJ)(g, P, view, E);
@@ -265,7 +267,16 @@ export function head(g, PAL, who, o = {}) {
   }
   mouth(g, P, V.mouth.x, V.mouth.y, V.mouth.w, E.mouth, V.mouth.fs);
   for (const ey of V.eyes) eye(g, P, ep, ey.x, ey.y, ey.w, ey.h, ey.dir, ey.fs, E, old);
+  if (o.glasses === 'down') {          // reading glasses on the nose: thin gold rims over the eyes (the eyes still read)
+    for (const ey of V.eyes) { const L = new Path2D(); L.ellipse(ey.x + (ey.dir || 1) * 2, ey.y + 4, ey.w * .62 * (ey.fs ?? 1) + 4, ey.h * .62 + 4, 0, 0, TAU); g.fillStyle = rgba('#dff4ff', .16); g.fill(L); g.strokeStyle = PAL.glasses.f; g.lineWidth = 2.6 * LWK.k; g.stroke(L); }
+    const a = V.eyes[0], b = V.eyes[1]; line(g, [[a.x + a.w * .55, a.y], [b.x - b.w * .6 * (b.fs ?? 1), b.y]], PAL.glasses.f, 2.4);
+  }
   hair(g, P, view, 'front', o);
+  if (o.hardhat) {          // the 1979 photo: a yellow hard hat
+    const hh = new Path2D(); hh.moveTo(-86, -40); hh.bezierCurveTo(-86, -130, 86, -130, 86, -40); hh.lineTo(100, -34); hh.lineTo(-100, -34); hh.closePath();
+    cel(g, hh, { f: PAL.mech.f, s: PAL.mech.s, so: [-8, -6], h: PAL.mech.h, ho: [4, 4], l: PAL.mech.l, lw: 2.4 });
+    line(g, [[0, -122], [0, -40]], PAL.mech.s, 6);
+  }
   for (const b of V.brows) brow(g, P, b[0], b[1], b[2], b[3], E.brow || [0, 0, 2], who === 'j' ? 1.4 : 1.1);
   if (E.sweat) { const sx = view === 'q' ? -56 : -60; cel(g, [[sx, -12, 1], [sx + 7, 4], [sx, 10], [sx - 7, 4]], { f: '#e8f8ff', l: '#4a6a98', lw: LS, h: '#ffffff', hi: [[[sx - 3, 2], [sx - 1, -2], [sx - 4, 6]]] }); }
 }

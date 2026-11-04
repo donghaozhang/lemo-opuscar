@@ -7,7 +7,7 @@ import { lamp } from './fx.js';
 
 const rr = (x, y, w, h, r) => { const p = new Path2D(); p.roundRect(x, y, w, h, r); return p; };
 const LWM = 3.2;
-function part(g, P, shape, c, o = {}) { return cel(g, shape, { f: c.f, s: c.s, h: c.h, l: c.l, lw: o.lw ?? LWM, so: o.so ?? [-10, -10], ho: o.ho ?? [6, 6], rim: o.rim, sh: o.sh, hi: o.hi, clipFn: o.clipFn }); }
+function part(g, P, shape, c, o = {}) { return cel(g, shape, { f: c.f, s: c.s, h: c.h, l: c.l, lw: o.lw ?? LWM, so: o.so ?? [-10, -10], ho: o.ho ?? [6, 6], rim: typeof o.rim === 'string' ? { c: o.rim, d: [5, -4] } : o.rim, sh: o.sh, hi: o.hi, clipFn: o.clipFn }); }
 function stripes(g, P, x, y, w, h) {
   g.save(); g.beginPath(); g.rect(x, y, w, h); g.clip(); g.fillStyle = P.stripeK.f;
   for (let k = -2; k < w / 28 + 2; k++) { g.beginPath(); g.moveTo(x + k * 56, y + h); g.lineTo(x + k * 56 + 28, y + h); g.lineTo(x + k * 56 + 28 + h, y); g.lineTo(x + k * 56 + h, y); g.fill(); }

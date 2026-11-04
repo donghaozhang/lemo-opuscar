@@ -57,7 +57,7 @@ export function figure(g, PAL, who, o = {}) {
   else { cel(g, path([[-70, shY + 10], [-50, shY - 20], [0, shY - 8], [50, shY - 20], [70, shY + 10], [36, shY + 40], [0, shY + 30], [-36, shY + 40]]), { f: top.f, s: top.s, so: [-4, -6], h: top.h, l: top.l, lw: 2 }); }
   // head
   g.save(); g.translate(G ? 6 : 0, shY - (G ? 118 : 140)); const hs = G ? 1.06 : 1.0; g.scale(hs, hs);
-  head(g, PAL, who, { view: o.view || 'q', expr: o.expr || 'neutral', look: o.look, body: false, circles: o.circles, rim: o.rimHead, E: o.E });
+  head(g, PAL, who, { view: o.view || 'q', expr: o.expr || 'neutral', look: o.look, body: false, circles: o.circles, rim: o.rimHead, E: o.E, glasses: o.glasses, young: o.young, hardhat: o.hardhat });
   g.restore();
   if (!G) { const hp = (x, y) => { const c = new Path2D(); c.ellipse(x, y, 20, 24, .2, 0, TAU); cel(g, c, { f: P.phone.f, s: P.phone.s, so: [-3, -3], l: '#08080c', lw: 2 }); }; line(g, [[-50, shY + 4], [0, shY + 34], [50, shY + 4]], P.phone.f, 6); hp(-56, shY + 6); hp(54, shY + 4); }
   drawArm(-1, o.armL ?? [.12, -.15]);
