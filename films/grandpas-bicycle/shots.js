@@ -32,6 +32,36 @@ function wipeClip(ctx, p) {
 }
 // the figure's skin tone hand on something, big (inserts)
 function drawStrokes(ctx, S, p = 1, a = 1) { if (p >= 1) for (const s of S) drawS(ctx, s, 1, null, a); else drawList(ctx, S, p, null, a); }
+// the bell insert, big: the handlebar, a domed bell in layers, its lever, a thumb that flicks it (used twice: summer, spring)
+function bellInsert(ctx, t, t0, tDing, skin, o = {}) {
+  const S = [], z = o.z ?? 1, cx = 960, cy = 520;
+  ctx.save(); ctx.translate(cx, cy); ctx.scale(z, z);
+  const flick = seg(t, tDing - .14, tDing) - seg(t, tDing + .06, tDing + .55);
+  withSeed(o.seed || 12, () => {
+    // the bar: a curved black tube with a shadow edge, and the rubber grip at right
+    const bar = mk(qcurve(-980, 210, 620, 150, 18, 12), 54, INKB, { prof: 'flat', nb: 6, a: .92, rib: .82, rough: .08 }); S.push(bar, edgeOf(bar, 1, 5, '#000', .35));
+    S.push(mk(qcurve(560, 150, 980, 140, 4, 8), 66, '#3b2a22', { prof: 'flat', nb: 5, a: .95, rib: .9, rough: .1 }));
+    for (let i = 0; i < 5; i++) S.push(mk(qcurve(620 + i * 70, 118, 620 + i * 70, 176, 0, 3), 6, '#241a14', { prof: 'even', nb: 0, a: .5 }));
+    // the clamp and the bell: rim, dome, cap, a paper highlight, the strike lever
+    dab(S, 0, 120, 80, 22, '#4b4740', .9, 0, 3);
+    dab(S, 0, 20, 175, 118, '#86817a', .95, 0, 6); dab(S, -20, -30, 150, 95, '#9a958b', .75, 0, 5); dab(S, -45, -75, 95, 52, '#aaa59a', .6, 0, 4);
+    dab(S, 0, 95, 190, 24, '#4b4740', .92, 0, 4);
+    dab(S, -70, -82, 42, 22, '#f1e9da', .95, -.3);
+    dab(S, 22, 28, 60, 34, '#6e6a62', .45, 0, 3);
+    const la = -.15 - flick * .55, L = 150; S.push(mk(qcurve(130, 64, 130 + Math.cos(la) * L, 64 + Math.sin(la) * L, -10, 7), 26, '#3a3632', { prof: 'even', nb: 3, a: .95, rib: .9 })); const le = [130 + Math.cos(la) * L, 64 + Math.sin(la) * L]; dab(S, le[0], le[1], 22, 20, '#3a3632', .95);
+  });
+  drawStrokes(ctx, S, seg(t, t0, t0 + 1.6));
+  // the thumb comes in from below right, pushes the lever, drops back
+  const th = ss(seg(t, t0 + .6, tDing - .12)), T = [];
+  const tx = lerp(640, 300, th) - flick * 80, ty = lerp(560, 190, th) - flick * 60;
+  withSeed(13, () => {
+    const hand = mk(qcurve(tx + 420, ty + 360, tx + 120, ty + 110, -60, 8), 190, skin, { prof: 'flat', nb: 6, a: .92, rib: .85, rough: .08 }); T.push(hand);
+    const thumb = mk(qcurve(tx + 150, ty + 120, tx, ty, -40, 8), 92, skin, { prof: 'tip', nb: 5, a: .95, rib: .88, rough: .1 }); T.push(thumb, edgeOf(thumb, -1, 7, mixc(skin, INKB, .45), .45));
+    dab(T, tx + 10, ty + 6, 26, 18, mixc(skin, '#f1e9da', .55), .8, -.6);
+  });
+  if (th > 0) drawStrokes(ctx, T, 1, ss(seg(t, t0 + .6, t0 + .9)));
+  ctx.restore();
+}
 // the seal-like stamp at the end
 function stampDraw(ctx, x, y, p) {
   if (p <= 0) return;
@@ -81,17 +111,7 @@ function buildFilm() {
   page('plate', 0, ST.plate.end, null);
   // shot 1: the bell, three strokes, rung
   shot({ id: 'bell', t0: 0, t1: 3.0, page: 'plate', trans: 'none', draw(ctx, t) {
-    const z = lerp(1, 1.06, ss(seg(t, 0, 3))), S = [];
-    ctx.save(); ctx.translate(960, 560); ctx.scale(z, z);
-    const flick = seg(t, HT.ding0 - .12, HT.ding0) - seg(t, HT.ding0 + .05, HT.ding0 + .5);
-    withSeed(11, () => { bellStrokes(S, 0, -20, 150, 1, flick); });
-    // the bar it sits on, and the thumb coming in from below right
-    withSeed(12, () => { S.push(mk(qcurve(-380, 150, 420, 110, 20, 10), 42, INKB, { prof: 'flat', nb: 5, a: .9, rib: .8 })); });
-    drawStrokes(ctx, S, seg(t, .15, 1.9));
-    const th = seg(t, .55, HT.ding0 - .1), tx = lerp(420, 140, eo(th)), ty = lerp(420, 60, eo(th)), T = [];
-    withSeed(13, () => { T.push(mk(qcurve(tx + 130, ty + 160, tx, ty - flick * 18, -30, 8), 44, SKIN, { prof: 'tip', nb: 4, a: .9, rib: .8 })); T.push(mk(qcurve(tx + 20, ty + 40, tx - 6, ty - 10 - flick * 18, 4, 4), 22, mixc(SKIN, SKIN2, .5), { prof: 'tip', nb: 0, a: .5 })); });
-    if (th > 0) drawStrokes(ctx, T, 1, ss(seg(t, .55, .8)));
-    ctx.restore();
+    bellInsert(ctx, t, 0.0, HT.ding0, he6.skin, { z: lerp(1, 1.05, ss(seg(t, 0, 3))) });
   } });
   ev(.15, 'brush', { dur: 1.6, pan: -.3 }); ev(HT.ding0, 'bell', { v: 1, hit: 'ding0' }); ev(HT.ding0 + .22, 'bell', { v: .7 });
   // shot 2: pull back to the plate, the bicycle paints itself in
@@ -116,7 +136,7 @@ function buildFilm() {
   ev(S0 + 1.2, 'pencil', { dur: 1.4 });
   // shot 3: wide, the lane; grandpa wheels the bike in, Xiao He runs ahead
   shot({ id: 's3', t0: S0, t1: SB(3), page: 'summer', trans: 'turn', draw(ctx, t) {
-    const cam = camAt(1250 + 320 * ss(seg(t, S0, SB(3))), 800, .58), rv = laneReveal(S0, cam);
+    const cam = camAt(1000 + 300 * ss(seg(t, S0, SB(3))), 810, .72), rv = laneReveal(S0, cam);
     drawLane(ctx, 'summer', cam, t, { reveal: rv });
     const fp = clamp((t - S0 - 1.3) / .9), lt = t - S0, bx = 120 + 95 * lt, ph = lt * 1.1;
     const Bk = { x: bx, y: 0, dir: 1, dist: bx - 120, crank: (bx - 120) / (2.75 * BIKE.R) };
@@ -200,15 +220,15 @@ function buildFilm() {
   ev(F3, 'clatter', { v: 1, hit: 'fall3' }); ev(F3 + .55, 'sandal', { v: .6 }); ev(F3 + .85, 'sandal', { v: .3 }); ev(F3 + .1, 'glock', { v: .6, n: 3 });
   // shot 8: insert, the scraped knee; the note with the tally
   shot({ id: 's8', t0: SB(10), t1: SB(12, 1.5), page: 'summer', trans: 'wipe', draw(ctx, t) {
-    const T0 = SB(10), z = lerp(7.4, 8.4, ss(seg(t, T0, T0 + 4))), laneAlpha = .55;
+    const T0 = SB(10), z = lerp(5.0, 5.6, ss(seg(t, T0, T0 + 4))), laneAlpha = .55;
     // she sits on the ground, knees up; the camera is on her near knee
-    const bx = 1900, sit = { x: bx + 40, y: 0, dir: 1, hipY: -12, lean: -.25, turn: .5, expr: E('sniff'), feet: [[bx + 50, -2], [bx + 58, -5]], hands: [[bx + 16, -2], [bx + 50, -30]], kneeSide: [1, 1], elbowSide: [-1, -1] };
-    const R0 = solve(he6, sit), cam = { x: R0.legs[0].knee[0] + 4, y: R0.legs[0].knee[1] + 10, z };
+    const bx = 1900, sit = { x: bx + 40, y: 0, dir: 1, hipY: -12, lean: -.25, turn: .5, expr: Object.assign({}, E('sniff'), { gaze: [.5, .6] }), feet: [[bx + 50, -2], [bx + 58, -5]], hands: [[bx + 16, -2], [bx + 50, -30]], kneeSide: [1, 1], elbowSide: [-1, -1], headTilt: .35 };
+    const R0 = solve(he6, sit), cam = { x: (R0.legs[0].knee[0] + R0.head[0]) / 2 + 10, y: (R0.legs[0].knee[1] + R0.head[1]) / 2 + 4, z };
     drawLane(ctx, 'summer', cam, t, { alpha: laneAlpha });
     const R = drawFigure(ctx, he6, sit, cam, { seed: 32 });
     // the scrape blooms: a wash that spreads, then a few darker dots
     const bl = seg(t, T0 + .4, T0 + 1.8), k = sp(cam, R.legs[0].knee), S = [];
-    withSeed(46, () => { dab(S, k[0] + 2 * z, k[1] + 1 * z, (1.5 + 2.6 * eo(bl)) * z, (1.2 + 2.2 * eo(bl)) * z, '#b8432e', .5 * ss(bl), .2, z > 4 ? 3 : 0); for (let i = 0; i < 5; i++) { const q = seg(bl, .5 + i * .08, .7 + i * .08); if (q > 0) dab(S, k[0] + rnd(-2.5, 2.5) * z, k[1] + rnd(-2, 2) * z, .5 * z * q, .4 * z * q, '#8a2f22', .7); } });
+    withSeed(46, () => { dab(S, k[0] + 2 * z, k[1] + 1 * z, (2 + 4 * eo(bl)) * z, (1.6 + 3.2 * eo(bl)) * z, '#b8432e', .55 * ss(bl), .2, z > 4 ? 3 : 0); for (let i = 0; i < 6; i++) { const q = seg(bl, .5 + i * .07, .7 + i * .07); if (q > 0) dab(S, k[0] + rnd(-4, 4) * z, k[1] + rnd(-3, 3) * z, .8 * z * q, .6 * z * q, '#8a2f22', .75); } });
     drawStrokes(ctx, S);
   } });
   ev(SB(10) + .4, 'brush', { dur: 1.4, pan: .2, v: .5 }); ev(SB(10) + 1.6, 'pencil', { dur: 1.5 }); ev(SB(10) + 3.2, 'tick', { n: 3, gap: .3, v: .35 });
@@ -299,7 +319,7 @@ function buildFilm() {
   } });
   ev(SB(23) + .5, 'wave', { v: .2 }); ev(SB(23) + .5, 'pen', { dur: 1.0 }); ev(SE - 1.5, 'mist', { dur: 1.6 });
   note({ page: 'summer', id: 'n50', txt: '50 m', t0: SB(23) + .7, t1: SE, x: 1130, y: 600, font: 'mono', size: 30 });
-  note({ page: 'summer', id: 'n50z', txt: '骑了 50 米！', t0: SB(23) + .75, t1: SE, x: 1300, y: 150, size: 52 });
+  note({ page: 'summer', id: 'n50z', txt: '骑了 50 米！', t0: SB(23) + .75, t1: SE, x: 1330, y: 930, size: 52 });
 
   // ======== page 2: autumn, age ten, to school (48.14 – 64.14) ========
   const K0 = ST.school.t, KE = ST.school.end, KB = (b, k = 0) => TB('school', b, k);
@@ -307,7 +327,7 @@ function buildFilm() {
   ev(K0, 'page', { hit: 'pageSchool' }); ev(K0 + .1, 'brush', { dur: 2.4, pan: -.8, pan1: .8 }); ev(K0 - .4, 'sparrows', { dur: KE - K0 + 1, v: .4 });
   note({ page: 'school', id: 'nschool', txt: '秋 · 十岁 · 上学路', t0: K0 + 1.3, t1: KE, x: 110, y: 120, size: 46 }); ev(K0 + 1.3, 'pencil', { dur: 1.2 });
   shot({ id: 's14', t0: K0, t1: KB(2), page: 'school', trans: 'turn', draw(ctx, t) {
-    const cam = camAt(1500 + 120 * ss(seg(t, K0, KB(2))), 780, .46), rv = laneReveal(K0, cam);
+    const cam = camAt(1100 + 200 * ss(seg(t, K0, KB(2))), 800, .62), rv = laneReveal(K0, cam);
     drawLane(ctx, 'school', cam, t, { reveal: rv });
     drawWeather(ctx, 'school', t, cam, ss(seg(t, K0 + 1, K0 + 2)));
     const lt = t - K0, bx = -500 + 330 * Math.max(0, lt - .9);
@@ -366,7 +386,7 @@ function buildFilm() {
   note({ page: 'leaving', id: 'nleave', txt: '秋 · 十八岁 · 去城里上大学', t0: L0 + 1.4, t1: LE, x: 110, y: 120, size: 46 }); ev(L0 + 1.4, 'pencil', { dur: 1.6 });
   // shot 18: wide, grey autumn, leaves; she straps a bag to the rack by the gate; grandpa at the gate
   shot({ id: 's18', t0: L0, t1: LB(1, 2.4), page: 'leaving', trans: 'turn', draw(ctx, t) {
-    const z = lerp(.58, .66, ss(seg(t, L0, LB(1, 2.4)))), cam = camAt(640, 790, z), rv = laneReveal(L0, cam);
+    const z = lerp(.72, .82, ss(seg(t, L0, LB(1, 2.4)))), cam = camAt(560, 800, z), rv = laneReveal(L0, cam);
     drawLane(ctx, 'leaving', cam, t, { reveal: rv });
     drawWeather(ctx, 'leaving', t, cam, ss(seg(t, L0 + 1, L0 + 2)));
     const fp = clamp((t - L0 - 1.4) / .9), Bk = { x: 520, y: 0, dir: 1, dist: 10, crank: .3 };
@@ -443,7 +463,7 @@ function buildFilm() {
   function winterStick(ctx, cam, p = 1, lean = .1) { const S = []; withSeed(56, () => stickStrokes(S, sx(cam, stickX), sy(cam, 0), 86 * cam.z, cam.z, 1, lean)); drawStrokes(ctx, S, p); }
   // shot 22: wide, the lane at dusk; snow; the bicycle leans under the wall; the one warm window
   shot({ id: 's22', t0: W0, t1: WB(1, 1), page: 'winter', trans: 'turn', draw(ctx, t) {
-    const z = lerp(.6, .68, ss(seg(t, W0, WB(1, 1)))), cam = camAt(900, 790, z), rv = laneReveal(W0, cam);
+    const z = lerp(.8, .9, ss(seg(t, W0, WB(1, 1)))), cam = camAt(760, 800, z), rv = laneReveal(W0, cam);
     drawLane(ctx, 'winter', cam, t, { reveal: rv });
     const fp = clamp((t - W0 - 1.5) / 1.1);
     winterBike(ctx, cam, fp);
@@ -515,7 +535,7 @@ function buildFilm() {
   const stickAt = (ctx, cam, x, p = 1, lean = .12) => { const S = []; withSeed(56, () => stickStrokes(S, sx(cam, x), sy(cam, 0), 86 * cam.z, cam.z, 1, lean)); drawStrokes(ctx, S, p); };
   // shot 26: wide, blossom; she wheels the bicycle out of the gate; he at the door with his stick
   shot({ id: 's26', t0: P0, t1: PB(1, 2), page: 'spring', trans: 'turn', draw(ctx, t) {
-    const cam = camAt(780 + 60 * ss(seg(t, P0, PB(1, 2))), 790, .55), rv = laneReveal(P0, cam);
+    const cam = camAt(640 + 80 * ss(seg(t, P0, PB(1, 2))), 800, .72), rv = laneReveal(P0, cam);
     drawLane(ctx, 'spring', cam, t, { reveal: rv });
     drawWeather(ctx, 'spring', t, cam, ss(seg(t, P0 + 1.5, P0 + 2.5)));
     const fp = clamp((t - P0 - 1.6) / .9), lt = Math.max(0, t - P0 - 1.9), bx = 330 + 70 * lt;
@@ -563,17 +583,10 @@ function buildFilm() {
   // shot 28: insert: her thumb flicks the bell
   const DS = HT.dingSpring;
   shot({ id: 's28', t0: PB(3, 1.5), t1: HT.dollyTwo, page: 'spring', trans: 'wipe', wipe: .4, draw(ctx, t) {
-    const T0 = PB(3, 1.5), cam = camAt(640 + BIKE.bell[0], 540 + 96 * 7, 7), z = cam.z;
-    drawLane(ctx, 'spring', cam, t);
-    const Bk = { x: 640, y: 0, dir: 1, dist: 10, crank: 2.6 };
-    drawBike(ctx, cam, Bk, { seed: 21 });
-    const flick = seg(t, DS - .12, DS) - seg(t, DS + .05, DS + .5), S = [];
-    const b = sp(cam, bikePt(Bk, BIKE.bell));
-    withSeed(60, () => { bellStrokes(S, b[0], b[1] - 2 * z, 5.2 * z, 1, flick); });
-    // her thumb: from the grip, up and over
-    const th = seg(t, T0 + .15, DS - .1), tx = b[0] + lerp(40, 4, eo(th)) * z * .25, ty = b[1] + lerp(60, 14, eo(th)) * z * .25;
-    withSeed(61, () => { S.push(mk(qcurve(tx + 14 * z, ty + 22 * z, tx, ty - flick * 2.5 * z, -3 * z, 6), 5.5 * z, he25.skin, { prof: 'tip', nb: 3, a: .9, rib: .8 })); });
-    drawStrokes(ctx, S);
+    const T0 = PB(3, 1.5), cam = camAt(640 + BIKE.bell[0], 540 + 96 * 7, 7);
+    drawLane(ctx, 'spring', cam, t, { alpha: .4 });
+    drawWeather(ctx, 'spring', t, { x: 0, y: 0, z: 1.5 }, .5);
+    bellInsert(ctx, t, T0 - 1.6, DS, he25.skin, { z: .92, seed: 14 });
   } });
   ev(DS, 'bell', { v: 1, hit: 'dingSpring' }); ev(DS + .22, 'bell', { v: .75 });
   // shot 29: the dolly again, slower: both on the bicycle; blossom bursts overhead; the stick on the wall exits left
@@ -619,12 +632,12 @@ function buildFilm() {
     const T0 = HB(2), lt = t - H0, bx = 1700 + 95 * lt;
     const Bk = { x: bx, y: 0, dir: 1, dist: bx - 640, crank: (bx - 640) / (2.75 * BIKE.R) };
     const rP = ridePose(he25, Bk, { expr: E('warm') }), R = solve(he25, rP);
-    const z = 11, cam = { x: R.sh[0] - 4, y: R.sh[1] + 2, z };
+    const z = 15, cam = { x: R.sh[0] - 2, y: R.sh[1] + 4, z };
     drawLane(ctx, 'spring', cam, t, { alpha: .45 });
     drawFigure(ctx, he25, rP, cam, { seed: 38 });
     const S = [], sh = sp(cam, [R.sh[0] - 4, R.sh[1] + 6]);
-    withSeed(63, () => { const a0 = sp(cam, [R.sh[0] - 60, R.sh[1] + 40]); S.push(mk(qcurve(a0[0], a0[1], sh[0] - 8 * z, sh[1] + 2 * z, -6 * z, 6), 6 * z, gp79.top, { prof: 'even', nb: 4, a: .9, rib: .78 })); handStrokes(S, sh[0], sh[1], 6.5 * z, 1, .35, gp79.skin, { rot: -.5 }); });
-    const cv = eo(seg(t, T0 + .5, T0 + 1.5)); if (cv > 0) { const hx = lerp(sh[0] + 120 * z * .2, sh[0] + 4 * z, cv), hy = lerp(sh[1] + 80 * z * .2, sh[1] - 4 * z, cv); withSeed(64, () => { const a0 = sp(cam, [R.sh[0] + 40, R.sh[1] + 30]); S.push(mk(qcurve(hx + 30 * z * .3, hy + 60 * z * .3, hx + 2 * z, hy + 2 * z, 4 * z, 6), 5.2 * z, he25.top, { prof: 'even', nb: 3, a: .9, rib: .78 })); handStrokes(S, hx, hy, 5.8 * z, -1, .5 * cv, he25.skin, { rot: .6 }); }); }
+    withSeed(63, () => { const a0 = sp(cam, [R.sh[0] - 60, R.sh[1] + 40]); S.push(mk(qcurve(a0[0], a0[1], sh[0] - 8 * z, sh[1] + 2 * z, -6 * z, 6), 6 * z, gp79.top, { prof: 'even', nb: 4, a: .9, rib: .78 })); handStrokes(S, sh[0], sh[1], 8 * z, 1, .35, gp79.skin, { rot: -.5 }); });
+    const cv = eo(seg(t, T0 + .5, T0 + 1.5)); if (cv > 0) { const hx = lerp(sh[0] + 120 * z * .2, sh[0] + 4 * z, cv), hy = lerp(sh[1] + 80 * z * .2, sh[1] - 4 * z, cv); withSeed(64, () => { const a0 = sp(cam, [R.sh[0] + 40, R.sh[1] + 30]); S.push(mk(qcurve(hx + 30 * z * .3, hy + 60 * z * .3, hx + 2 * z, hy + 2 * z, 4 * z, 6), 5.2 * z, he25.top, { prof: 'even', nb: 3, a: .9, rib: .78 })); handStrokes(S, hx, hy, 7 * z, -1, .5 * cv, he25.skin, { rot: .6 }); }); }
     drawStrokes(ctx, S);
   } });
   ev(HB(2) + 1.2, 'cloth', { v: .25 });
@@ -643,7 +656,7 @@ function buildFilm() {
   } });
   ev(N0 + 1.2, 'chain', { dur: 6, v: .15, fade: 1 });
   note({ page: 'lane', id: 'n50b', txt: '50 m', t0: N0 + 2.0, t1: NE - 1.6, x: 1130, y: 600, font: 'mono', size: 30 });
-  note({ page: 'lane', id: 'n50bz', txt: '骑了 50 米，和那年一样', t0: N0 + 2.3, t1: NE - 1.6, x: 1810, y: 150, size: 52, align: 'right' });
+  note({ page: 'lane', id: 'n50bz', txt: '骑了 50 米，和那年一样', t0: N0 + 2.3, t1: NE - 1.6, x: 1810, y: 930, size: 52, align: 'right' });
   // shot 33: the brush lifts; mist to paper; the stamp
   shot({ id: 's33', t0: NE - 2.0, t1: NE, page: 'lane', trans: 'none', draw(ctx, t) {
     SHOTS.find(s => s.id === 's32').draw(ctx, t);
