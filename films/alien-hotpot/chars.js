@@ -1,7 +1,10 @@
 // chars.js — our own cast: 刘姨 Auntie Liu, 祖格 Zug (tall, deadpan), 皮皮 Pip (small, nervous) + props.
 // Every character: local coordinates, origin at the feet, y down; face = 1 looks screen-right (3/4), -1 mirrors.
 import { clamp, lerp, hash, TAU } from '/core/lib.js';
-import { INK, g, push, pop, translate, rotate, scale, shape, fillOnly, stroke, ell, arc, spline, rr, rect, noodle, quad, dot, text, S, tx, zoom } from './toon.js';
+import { INK, g, push, pop, translate, rotate, scale, shape, fillOnly, stroke, ell, arc, spline, rr, rect, noodle, quad, dot, text, S, tx, zoom, getM, setM } from './toon.js';
+// hands that must be drawn in front of the pot: arm option {late: true} queues the hand + its prop, shop() draws them after the pot
+export const LATE = [];
+const lateOr = (A, draw) => { if (A?.late) { const m = getM(); LATE.push(() => { const k = getM(); setM(m); draw(); setM(k); }); } else draw(); };
 
 // Palette; `tint` (0..1) pulls every colour toward the current light (cyan fuel wash, morning)
 export const BASE = {
@@ -106,8 +109,7 @@ export function liu(P) {
     shape(noodle(sh, mid, (A?.bend ?? side * -8) * .5, 40, 36), { fill: C.lShirt, lw: 7 });
     shape(noodle(mid, hp, (A?.bend ?? side * -8) * .5, 40, 34), { fill: C.sleeve, lw: 7, shade: () => fillOnly(rect(-400, mid[1] + 18, 800, 400), C.sleeveS, { boil: .3 }) });
     stroke([[mid[0] - 18, mid[1] - 4], [mid[0] + 18, mid[1] + 4]], 5);
-    if (A?.hold) A.hold(hp);
-    hand(hp[0] + side * 4, hp[1] + 14, (A?.ang ?? side * 1.6), 20, C.lSkin, { fist: A?.fist });
+    lateOr(A, () => { if (A?.hold) A.hold(hp); hand(hp[0] + side * 4, hp[1] + 14, (A?.ang ?? side * 1.6), 20, C.lSkin, { fist: A?.fist }); });
   };
   if (P.back) {
     // back view (over-the-shoulder): torso, collar, apron strings, the back of the head with the bun
@@ -196,8 +198,7 @@ export function zug(P) {
     const sh = side < 0 ? SH[0] : SH[1];
     const hp = A ? [sh[0] + A.h[0], sh[1] + A.h[1]] : [sh[0] + side * 16, sh[1] + 200];
     shape(noodle(sh, hp, A?.bend ?? side * -14, 26, 22), { fill: C.suit, lw: 7 });
-    if (A?.hold) A.hold(hp);
-    hand(hp[0] + side * 4, hp[1] + 10, A?.ang ?? side * 1.6, 19, C.zSkin, { fist: A?.fist });
+    lateOr(A, () => { if (A?.hold) A.hold(hp); hand(hp[0] + side * 4, hp[1] + 10, A?.ang ?? side * 1.6, 19, C.zSkin, { fist: A?.fist }); });
   };
   arm(-1, P.armL);
   // head: a tall egg
@@ -320,7 +321,7 @@ export function cell(x, y, s = 1, { glow = 0, level = 0, t = 0, a = 0 } = {}) {
 }
 
 // —— 九宫格 the nine-grid pot (seen from 3/4 above) ——
-export function pot(x, y, s = 1, { t = 0, boil = 1, steam = 1, heat = 1, pick = null } = {}) {
+export function pot(x, y, s = 1, { t = 0, boil = 1, steam = 1, heat = 1, pick = null, sides = false } = {}) {
   push(); translate(x, y); scale(s);
   // burner + flames
   shape(rr(-150, 40, 300, 50, 10), { fill: '#3a3a48', lw: 7 });
@@ -343,7 +344,7 @@ export function pot(x, y, s = 1, { t = 0, boil = 1, steam = 1, heat = 1, pick = 
   for (const gy of [-16, 16]) stroke([[-176, -22 + gy], [176, -22 + gy]], 6, { line: C.steelS });
   if (pick) pick();
   // steam: white wisps, on ones
-  for (let i = 0; i < 4 * steam; i++) { const ph = (t * .45 + i * .27) % 1, x0 = -120 + i * 80, y0 = -60 - ph * 260; stroke(spline([[x0, y0], [x0 + 18, y0 - 30], [x0 - 10, y0 - 62], [x0 + 14, y0 - 94]], false), 6, { line: `rgba(255,255,255,${.7 * (1 - ph) * steam})` }); }
+  for (let i = 0; i < 4 * steam; i++) { if (sides && (i === 1 || i === 2)) continue; const ph = (t * .45 + i * .27) % 1, x0 = -120 + i * 80, y0 = -60 - ph * 260; stroke(spline([[x0, y0], [x0 + 18, y0 - 30], [x0 - 10, y0 - 62], [x0 + 14, y0 - 94]], false), 6, { line: `rgba(255,255,255,${.7 * (1 - ph) * steam})` }); }
   pop();
 }
 

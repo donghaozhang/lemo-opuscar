@@ -1,7 +1,7 @@
 // 外星人来吃火锅 — Sci-Fi Sitcom Toon. Picture = render(t); all timing from timeline.js.
 import { clamp, lerp, seg, ss, eo, ei, eio, back, hash, TAU } from '/core/lib.js';
 import { W, H, INK, init, frame, g, push, pop, translate, rotate, scale, shape, fillOnly, stroke, ell, arc, rr, rect, spline, dot, text, screenRect, S, noodle, reset, quad, bands } from './toon.js';
-import { C, light, mix, mul, liu, zug, pip, translator, cell, pot, saucer, hexCoin, coin, chopsticks, tripe, puff, hand, sweat } from './chars.js';
+import { LATE, C, light, mix, mul, liu, zug, pip, translator, cell, pot, saucer, hexCoin, coin, chopsticks, tripe, puff, hand, sweat } from './chars.js';
 import { NIGHT, MORNING, city, alley, rain, zhuanrang, renzheng, interior, counter, table, stool, counterTop, menuBoard, sign, FONT, SHOP, SHOPIN } from './sets.js';
 import { DUR, q, SECS, sec, beat, SHOTS, shotAt, LINES, WHO, HITS, DIPS, DIPS2, FOLEY, dipFoley, TITLE, TAGS } from './timeline.js';
 
@@ -49,7 +49,7 @@ function fuelLight(k) { if (k <= 0) { ROOM(); return; } light('#6ff4ff', .38 * k
 
 // —— poses ——
 const LIU_C = { x: 330, y: 820, face: 1 };
-const LIU_T = { x: 1215, y: 900, face: -1 };
+const LIU_T = { x: 1040, y: 905, face: 1 };
 const ZUG_T = { x: 790, y: 960, sit: 1, face: 1 };
 const PIP_T = { x: 1405, y: 772, face: -1 };
 const POT = [1040, 668, .78];
@@ -79,7 +79,8 @@ function shop(t, o = {}) {
   if (o.liu === 'table') liu(o.liuP);
   if (o.pip) pip(o.pip);
   if (o.table !== false) table({ K });
-  if (o.pot !== false) pot(POT[0], POT[1], POT[2], { t, heat: o.heat ?? 1, boil: o.boil ?? 1, steam: o.steam ?? 1, pick: o.pick });
+  if (o.pot !== false) pot(POT[0], POT[1], POT[2], { t, heat: o.heat ?? 1, boil: o.boil ?? 1, steam: o.steam ?? 1, pick: o.pick, sides: o.liu === 'table' });
+  for (const f of LATE.splice(0)) f();
   if (o.front) o.front(K);
 }
 // the coins on the counter top seen from above
@@ -262,15 +263,15 @@ SH.title = (t, u) => {
 };
 SH.roof = (t, u) => {
   NIGHT_OUT();
-  cam(mv(u, 0, 4, 1000, 1040), mv(u, 0, 4, 10, 0), 2.05, 0, 0, t);
+  cam(mv(u, 0, 4, 1010, 1050), mv(u, 0, 4, -10, -30), 1.85, 0, 0, t);
   const hatch = back(seg(t, 27.75, 28.1), 1.2);
   const zr = ss(seg(t, 27.95, 28.9));
   const zm = talk('ZUG', t), pm = talk('PIP', t);
   alley(t, NIGHT, {
     roof: () => {
+      // Zug rising out of the cockpit, deadpan, holding the cell (the dish hides his legs)
+      zug({ x: 985, y: lerp(260, 120, zr), s: .5, face: 1, lid: .6, look: [.3, .2], blink: blinkAt(t, [29.9]), mouth: { o: zm.o * .8, w: zm.w }, armR: { h: [30, 70], bend: -30, hold: hp => cell(hp[0] + 10, hp[1] - 10, .55, { glow: 0, level: 0, t }) }, armL: { h: [40, 80], bend: 20 } });
       saucer(1000, 96, .55, { glow: .1, tilt: .12, t, hatch, smoke: .6 });
-      // Zug rising out of the cockpit, deadpan, holding the cell
-      zug({ x: 985, y: lerp(150, 40, zr), s: .5, face: 1, lid: .6, look: [.3, .2], blink: blinkAt(t, [29.9]), mouth: { o: zm.o * .8, w: zm.w }, armR: { h: [30, 70], bend: -30, hold: hp => cell(hp[0] + 10, hp[1] - 10, .55, { glow: 0, level: 0, t }) }, armL: { h: [40, 80], bend: 20 } });
       // Pip springs out at 29.85 and lands on the roof at 30.1
       if (t > 29.85) {
         const fv = seg(t, 29.85, 30.1), px = lerp(1020, 1150, fv), py = lerp(60, 118, fv) - Math.sin(fv * Math.PI) * 120;
@@ -320,7 +321,7 @@ SH.door = (t, u) => {
     },
     front: () => {
       // over-the-shoulder: Liu's back, shoulder, collar, ear and bun in the foreground
-      liu({ x: 700, y: 1440, s: 1.55, face: 1, back: true, headTilt: .05 + u * .02 });
+      liu({ x: 830, y: 1250, s: 1.45, face: 1, back: true, headTilt: .05 + u * .02 });
     },
   });
 };
@@ -426,9 +427,9 @@ SH.pipCU = (t, u, d) => {
     if (t > 62.2) {
       const pv = [62.2, 62.35, 62.5];
       const hx = PIP_T.x, hy = PIP_T.y - 232;
-      for (const s of [-1, 1]) puff(hx - s * 62, hy - 150, seg(t, pv[0], pv[0] + 1.1), -Math.PI / 2 - s * .3, 1);   // antenna tips
-      for (const s of [-1, 1]) puff(hx - s * 84, hy - 4, seg(t, pv[1], pv[1] + 1.1), s < 0 ? -.2 : Math.PI + .2, 1);   // ears
-      puff(hx - 4, hy + 10, seg(t, pv[2], pv[2] + 1), Math.PI * .6, .8);
+      const jet = (x, y, t0, dir, sc) => { for (let k = 0; k < 5; k++) { const v = seg(t, t0 + k * .12, t0 + k * .12 + 1.0); if (v > 0 && v < 1) puff(x, y, v * .8, dir, sc * (.6 + .1 * k)); } };
+      for (const s of [-1, 1]) jet(hx - s * 66, hy - 150, pv[0], -Math.PI / 2 - s * .35, .7);   // antenna tips
+      for (const s of [-1, 1]) jet(hx - s * 88, hy - 4, pv[1], s < 0 ? -.25 : Math.PI + .25, .6);   // ears
     }
   } });
 };
@@ -439,7 +440,7 @@ SH.zugBlink = (t) => {
 };
 SH.liuArms = (t) => {
   ROOM();
-  cam(1200, 520, 2.45, 0, 0, t);
+  cam(1066, 505, 2.45, 0, 0, t);
   shop(t, { liu: 'table', liuP: L(t, { ...LIU_T, cross: true, look: [1, .2], lid: .5, blink: blinkAt(t, [65.3]), brow: { tilt: .1 } }), steam: .3 });
 };
 SH.pipMore = (t, u) => {
@@ -462,29 +463,30 @@ SH.tripe1 = (t, u) => {
   const shrink = t > 70.3 ? 1 : 0;
   shop(t, {
     liu: 'table', liuP: L(t, { ...LIU_T, cross: true, look: [-1, .4], lid: .5, blink: blinkAt(t, [70.9]) }),
-    zug: Z(t, { look: shrink ? [.6, -.4] : [1, .6], lid: shrink ? .5 : .6, armR: { h: [lerp(120, 190, dip) - lift * 40, lerp(-40, 30, dip) - lift * 120], bend: -20, fist: true, hold: hp => chopsticks(hp[0], hp[1], .5 - lift * .6, { L: 150, food: () => tripe(.75, 1, shrink) }) } }),
+    zug: Z(t, { look: shrink ? [.6, -.4] : [1, .6], lid: shrink ? .5 : .6, armR: { late: true, h: [lerp(120, 170, dip) - lift * 110, lerp(-60, -10, dip) - lift * 110], bend: -20, fist: true, hold: hp => chopsticks(hp[0], hp[1], .75 - lift * 2.0, { L: 150, food: () => tripe(.75, 1, shrink) }) } }),
     pip: Pp(t, { flush: .8, jit: 2, look: [-1, .4] }),
     steam: .6,
   });
 };
 SH.liuShake = (t) => {
   ROOM();
-  cam(1200, 520, 2.45, 0, 0, t);
+  cam(1066, 505, 2.45, 0, 0, t);
   const sh = Math.sin((t - 71.5) * TAU * 2.2) * .13 * env(t, 71.5, 72.5);
   shop(t, { liu: 'table', liuP: L(t, { ...LIU_T, cross: true, headTilt: sh, look: [sh * 4, .1], lid: .58, brow: { tilt: .3, h: 0 }, mouth: { sm: -.6 } }), steam: .3 });
 };
 function env(t, a, b) { return Math.min(seg(t, a, a + .15), 1 - seg(t, b - .2, b)); }
 SH.lesson = (t, u) => {
   ROOM();
-  cam(1160, mv(u, 0, 5, 520, 540), mv(u, 0, 5, 1.85, 1.98), 0, 0, t);
+  cam(mv(u, 0, 5, 1120, 1090), mv(u, 0, 5, 540, 560), mv(u, 0, 5, 1.75, 1.9), 0, 0, t);
   const dy = dipY(t, DIPS);
   const n = DIPS.filter(b => t >= b).length;
+  // (Liu behind the pot, dipping into its right half)
   shop(t, {
     liu: 'table', liuP: L(t, { ...LIU_T, face: -1, look: [-.4, .8], lid: .5, blink: false, headTilt: dy * .05, bob: dy * 6,
-      armR: { h: [130, lerp(70, 140, dy)], bend: -20, fist: true, hold: hp => chopsticks(hp[0], hp[1], .8, { L: 120, food: () => tripe(.5) }) }, armL: { h: [-10, 120], bend: 10 } }),
+      armR: { late: true, h: [70, lerp(-40, 0, dy)], bend: -20, fist: true, hold: hp => chopsticks(hp[0], hp[1], 1.0, { L: 110, food: () => tripe(.5) }) }, armL: { h: [-10, 120], bend: 10 } }),
     pip: Pp(t, { flush: .7, look: [-1, .6], jit: 1 }),
     steam: .5,
-    front: () => { for (let i = 0; i < 8; i++) { const x = 1000 + i * 36, y = 380; if (i < n) shape(ell(x, y, 11, 11, 12), { fill: i < 7 ? '#ffd25a' : '#ff5a3c', lw: 4 }); else shape(ell(x, y, 8, 8, 10), { lw: 3, line: 'rgba(34,20,50,.5)' }); } },
+    front: () => { for (let i = 0; i < 8; i++) { const x = 960 + i * 36, y = 360; if (i < n) shape(ell(x, y, 11, 11, 12), { fill: i < 7 ? '#ffd25a' : '#ff5a3c', lw: 4 }); else shape(ell(x, y, 8, 8, 10), { lw: 3, line: 'rgba(34,20,50,.5)' }); } },
   });
 };
 SH.antenna = (t, u) => {
@@ -507,8 +509,8 @@ SH.mirror = (t, u) => {
   cam(1010, 500, mv(u, 0, 4, 1.32, 1.4), 0, 0, t);
   const dy = dipY(t, DIPS2), dz = dipY(t - .04, DIPS2);
   shop(t, {
-    liu: 'table', liuP: L(t, { ...LIU_T, look: [-.8, .7], lid: .5, headTilt: dy * .05, armR: { h: [130, lerp(70, 140, dy)], bend: -20, fist: true, hold: hp => chopsticks(hp[0], hp[1], .8, { L: 120, food: () => tripe(.5) }) }, armL: { h: [-10, 120], bend: 10 } }),
-    zug: Z(t, { closed: true, chop: 1, chopWig: dz * .25, headTilt: dz * .05, brow: { tilt: .15 }, armR: { h: [190, lerp(-30, 40, dz)], bend: -20, fist: true, hold: hp => chopsticks(hp[0], hp[1], .45, { L: 150, food: () => tripe(.6) }) } }),
+    liu: 'table', liuP: L(t, { ...LIU_T, face: -1, look: [-.2, .8], lid: .5, headTilt: dy * .05, armR: { late: true, h: [70, lerp(-40, 0, dy)], bend: -20, fist: true, hold: hp => chopsticks(hp[0], hp[1], 1.0, { L: 110, food: () => tripe(.5) }) }, armL: { h: [-10, 120], bend: 10 } }),
+    zug: Z(t, { closed: true, chop: 1, chopWig: dz * .25, headTilt: dz * .05, brow: { tilt: .15 }, armR: { late: true, h: [150, lerp(-60, -10, dz)], bend: -20, fist: true, hold: hp => chopsticks(hp[0], hp[1], .8, { L: 130, food: () => tripe(.6) }) } }),
     pip: Pp(t, { flush: .5, look: [-1, .3], jit: 1, mouth: { o: 0, sm: .4 } }),
     steam: .5,
   });
@@ -549,7 +551,7 @@ SH.experiment = (t, u) => {
 };
 SH.whip = (t, u) => {
   ROOM();
-  const xs = [[93.4, 800], [94.0, 800], [94.25, 1400], [94.7, 1400], [94.95, 1210], [95.4, 1210]];
+  const xs = [[93.4, 800], [94.0, 800], [94.25, 1400], [94.7, 1400], [94.95, 1066], [95.4, 1066]];
   let x = 800; for (let i = 0; i < xs.length - 1; i++) if (t >= xs[i][0] && t < xs[i + 1][0]) x = lerp(xs[i][1], xs[i + 1][1], eio(seg(t, xs[i][0], xs[i + 1][0])));
   cam(x, 480, 2.0, 0, 0, t);
   shop(t, { liu: 'table', liuP: L(t, { ...LIU_T, cross: true, look: [-.2, .1], lid: .5 }), zug: Z(t, { look: [1, .5], lid: .2, pupil: 3.5, brow: { h: 12 } }), pip: Pp(t, { flush: .3, look: [-1, .3], lid: 0, jit: 4, brow: { h: 14 } }), steam: .6, k: .05 });
@@ -560,7 +562,7 @@ SH.whip = (t, u) => {
 SH.ladleSlide = (t, u) => {
   ROOM();
   const tilt = ss(seg(t, 96.4, 96.9));
-  cam(lerp(1215, 1130, tilt), lerp(520, 700, tilt), lerp(2.45, 2.0, tilt), 0, 0, t);
+  cam(lerp(1066, 1130, tilt), lerp(505, 690, tilt), lerp(2.45, 2.0, tilt), 0, 0, t);
   const sl = ss(seg(t, 96.7, 97.6));
   shop(t, { k: .05, liu: 'table', liuP: L(t, { ...LIU_T, look: [-.5, .9], lid: .55, blink: blinkAt(t, [95.9]), armR: { h: [lerp(60, 150, tilt), 120], bend: -10, fist: true } }), steam: .4,
     front: () => { push(); translate(lerp(1300, 1040, sl), 705); rotate(-.08); shape(noodle([0, 0], [-240, -10], 0, 18, 14), { fill: C.steel, lw: 6 }); shape(ell(-270, -10, 50, 20, 20), { fill: C.steel, lw: 6 }); pop(); } });
@@ -679,7 +681,7 @@ SH.fleet = (t, u, d) => {
 };
 SH.queue = (t, u, d) => {
   light('#ffe0c0', .1);
-  cam(mv(u, 0, d, 1100, 160), 700, 1.15, 0, 0, t);
+  cam(mv(u, 0, d, 1000, 200), 800, 1.45, 0, 0, t);
   morningAlley(t, { sky: () => { for (let i = 0; i < 5; i++) saucer(-400 + i * 330, -320 + (i % 2) * 60, .3, { glow: .3, t }); } });
   // the humans by the door, then the aliens with tiny bowls, Pip and Zug at their front
   queue(t, 880, 5, .62, { look: [-1, 0] });
@@ -755,7 +757,7 @@ function tag(t) {
 
 window.DUR = DUR;
 window.render = t => {
-  frame(t);
+  frame(t); LATE.length = 0;
   g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = '#000'; g.fillRect(0, 0, W, H);
   const s = shotAt(t);
   (SH[s.id] || (() => { }))(t, s.u, s.d, s);
