@@ -226,9 +226,19 @@ def lufs(x):
     k = kweight(x); blk = int(.4 * SR); hop = blk // 4; ms = np.array([np.mean(np.sum(k[i:i + blk] ** 2, 1)) for i in range(0, len(k) - blk, hop)])
     L = -.691 + 10 * np.log10(ms + 1e-12); g = ms[L > -70]; rel = -.691 + 10 * np.log10(g.mean()) - 10; g2 = ms[(L > -70) & (L > rel)]
     return -.691 + 10 * np.log10(g2.mean())
+from scipy.signal import resample_poly
+from scipy.ndimage import minimum_filter1d
+def tplimit(x, ceil_db=-2.0, look=.006):
+    # true-peak limiter: 4× oversampled peak detection, look-ahead minimum + smoothing of the gain (no hard clipping)
+    c = 10 ** (ceil_db / 20); up = np.abs(resample_poly(x, 4, 1, axis=0)).max(1)
+    pk = up[:len(up) // 4 * 4].reshape(-1, 4).max(1); pk = np.pad(pk, (0, len(x) - len(pk)), mode='edge')
+    g = np.minimum(1, c / (pk + 1e-12)); L = int(look * SR)
+    g = minimum_filter1d(g, 2 * L + 1); g = uniform_filter1d(g, L); g = minimum_filter1d(g, L); g = uniform_filter1d(g, L)
+    return x * g[:, None]
 for _ in range(3):
-    MIX *= 10 ** ((-14.1 - lufs(MIX)) / 20); MIX = limit(MIX, 10 ** (-3.0 / 20))
-print('master', round(lufs(MIX), 2), 'LUFS, peak', round(20 * np.log10(np.abs(MIX).max()), 2), 'dBFS')
+    MIX *= 10 ** ((-14.1 - lufs(MIX)) / 20)
+    for _k in range(2): MIX = tplimit(MIX, -3.2)
+print('master', round(lufs(MIX), 2), 'LUFS, sample peak', round(20 * np.log10(np.abs(MIX).max()), 2), 'dBFS, true peak', round(20 * np.log10(np.abs(resample_poly(MIX, 4, 1, axis=0)).max()), 2), 'dBTP')
 sf.write(os.path.join(HERE, 'mix.wav'), MIX.astype(np.float32), SR)
 def db(x): return 20 * np.log10(np.sqrt(np.mean(x ** 2)) + 1e-9)
 for name, (t0, t1) in {'A': (0, 29.3), 'B': (29.3, 38.7), 'C': (38.7, 77.3), 'C2': (77.3, 89.8), 'D': (89.8, 101.8), 'ma2': (102.2, 106.7), 'D2': (106.8, 112.8), 'E': (112.8, DUR)}.items():
