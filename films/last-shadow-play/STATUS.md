@@ -12,3 +12,4 @@
 | 12:13 | render 2 | readcheck: three placards and the end plaque too short → extended; score/mix rebuilt; cuecheck 0 ms; render 2 started (3360 frames, 3 workers) |
 | 12:23 | render 2 | frames done ≈ 2100 / 3360 |
 | 12:34 | render 2 | frames done ≈ 7020 / 3360 |
+| 12:44 | render 2 | frames done ≈ 16440 / 3360 |
