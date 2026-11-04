@@ -239,13 +239,13 @@ export function bust(who, ex, s, o = {}) {
 function body(f, who, ox, oy, s, o, h) {
   const k = s * (CHAR[who].big || 1), sy = oy + 11.5 * k;
   const mats = {
-    rider: [C.ink, C.night, C.navy, C.blue], coat: [C.navy, C.blue, C.cyan, C.white], lady: [C.umber, C.plum, C.rose, C.pink], kid: [C.ink, C.dgreen, C.green, C.lime],
+    rider: [C.ink, C.night, C.navy, C.blue], coat: [C.ink, C.navy, C.blue, C.cyan], lady: [C.umber, C.plum, C.rose, C.pink], kid: [C.ink, C.dgreen, C.green, C.lime],
   };
   const m = who === 'rider' ? (o.hood || o.coat ? mats.coat : mats.rider) : who === 'lady' ? mats.lady : mats.kid;
   const sh = (x, y, nx, ny) => { const l = -nx * .5 - ny * .5; return l > .45 ? m[3] : l < -.25 ? m[1] : m[2]; };
-  f.ell(ox + 1 * s, sy + 12 * s, 17 * s, 13 * s, sh);
+  f.ell(ox + 1 * s, sy + 12 * s, 17 * s, 13 * s, sh); for (let y = Math.round(sy + 12 * s); y < h; y++) for (let x = Math.round(ox - 16 * s); x < ox + 18 * s; x++) f.px(x, y, sh(x, y, (x - ox) / (17 * s), 0));
   if (who === 'rider' && !(o.hood || o.coat)) { // reflective stripe + collar
-    f.rect(ox - 17 * s, sy + 8 * s, 34 * s, Math.max(1, 1.4 * s), C.amber);
+    for (let x = Math.round(ox - 17 * s); x < ox + 18 * s; x++) for (let j = 0; j < Math.max(1, 1.4 * s); j++) if (f.get(x, sy + 8 * s + j) !== T) f.px(x, sy + 8 * s + j, C.amber);
     f.poly([[ox - 5 * s, sy - 1 * s], [ox + 6 * s, sy - 1 * s], [ox + 2 * s, sy + 5 * s]], C.night);
   }
   if (who === 'lady') { // collar of a white blouse + buttons

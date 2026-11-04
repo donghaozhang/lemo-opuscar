@@ -4,8 +4,9 @@ import { text, textW, wrap, LH } from './font.js';
 
 export const SKIN = { fill: [C.navy, C.night], fillB: [C.night, C.deep] };
 // layered rounded window: ink / white / silver, dithered fill
+export const RECTS = [];   // windows drawn this frame (the rain skips them)
 export function win(fb, x, y, w, h, o = {}) {
-  x = Math.round(x); y = Math.round(y); w = Math.round(w); h = Math.round(h);
+  x = Math.round(x); y = Math.round(y); w = Math.round(w); h = Math.round(h); if (fb.w === W) RECTS.push([x, y, w, h]);
   const fill = o.fill || SKIN.fill;
   fb.gradV(x + 3, y + 3, w - 6, h - 6, fill);
   // ink outer (corners cut)

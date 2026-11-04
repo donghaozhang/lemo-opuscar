@@ -100,56 +100,59 @@ function routePoint(u) {   // u 0..1 along ROUTE by length
 }
 export { routePoint };
 let MAPFB = null;
+const RH = [92, 140, 196, 252, 300], RV = [44, 116, 180, 236, 300, 372, 420, 452];
 function buildMap() {
   const f = new FB(MAP.w * 8, MAP.h * 8);
-  f.clear(C.ink);
-  // ground: dark blocks
-  for (let y = 0; y < f.h; y++) for (let x = 0; x < f.w; x++) f.d[y * f.w + x] = bayer(x, y) < .2 ? C.night : C.ink;
-  // river (diagonal band top-left)
-  for (let y = 0; y < f.h; y++) for (let x = 0; x < f.w; x++) { const d = x * .55 + y - 120; if (d > 0 && d < 26 && y < 150) f.d[y * f.w + x] = (x + y) % 7 === 0 ? C.p0 : (x * 3 + y) % 11 === 0 ? C.p1 : C.navy; }
-  // roads: grid lines
-  const roadsH = [92, 140, 196, 252, 300], roadsV = [44, 116, 180, 236, 300, 372, 420, 452];
-  for (const ry of roadsH) { f.rect(0, ry - 6, f.w, 13, C.dslate); f.rect(0, ry - 4, f.w, 9, C.deep); for (let x = 0; x < f.w; x += 10) f.rect(x, ry, 5, 1, C.dslate); for (let x = 6; x < f.w; x += 34) { f.px(x, ry - 6, C.amber); } }
-  for (const rx of roadsV) { f.rect(rx - 6, 0, 13, f.h, C.dslate); f.rect(rx - 4, 0, 9, f.h, C.deep); for (let y = 0; y < f.h; y += 10) f.rect(rx, y, 1, 5, C.dslate); }
-  for (const ry of roadsH) f.rect(0, ry - 4, f.w, 9, C.deep);
-  // blocks: buildings with roofs, lit windows, rooftop units
-  for (let by = 0; by < 6; by++) for (let bx = 0; bx < 9; bx++) {
-    const x0 = [0, 44, 116, 180, 236, 300, 372, 420, 452, 512][bx] + 7, x1 = [44, 116, 180, 236, 300, 372, 420, 452, 512, 512][bx] - 7;
-    const y0 = [0, 92, 140, 196, 252, 300, 352][by] + 7, y1 = [92, 140, 196, 252, 300, 352, 352][by] - 7;
-    if (x1 - x0 < 8 || y1 - y0 < 8) continue;
+  f.clear(C.deep);
+  for (let y = 0; y < f.h; y++) for (let x = 0; x < f.w; x++) if (bayer(x, y) < .12) f.d[y * f.w + x] = C.ink;
+  // river (diagonal band, top-left)
+  for (let y = 0; y < f.h; y++) for (let x = 0; x < f.w; x++) { const d = x * .55 + y - 120; if (d > 0 && d < 30 && y < 160) f.d[y * f.w + x] = (x * 5 + y * 3) % 13 === 0 ? C.p0 : (x * 3 + y) % 17 === 0 ? C.p1 : C.navy; }
+  // blocks: dark roofs with a lit edge, rooftop details; parks
+  const XS = [0, ...RV, 512], YS = [0, ...RH, 352];
+  for (let by = 0; by < YS.length - 1; by++) for (let bx = 0; bx < XS.length - 1; bx++) {
+    const x0 = XS[bx] + 8, x1 = XS[bx + 1] - 8, y0 = YS[by] + 8, y1 = YS[by + 1] - 8;
+    if (x1 - x0 < 6 || y1 - y0 < 6) continue;
     const seed = bx * 13 + by * 7;
-    const park = seed % 9 === 4 && !(bx === 7 && by === 1);
-    if (park) { for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) f.d[y * f.w + x] = bayer(x, y) < .4 ? C.teal : C.dgreen; for (let k = 0; k < 6; k++) { const tx = x0 + 4 + hash(seed, k) * (x1 - x0 - 8), ty = y0 + 4 + hash(seed, k, 2) * (y1 - y0 - 8); f.disc(tx, ty, 3, C.dgreen); f.disc(tx - 1, ty - 1, 1.5, C.green); } continue; }
-    // several buildings per block
-    let x = x0; while (x < x1 - 6) {
-      const w = Math.min(x1 - x, 14 + Math.floor(hash(seed, x) * 18)); const hh = y1 - y0;
-      const roof = hash(seed, x, 3) < .5 ? C.slate : C.dslate;
-      f.rect(x + 2, y0 + 3, w - 2, hh - 2, C.deep);                 // shadow
-      f.rect(x, y0, w - 2, hh - 3, roof); f.rect(x, y0, w - 2, 1, C.steel); f.rect(x, y0, 1, hh - 3, C.steel); f.rect(x + w - 3, y0, 1, hh - 3, C.night);
-      for (let k = 0; k < 3; k++) { const ux = x + 3 + Math.floor(hash(seed, x, k + 9) * (w - 9)), uy = y0 + 3 + Math.floor(hash(seed, x, k + 19) * (hh - 10)); f.rect(ux, uy, 3, 2, C.slate); }
-      for (let wy = y0 + 2; wy < y0 + hh - 5; wy += 4) if (hash(seed, x, wy) < .18) f.px(x + 2 + Math.floor(hash(x, wy) * (w - 6)), wy, hash(x, wy, 3) < .4 ? C.amber : C.tan);
+    if (seed % 9 === 4) { // park
+      for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) f.d[y * f.w + x] = bayer(x, y) < .35 ? C.teal : C.dgreen;
+      for (let k = 0; k < 8; k++) { const tx = x0 + 3 + hash(seed, k) * (x1 - x0 - 6), ty = y0 + 3 + hash(seed, k, 2) * (y1 - y0 - 6); f.disc(tx, ty + 1, 3, C.teal); f.disc(tx, ty, 3, C.dgreen); f.disc(tx - 1, ty - 1, 1.5, C.green); }
+      continue;
+    }
+    let x = x0; while (x < x1 - 4) {
+      const w = Math.min(x1 - x, 12 + Math.floor(hash(seed, x) * 20)); const hh = y1 - y0;
+      const rr = hash(seed, x, 3); const roof = rr < .45 ? C.night : rr < .7 ? C.dslate : rr < .85 ? C.umber : C.ink;
+      f.rect(x, y0, w - 1, hh, roof); f.rect(x, y0, w - 1, 1, C.slate); f.rect(x, y0, 1, hh, C.slate); f.rect(x + w - 2, y0 + 1, 1, hh - 1, C.ink); f.rect(x + 1, y0 + hh - 1, w - 2, 1, C.ink);
+      for (let k = 0; k < 2; k++) { const ux = x + 3 + Math.floor(hash(seed, x, k + 9) * Math.max(1, w - 8)), uy = y0 + 3 + Math.floor(hash(seed, x, k + 19) * Math.max(1, hh - 8)); f.rect(ux, uy, 3, 2, C.slate); f.px(ux, uy, C.steel); }
+      if (hash(seed, x, 4) < .35) { const lx = x + 2 + Math.floor(hash(seed, x, 5) * Math.max(1, w - 5)), ly = y0 + 2 + Math.floor(hash(seed, x, 6) * Math.max(1, hh - 5)); f.rect(lx, ly, 2, 1, C.amber); }  // skylight
       x += w;
     }
   }
-  // the 幸福里 compound (block bx=7, by=0..1 area): low wall, gate, the tower 3栋
-  f.rect(380, 30, 66, 104, C.night); f.frame(380, 30, 66, 104, C.slate);
-  f.rect(398, 128, 18, 6, C.dslate);                                  // gate gap
-  // tower 3: tall building drawn with a long shadow
-  f.rect(442, 34, 26, 50, C.deep); f.rect(436, 30, 26, 50, C.dslate); f.rect(436, 30, 26, 1, C.steel); f.rect(436, 30, 1, 50, C.steel);
-  for (let wy = 33; wy < 78; wy += 4) for (let wx = 439; wx < 460; wx += 4) if (hash(wx, wy, 5) < .3) f.px(wx, wy, C.tan);
-  // bus stop shelter mark near (236,196)
-  f.rect(240, 186, 10, 4, C.steel); f.rect(240, 186, 10, 1, C.silver);
-  // noodle shop: a lit roof sign near start
+  // roads: wet asphalt (lighter than the roofs), kerbs, centre dashes; lamps with warm pools
+  const road = (x, y, w, h) => { f.rect(x, y, w, h, C.slate); };
+  for (const ry of RH) road(0, ry - 6, f.w, 13);
+  for (const rx of RV) road(rx - 6, 0, 13, f.h);
+  for (const ry of RH) { for (let x = 0; x < f.w; x++) { if (f.get(x, ry - 7) !== C.slate) f.px(x, ry - 7, C.steel); if (f.get(x, ry + 7) !== C.slate) f.px(x, ry + 7, C.dslate); } for (let x = 0; x < f.w; x += 12) f.rect(x, ry, 6, 1, C.silver); }
+  for (const rx of RV) { for (let y = 0; y < f.h; y++) { if (f.get(rx - 7, y) !== C.slate) f.px(rx - 7, y, C.steel); if (f.get(rx + 7, y) !== C.slate) f.px(rx + 7, y, C.dslate); } for (let y = 0; y < f.h; y += 12) f.rect(rx, y, 1, 6, C.silver); }
+  for (const ry of RH) for (let x = 10; x < f.w; x += 40) { f.glow(x, ry - 3, 9, 6, WARM, .9); f.rect(x, ry - 7, 2, 2, C.yellow); }
+  for (const rx of RV) for (let y = 20; y < f.h; y += 40) { f.glow(rx - 3, y, 6, 9, WARM, .9); f.rect(rx - 7, y, 2, 2, C.yellow); }
+  // wet sheen on the roads (puddle shimmer indices)
+  for (let i = 0; i < 400; i++) { const x = Math.floor(hash(i, 61) * f.w), y = Math.floor(hash(i, 62) * f.h); if (f.get(x, y) === C.slate) f.px(x, y, i % 2 ? C.p0 : C.p1); }
+  // the 幸福里 compound: wall + gate + tower 3 (tall, long shadow)
+  f.rect(380, 20, 66, 114, C.ink); for (let y = 22; y < 132; y += 4) for (let x = 382; x < 444; x += 4) if (bayer(x, y) < .3) f.px(x, y, C.dgreen);
+  f.frame(380, 20, 66, 114, C.silver); f.rect(398, 133, 18, 2, C.slate);
+  f.rect(441, 33, 28, 52, C.ink); f.rect(434, 28, 28, 52, C.dslate); f.rect(434, 28, 28, 1, C.silver); f.rect(434, 28, 1, 52, C.silver);
+  for (let wy = 31; wy < 78; wy += 4) for (let wx = 437; wx < 460; wx += 4) if (hash(wx, wy, 5) < .25) f.px(wx, wy, C.tan);
+  // landmarks: noodle shop sign, underpass (rail bridge), bus shelter, traffic light
   f.rect(26, 306, 16, 8, C.umber); f.rect(28, 308, 12, 4, C.n0);
-  // underpass: the road dips under a rail line (dark band)
-  f.rect(160, 220, 40, 14, C.ink); f.rect(150, 224, 60, 3, C.steel); f.rect(150, 230, 60, 3, C.steel);
-  // traffic light dot at the intersection
-  f.rect(121, 244, 2, 2, C.red);
+  f.rect(150, 222, 60, 3, C.steel); f.rect(150, 230, 60, 3, C.steel); for (let x = 150; x < 210; x += 4) f.rect(x, 225, 1, 5, C.dslate);
+  f.rect(240, 184, 12, 4, C.cyan); f.rect(240, 184, 12, 1, C.white);
+  f.rect(121, 243, 3, 3, C.red);
   MAPFB = f; return f;
 }
 // draw the overworld: camera centre (cx, cy) in map px. o: {bike:{x,y,dx,dy}, marker, clear}
 export function overworld(fb, t, cx, cy, o = {}) {
   const M = MAPFB || buildMap();
+  cx = clamp(cx, W / 2, MAP.w * 8 - W / 2); cy = clamp(cy, H / 2, MAP.h * 8 - H / 2);
   const ox = Math.round(cx - W / 2), oy = Math.round(cy - H / 2);
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const c = M.get(x + ox, y + oy); fb.d[y * W + x] = c === T ? C.ink : c; }
   // the gold window: a lit window in tower 3 (protected gold), pulsing 1 px quest marker above it
@@ -163,24 +166,25 @@ export function overworld(fb, t, cx, cy, o = {}) {
   if (o.bike) bikeTop(fb, o.bike.x - ox, o.bike.y - oy, o.bike.dx, o.bike.dy, t, o.bike.light !== false);
   return { ox, oy };
 }
-// top-down bike sprite (7×11) with headlight cone
+// top-down bike sprite (≈13×7) with a headlight cone
 function bikeTop(fb, x, y, dx, dy, t, light) {
   x = Math.round(x); y = Math.round(y);
-  const horiz = dx !== 0; const fdir = horiz ? dx : dy;
-  if (light) {
-    for (let k = 3; k < 22; k++) for (let s = -Math.floor(k * .4); s <= Math.floor(k * .4); s++) {
-      const px = horiz ? x + k * dx : x + s, py = horiz ? y + s : y + k * dy; if (bayer(px, py) < 1 - k / 22) { const i = py * W + px; if (px >= 0 && py >= 0 && px < W && py < H) fb.d[i] = LIGHT[fb.d[i]]; }
-    }
+  const horiz = dx !== 0, d = horiz ? dx : dy;
+  const P = (a, b) => horiz ? [x + a * d, y + b] : [x + b, y + a * d];
+  if (light) for (let k = 5; k < 34; k++) for (let s = -Math.floor(k * .42); s <= Math.floor(k * .42); s++) {
+    const [px, py] = P(k, s); if (px < 0 || py < 0 || px >= W || py >= H) continue; if (bayer(px, py) < 1.1 - k / 34) { const i = py * W + px; fb.d[i] = k < 16 ? LL[fb.d[i]] : LIGHT[fb.d[i]]; }
   }
-  const pts = horiz ? [[-5, 0], [5, 0]] : [[0, -5], [0, 5]];
-  // body: rider (orange dot) on a teal frame, blue box at the back
-  const P = (a, b) => horiz ? [x + a * dx, y + b] : [x + b, y + a * dy];
-  fb.line(...P(-5, 0), ...P(5, 0), C.ink);
-  fb.rect(...P(-6, -2).map(Math.round), 4, 4, C.ink); fb.rect(...(horiz ? [x - 5 * dx - (dx > 0 ? 0 : 2) , y - 1] : [x - 1, y - 5 * dy - (dy > 0 ? 0 : 2)]), 3, 3, C.blue);
-  fb.rect(...(horiz ? [x - 1, y - 1] : [x - 1, y - 1]), 3, 3, C.orange); fb.px(x, y, C.amber);
-  fb.px(...P(5, 0), C.white);
+  const dot = (a, b, c) => { const [px, py] = P(a, b); fb.px(px, py, c); };
+  for (let a = -7; a <= 7; a++) for (let b = -2; b <= 2; b++) dot(a, b, C.ink);                  // outline body
+  for (let a = -6; a <= 6; a++) dot(a, 0, C.dslate);                                              // frame
+  for (let a = -6; a <= -2; a++) for (let b = -1; b <= 1; b++) dot(a, b, C.blue);               // delivery box
+  dot(-4, 0, C.cyan);
+  for (let a = -1; a <= 2; a++) for (let b = -1; b <= 1; b++) dot(a, b, C.orange);              // rider's helmet / shoulders
+  dot(1, -1, C.amber); dot(0, 0, C.amber);
+  dot(3, -2, C.ink); dot(3, 2, C.ink); dot(4, -2, C.silver); dot(4, 2, C.silver);               // handlebar
+  dot(7, 0, C.white); dot(6, 0, C.yellow);
+  dot(-7, 0, C.red);
 }
-
 // —— 3. parallax city side-scroll (shot: ride). scroll in px of the near layer ——
 export function cityScroll(fb, t, s) {
   sky(fb, 110, [C.deep, C.ink, C.night]);
@@ -209,7 +213,8 @@ export function battleBG(fb, t, kind) {
   if (kind === 'cross') {
     sky(fb, 80); for (let i = 0; i < 9; i++) building(fb, i * 38 - 6, 20 + Math.floor(hash(i, 8) * 30), 34, 90, { lit: .3, seed: i + 300 });
     fb.rect(0, 92, W, 40, C.ink); fb.dither(0, 92, W, 40, (x, y) => (y - 92) / 60, C.ink, C.night);
-    for (let i = 0; i < 9; i++) fb.poly([[i * 36 + 10, 100], [i * 36 + 30, 100], [i * 36 + 34, 128], [i * 36 + 8, 128]], C.slate);   // zebra crossing
+    for (let i = 0; i < 7; i++) { const y = 100 + i * 4 + Math.floor(i * i * .3); fb.rect(0, y, W, 1 + Math.floor(i / 2), C.slate); }   // crossing stripes on the road plane
+    fb.rect(0, 96, W, 2, C.steel);
     fb.glow(90, 60, 50, 60, null || [...LIGHT].map((v, i) => i === C.ink ? C.crimson : i === C.night ? C.crimson : i === C.dslate ? C.rust : v), .7);
   } else if (kind === 'under') {
     fb.clear(C.ink);
@@ -296,30 +301,42 @@ export function well(fb, t, push, lights = 0) {
   const zt = 28 - push * 26, st = 1 / (1 + zt * .32);
   fb.rect(Math.round(cx - 6 * st * 6), Math.round(cy - 4 * st * 6), Math.max(2, Math.round(12 * st * 6)), Math.max(2, Math.round(8 * st * 6)), C.goldD);
 }
-// —— 8. stair flight (side view, diagonal climb). scroll px; floor label every 60 px of climb
-export function stairs(fb, t, s, o = {}) {
-  fb.clear(C.deep);
-  const lit = o.lit ?? 1;
-  const base = lit ? C.dslate : C.night, edge = lit ? C.slate : C.dslate;
-  // wall with floor numbers painted, moving diagonally (climb up-right → world moves down-left)
-  for (let i = -2; i < 8; i++) {
-    const fy = 150 - i * 70 + mod(s, 70) * 1, fl = i + Math.floor(s / 70) + (o.floor0 || 1);
-    if (fl < 1 || fl > 28) continue;
-    fb.rect(0, Math.round(fy) - 2, W, 2, C.night);
-    fb.rect(220, Math.round(fy) - 40, 34, 24, edge); text(fb, fl + 'F', 224, Math.round(fy) - 37, lit ? C.white : C.steel, { shadow: C.ink });
+// —— 8. stairwell section (side view): switch-free flights rising to the right, one floor = 10 steps + a landing.
+// p = floors climbed (float, world), cam follows the climber at screen (sx, sy). Returns foot(p) → screen [x,y] for a climber at progress q.
+export const FL = { dx: 96, dy: 44, run: 64 };
+export function stairs(fb, t, p, o = {}) {
+  const lit = o.lit ?? 1, sx = o.sx ?? 140, sy = o.sy ?? 124, f0 = o.floor0 ?? 1;
+  const camX = p * FL.dx, camY = -p * FL.dy;
+  const S = (wx, wy) => [Math.round(wx - camX + sx), Math.round(wy - camY + sy)];
+  fb.clear(lit ? C.night : C.deep);
+  // wall seams
+  for (let x = -mod(Math.round(camX * .5), 32); x < W; x += 32) fb.rect(x, 0, 1, H, lit ? C.ink : C.black);
+  const wall = lit ? C.dslate : C.night, top = lit ? C.steel : C.dslate, edge = lit ? C.slate : C.night;
+  for (let k = Math.floor(p) - 3; k <= Math.floor(p) + 3; k++) {
+    if (k + f0 < 1 || k + f0 > 28) continue;
+    const topF = k + f0 === 28;
+    const [x0, y0] = S(k * FL.dx, -k * FL.dy), [x1, y1] = S(k * FL.dx + FL.run, -(k + 1) * FL.dy), [x2] = S((k + 1) * FL.dx, 0);
+    // painted floor number + wall lamp on the landing
+    const [lx, ly] = S(k * FL.dx - 22, -k * FL.dy - 52);
+    fb.rect(lx - 2, ly - 2, 34, 20, edge); fb.rect(lx, ly, 30, 16, lit ? C.night : C.deep);
+    text(fb, (k + f0) + 'F', lx + 3, ly + 2, lit ? C.white : C.slate);
+    fb.rect(lx + 40, ly - 14, 10, 4, lit ? C.white : C.dslate);
+    if (lit) fb.glow(lx + 45, ly - 4, 50, 46, LIGHT, .7);
+    if (topF) { fb.rect(x0, y0, W, 8, wall); fb.rect(x0, y0, W, 1, top); fb.rect(x0, y0 + 8, W, H, C.ink); continue; }
+    // landing slab
+    fb.rect(x1, y1, x2 - x1 + 1, 8, wall); fb.rect(x1, y1, x2 - x1 + 1, 1, top); fb.rect(x1, y1 + 8, x2 - x1 + 1, 2, C.ink);
+    // flight: underside slab + step teeth
+    fb.poly([[x0, y0 + 8], [x1, y1 + 8], [x1, y1 + 16], [x0, y0 + 16]], C.ink);
+    fb.poly([[x0, y0], [x1, y1], [x1, y1 + 8], [x0, y0 + 8]], wall);
+    for (let i = 0; i < 10; i++) { const ax = x0 + Math.round(i * (x1 - x0) / 10), ay = y0 - Math.round((i + 1) * (y0 - y1) / 10); const w = Math.round((x1 - x0) / 10); fb.rect(ax, ay, w + 1, Math.round((y0 - y1) / 10) + 1, wall); fb.rect(ax, ay, w + 1, 1, top); fb.rect(ax, ay, 1, Math.round((y0 - y1) / 10), edge); }
+    // railing: posts + rail parallel to the flight
+    for (let i = 0; i <= 4; i++) { const px = Math.round(x0 + i * (x1 - x0) / 4), py = Math.round(y0 - i * (y0 - y1) / 4); fb.rect(px, py - 22, 1, 22, edge); }
+    fb.line(x0, y0 - 22, x1, y1 - 22, top); fb.line(x1, y1 - 22, x2, y1 - 22, top);
   }
-  // flights: steps rising to the right at 1:1.4
-  const off = mod(s, 70);
-  for (let i = -2; i < 10; i++) {
-    const x = i * 10 - Math.round(off * 1.4 % 10), y = 170 - i * 7 + Math.round(off % 7);
-    fb.rect(x, y, 11, 7, base); fb.rect(x, y, 11, 1, edge);
-  }
-  // handrail
-  fb.line(0, 120 + Math.round(off % 7), W, 120 - W * .7 + Math.round(off % 7), lit ? C.steel : C.slate);
-  if (lit) fb.glow(140, 40, 140, 70, LIGHT, .5);
+  return q => { const k = Math.floor(q), f = q - k; const wx = k * FL.dx + Math.min(f * FL.dx, FL.run), wy = -k * FL.dy - Math.min(1, f * FL.dx / FL.run) * FL.dy; return S(wx, wy); };
 }
 // —— 9. corridor with door 2803 (front view). open 0..1, spill (warm light) ——
-export const DOOR = { x: 130, y: 26, w: 60, h: 98 };
+export const DOOR = { x: 136, y: 50, w: 48, h: 74 };
 export function corridor(fb, t, open, o = {}) {
   fb.clear(C.night);
   fb.rect(0, 0, W, 124, C.night); for (let x = 0; x < W; x += 24) fb.rect(x, 0, 1, 124, C.ink);
@@ -334,7 +351,7 @@ export function corridor(fb, t, open, o = {}) {
   const ow = Math.round(w * open);
   if (ow > 0) {
     fb.rect(x, y, w, h, C.goldD); fb.dither(x, y, w, h, (X, Y) => .55 - (Y - y) / 300, C.goldD, C.gold);
-    fb.rect(x + 6, y + 30, 20, 18, C.goldL); fb.rect(x + 6, y + 30, 20, 1, C.warmW);                // a lamp shade glow inside
+    fb.rect(x + 6, y + 22, 16, 14, C.goldL); fb.rect(x + 6, y + 22, 16, 1, C.warmW);                // a lamp shade glow inside
   }
   // the door leaf (panels, bevels, studs) shrinking as it swings inward (hinge on the left)
   const lw = w - ow;
@@ -342,15 +359,15 @@ export function corridor(fb, t, open, o = {}) {
     fb.rect(x, y, lw, h, C.rust); fb.rect(x, y, lw, 1, C.clay); fb.rect(x, y, 1, h, C.clay);
     if (lw > 20) {
       const pw = lw - 14;
-      for (const [py, ph] of [[8, 36], [52, 38]]) { fb.rect(x + 7, y + py, pw, ph, C.crimson); fb.rect(x + 7, y + py, pw, 1, C.umber); fb.rect(x + 7, y + py, 1, ph, C.umber); fb.rect(x + 7, y + py + ph - 1, pw, 1, C.clay); fb.rect(x + 6 + pw, y + py, 1, ph, C.clay); }
+      for (const [py, ph] of [[6, 28], [40, 28]]) { fb.rect(x + 7, y + py, pw, ph, C.crimson); fb.rect(x + 7, y + py, pw, 1, C.umber); fb.rect(x + 7, y + py, 1, ph, C.umber); fb.rect(x + 7, y + py + ph - 1, pw, 1, C.clay); fb.rect(x + 6 + pw, y + py, 1, ph, C.clay); }
       // 福 diamond
-      const fx = x + Math.round(lw / 2), fy = y + 26; fb.poly([[fx, fy - 12], [fx + 12, fy], [fx, fy + 12], [fx - 12, fy]], C.red); fb.poly([[fx, fy - 10], [fx + 10, fy], [fx, fy + 10], [fx - 10, fy]], C.red);
+      const fx = x + Math.round(lw / 2), fy = y + 20; fb.poly([[fx, fy - 10], [fx + 10, fy], [fx, fy + 10], [fx - 10, fy]], C.red);
       text(fb, '福', fx - 6, fy - 7, C.amber);
       // number plate + handle + peephole
       fb.rect(x + lw / 2 - 12, y - 4, 24, 9, C.amber); text(fb, '2803', x + lw / 2 - 11, y - 6, C.ink, { size: 8 });
-      fb.rect(x + lw - 9, y + 54, 4, 10, C.amber); fb.px(x + lw - 8, y + 55, C.yellow);
-      fb.disc(x + lw / 2, y + 48, 1, C.ink);
-      for (const sy of [10, 40, 70, 90]) fb.px(x + 2, y + sy, C.amber);
+      fb.rect(x + lw - 8, y + 38, 3, 8, C.amber); fb.px(x + lw - 8, y + 39, C.yellow);
+      fb.disc(x + lw / 2, y + 36, 1, C.ink);
+      for (const sy of [8, 30, 52, 68]) fb.px(x + 2, y + sy, C.amber);
     }
   }
   // warm spill on the corridor floor
@@ -377,4 +394,20 @@ export function cuBack(fb, t, kind) {
   if (kind === 'doorOut') { fb.gradV(0, 0, W, H, [C.ink, C.night, C.dslate]); fb.glow(40, 90, 120, 120, WARM, 1); }
   if (kind === 'bus') { fb.gradV(0, 0, W, H, [C.deep, C.ink, C.navy]); fb.rect(0, 30, W, 4, C.steel); for (let i = 0; i < 7; i++) fb.rect(Math.round(hash(i, 3) * W), 50 + Math.round(hash(i, 4) * 60), 5, 5, C.dslate); }
   if (kind === 'night') { fb.gradV(0, 0, W, H, [C.deep, C.ink, C.night]); }
+}
+
+// —— 10. the ending: side view after the rain — stars, a wet street that mirrors them, tower 3 with one warm window ——
+export function nightEnd(fb, t, o = {}) {
+  sky(fb, 112, [C.deep, C.deep, C.ink, C.night]);
+  for (let i = 0; i < 70; i++) { const x = Math.floor(hash(i, 91) * W), y = Math.floor(hash(i, 92) * 80); const tw = Math.floor(t * 3 + i) % 9; fb.px(x, y, tw === 0 ? C.white : hash(i, 93) < .3 ? C.silver : C.steel); }
+  for (let i = -1; i < 10; i++) building(fb, i * 36, 40 + Math.floor(hash(i, 95) * 40), 32, 80, { base: C.deep, edge: C.ink, lit: .18, seed: i + 900 });
+  // tower 3 with the gold window (protected)
+  fb.rect(200, 14, 54, 100, C.night); fb.rect(200, 14, 54, 1, C.dslate); fb.rect(200, 14, 1, 100, C.dslate);
+  for (let wy = 20; wy < 108; wy += 6) for (let wx = 205; wx < 250; wx += 7) fb.rect(wx, wy, 3, 3, hash(wx, wy, 7) < .15 ? C.tan : C.ink);
+  fb.rect(226, 32, 4, 4, C.goldL); fb.px(226, 32, C.warmW); fb.glow(228, 34, 16, 14, WARM, .8); fb.rect(226, 32, 4, 4, C.goldL);
+  fb.rect(0, 112, W, 6, C.slate); fb.rect(0, 112, W, 1, C.steel);
+  fb.rect(0, 118, W, 62, C.ink);
+  // the wet road mirrors the sky: stars and the gold window reflected (flipped, every other row)
+  for (let y = 120; y < 180; y++) { if (y % 2) continue; const sy = 236 - y; for (let x = 0; x < W; x++) { const c = fb.get(x, sy); if (c === C.white || c === C.silver) fb.px(x, y, C.slate); if (c === C.goldL || c === C.warmW) fb.px(x, y, C.gold); } }
+  for (let x = 20; x < W; x += 60) fb.rect(x, 150, 24, 2, C.dslate);
 }

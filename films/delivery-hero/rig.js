@@ -6,7 +6,7 @@ import { head, hairBack, hairFront, EXPR } from './face.js';
 const MAT = {
   skin: [C.dbrown, C.skinS, C.skin, C.sand],
   jacket: [C.ink, C.night, C.navy, C.blue],
-  coat: [C.navy, C.blue, C.cyan, C.white],
+  coat: [C.ink, C.navy, C.blue, C.cyan],
   pants: [C.ink, C.night, C.dslate, C.slate],
   shoe: [C.ink, C.ink, C.umber, C.dbrown],
   helmet: [C.crimson, C.rust, C.orange, C.amber],
@@ -87,7 +87,7 @@ export function figure(fb, who, pose, gx, gy, o = {}) {
   if (who === 'rider' && !o.coat) { const a = T2([lerp(hip[0], sh[0], .55), lerp(hip[1], sh[1], .55)]); f.capsule(a[0] - 3.6 * u, a[1], a[0] + 3.6 * u, a[1], Math.max(.6, .55 * u), C.amber); }
   if (who === 'lady') { const a = T2([hip[0], hip[1]]); f.poly([[a[0] - 4.6 * u, a[1] - 1 * u], [a[0] + 4.6 * u, a[1] - 1 * u], [a[0] + 5.6 * u, a[1] + 5 * u], [a[0] - 5.2 * u, a[1] + 5 * u]], shadeFn(MAT.skirt)); }
   if (o.coat && who === 'rider') { // raincoat skirt over hips
-    const a = T2(hip); f.poly([[a[0] - 4.8 * u, a[1] - 3 * u], [a[0] + 4.8 * u, a[1] - 3 * u], [a[0] + 6 * u * face, a[1] + 4 * u], [a[0] - 6 * u * face, a[1] + 4.4 * u]], (x, y) => (x + y) % 5 === 0 ? C.white : C.blue);
+    const a = T2(hip); f.poly([[a[0] - 4.8 * u, a[1] - 3 * u], [a[0] + 4.8 * u, a[1] - 3 * u], [a[0] + 6 * u * face, a[1] + 4 * u], [a[0] - 6 * u * face, a[1] + 4.4 * u]], (x, y) => (x + y) % 9 === 0 ? C.cyan : C.blue);
   }
   legDraw(P.legF, false);
   // head
