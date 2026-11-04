@@ -10,3 +10,4 @@
   pass 1 findings → fixes: C4 pick invisible on dark rock (white carved halo); I1/I2 red box with a hard edge (radial glow); E3 grass blade lost against bright sky (darker ground); D1 blossoms too small (bigger five-petal cuts); master peaked +0.3 dB at −14.3 LUFS (look-ahead limiter in mix.py); cue check 0 ms after the title grid fix; CJK glyph check: 144/144 characters covered.
 12:56Z first full render: frames 3360/3488
 13:02Z second full render starting (pass-1 fixes)
+13:12Z second full render: frames 1440/3488
