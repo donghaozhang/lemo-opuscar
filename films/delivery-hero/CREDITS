@@ -1,0 +1,23 @@
+《外卖勇者》 — credits for third-party material
+
+Font
+- Fusion Pixel Font (12 px and 8 px, proportional, Simplified Chinese), © 2022 TakWolf, SIL Open Font License 1.1.
+  https://github.com/TakWolf/fusion-pixel-font — obtained from npm package @vp-tw/cjk-web-fonts-fusion-pixel-font 0.0.1
+  (font version 2026.08.11). Licence text: fonts/OFL-fusion-pixel.txt. Rasterised to a 1-bit glyph atlas (glyphs.json).
+
+Palette
+- ENDESGA 32 palette by ENDESGA (free palette, Lospec), used as the master palette's first 32 indices.
+
+Music
+- All music is original, synthesised in code (music/score.py).
+- The birthday tune his text blips sing is "Good Morning to All" / "Happy Birthday to You" (Mildred J. Hill & Patty Hill, 1893),
+  in the public domain.
+
+Sound effects
+- All sound effects are synthesised in code (mix.py). No samples.
+
+Pictures
+- Everything on screen is drawn in code (no images, no generated video).
+
+Tools
+- Rendered with this library's core tools (headless Chromium, ffmpeg).

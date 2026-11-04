@@ -113,7 +113,7 @@ ev(at('s14', 5.0), 'shake');
 // s15–s18 bus stop
 ev(at('s15', .2), 'motor', { d: .8, g: .6 }); ev(at('s15', 1.0), 'skid'); hit('skid', at('s15', 1.0), 'kid', 2);
 D('s16', .1, 3.8, 'kid', '公交停了……我走过去。', { expr: 'sadWet', wet: 1 });
-MENU('s17', .1, 3.6, { x: 8, y: 26, w: 100, items: [{ label: '雨衣', icon: ICON.coat }, { label: '充电宝', icon: ICON.bank }, { label: '备用雨伞', icon: ICON.umbrella, dimAt: at('s17', 1.6) }], cur: (t) => t < at('s17', .6) ? 0 : t < at('s17', .9) ? ss(seg(t, at('s17', .6), at('s17', .7))) : 1 + ss(seg(t, at('s17', .9), at('s17', 1.0))), sel: at('s17', 1.6) });
+MENU('s17', .02, 3.6, { x: 8, y: 26, w: 100, items: [{ label: '雨衣', icon: ICON.coat }, { label: '充电宝', icon: ICON.bank }, { label: '备用雨伞', icon: ICON.umbrella, dimAt: at('s17', 1.6) }], cur: (t) => t < at('s17', .6) ? 0 : t < at('s17', .9) ? ss(seg(t, at('s17', .6), at('s17', .7))) : 1 + ss(seg(t, at('s17', .9), at('s17', 1.0))), sel: at('s17', 1.6) });
 ev(at('s17', .6), 'cursor'); ev(at('s17', .9), 'cursor'); ev(at('s17', 1.6), 'select'); ev(at('s17', 2.0), 'umbrella'); hit('umbrella', at('s17', 2.0), 'kid', 16); ev(at('s17', 2.1), 'item');
 D('s18', .1, 2.6, 'kid', '谢谢叔叔！', { expr: 'joy', noPortrait: 1 });
 // s19–s22 the dog
@@ -124,7 +124,7 @@ const CMD3 = [{ label: '攻击' }, { label: '等待' }, { label: '摸摸', newAt
 UI.push({ kind: 'cmd', t0: SH.s21.t0, t1: SH.s21.t1, items: CMD3 });
 ev(at('s21', .4), 'sparkle'); ev(at('s21', 1.0), 'cursor'); ev(at('s21', 1.4), 'select'); ev(at('s21', 1.8), 'pat'); ev(at('s21', 2.1), 'pat'); ev(at('s21', 2.4), 'pat'); ev(at('s21', 2.0), 'heart'); ev(at('s21', 2.5), 'heart');
 hit('pat', at('s21', 1.4), 'dog', 15);
-M('s22', .1, 3.0, '大黄 成了朋友！'); ev(at('s22', .3), 'victory', { soft: 1 }); ev(at('s22', .5), 'woof');
+M('s22', .03, 3.0, '大黄 成了朋友！'); ev(at('s22', .3), 'victory', { soft: 1 }); ev(at('s22', .5), 'woof');
 // s23–s28 boss: the stairs
 [.6, 1.0, 1.4].forEach(x => ev(at('s23', x), 'liftbuzz')); ev(at('s23', 2.2), 'thunk');
 ev(at('s24', .3), 'sweat');
@@ -142,7 +142,7 @@ ev(at('s29', .5), 'knock'); ev(at('s29', .8), 'knock'); hit('knock', at('s29', .
 ev(at('s30', 0), 'latch'); ev(at('s30', .3), 'creak', { d: 1.0 }); ev(at('s30', .4), 'warm'); hit('door', SH.s30.t0, 'tender', 0);
 D('s31', .1, 3.3, 'lady', '哎呀，淋成这样……', { noPortrait: 1, cps: 9 });
 D('s32', .1, 2.6, 'rider', '……蜡烛呢？', { noPortrait: 1, cps: 9 }); ev(at('s32', .2), 'rustle');
-D('s33', .1, 3.5, 'lady', '没事。今天是我生日。', { noPortrait: 1, cps: 9 });
+D('s33', .04, 3.5, 'lady', '没事。今天是我生日。', { noPortrait: 1, cps: 9 });
 D('s34', .1, 4.6, 'lady', '孙子说要来，我叫他别来了。', { expr: 'wistful', cps: 9 });
 // s35–s38 the decision, the song, 00:00, the phone dies
 MENU('s35', .9, 3.8, { x: 214, y: 30, w: 96, items: [{ label: '手电筒', icon: ICON.light }], cur: () => 0, sel: at('s35', 3.0), hesitate: [at('s35', 1.6), at('s35', 2.9)] });
@@ -166,8 +166,8 @@ D('s41', .1, 2.3, 'lady', '小豆？！', { noPortrait: 1 });
 D('s42', .1, 2.7, 'kid', '雨伞叔叔！', { expr: 'joy' }); ev(at('s42', 1.8), 'wink');
 // s43–s45 save, level up, end
 ev(at('s43', .2), 'sparkle');
-UI.push({ kind: 'save', t0: at('s43', .3), t1: SH.s43.t1, text: '要存档吗？', sel: at('s43', 1.6) }); SUBS.push({ t0: at('s43', .3), t1: SH.s43.t1, text: '要存档吗？' });
-ev(at('s43', .3), 'open'); ev(at('s43', 1.0), 'cursor'); ev(at('s43', 1.6), 'select'); for (let s = 1.7; s < 2.5; s += .08) ev(at('s43', s), 'savetick'); ev(at('s43', 2.5), 'saved');
+UI.push({ kind: 'save', t0: at('s43', .02), t1: SH.s43.t1, text: '要存档吗？', sel: at('s43', 1.6) }); SUBS.push({ t0: at('s43', .02), t1: SH.s43.t1, text: '要存档吗？' });
+ev(at('s43', .02), 'open'); ev(at('s43', 1.0), 'cursor'); ev(at('s43', 1.6), 'select'); for (let s = 1.7; s < 2.5; s += .08) ev(at('s43', s), 'savetick'); ev(at('s43', 2.5), 'saved');
 UI.push({ kind: 'level', t0: at('s44', .1), t1: SH.s44.t1, text: '小满 升级了！', text2: '温暖 +1' }); SUBS.push({ t0: at('s44', .1), t1: SH.s44.t1, text: '小满 升级了！温暖 +1' });
 hit('fanfare', SH.s44.t0, 'fanfare', 0); ev(SH.s44.t0, 'sparkle');
 ev(at('s45', .6), 'rainstop'); ev(at('s45', .9), 'motor', { d: 2.0, g: .4 }); ev(at('s45', 1.4), 'woof', { g: .5 });
@@ -261,7 +261,7 @@ function texts(t) {
     if (t < u.t0 || t >= u.t1) continue;
     if (u.kind === 'dlg') L.push({ id: 'dlg' + u.t0, text: u.text, x0: DLG.x * K, y0: DLG.y * K, x1: (DLG.x + DLG.w) * K, y1: (DLG.y + DLG.h) * K });
     if (u.kind === 'msg') L.push({ id: 'msg' + u.t0, text: u.text, x0: 4 * K, y0: 4 * K, x1: 312 * K, y1: 23 * K });
-    if (u.kind === 'quest') L.push({ id: 'quest', text: u.title + u.text, x0: 10 * K, y0: 22 * K, x1: 216 * K, y1: 68 * K });
+    if (u.kind === 'quest') { L.push({ id: 'questT', text: u.title, x0: 10 * K, y0: 22 * K, x1: 216 * K, y1: 44 * K }); L.push({ id: 'questB', text: u.text, x0: 10 * K, y0: 44 * K, x1: 216 * K, y1: 68 * K }); }
     if (u.kind === 'menu') L.push({ id: 'menu' + u.t0, text: u.items.map(i => i.label).join(' '), x0: Math.max(0, u.x - 2) * K, y0: u.y * K, x1: Math.min(320, u.x + (u.w || 86)) * K, y1: (u.y + u.items.length * 16 + 10) * K });
     if (u.kind === 'cmd') L.push({ id: 'cmd' + u.t0, text: u.items.map(i => i.label).join(' '), x0: 4 * K, y0: 132 * K, x1: 124 * K, y1: 177 * K });
     if (u.kind === 'save') L.push({ id: 'save', text: u.text + ' 是 否', x0: 70 * K, y0: 4 * K, x1: 250 * K, y1: 66 * K });
@@ -269,7 +269,7 @@ function texts(t) {
   }
   const s = shotAt(t);
   if (s.id === 's05') L.push({ id: 'title', text: '《外卖勇者》', x0: 60 * K, y0: 50 * K, x1: 260 * K, y1: 90 * K });
-  if (s.id === 's03') { const lt = t - s.t0; L.push({ id: 'phone', text: '新订单 长寿面×1 幸福里3栋2803 备注 请帮忙插一根蜡烛', x0: 100 * K, y0: 0, x1: 220 * K, y1: 180 * K }); }
+  if (s.id === 's03') { const lt = t - s.t0; const rows = [[.2, '新订单', 29, 47], [.5, '长寿面×1', 52, 76], [.75, '幸福里3栋2803', 82, 106], [1.0, '备注请帮忙插一根蜡烛', 112, 156]]; for (const [l0, tx, y0, y1] of rows) if (lt >= l0) L.push({ id: 'ph' + l0, text: tx, x0: 106 * K, y0: y0 * K, x1: 214 * K, y1: y1 * K }); }
   if (s.id === 's23') L.push({ id: 'liftsign', text: '电梯维修', x0: 126 * K, y0: 56 * K, x1: 194 * K, y1: 76 * K });
   if (s.id === 's45' && t - s.t0 >= 1.5) L.push({ id: 'end', text: '完', x0: 140 * K, y0: 46 * K, x1: 180 * K, y1: 80 * K });
   return L;
@@ -407,7 +407,7 @@ const SHOTS = {
     const u = lerp(0, .19, clamp(lt / 2.5, 0, 1)); const p = S.routePoint(u);
     const { ox, oy } = S.overworld(fb, t, p.x + 20, p.y - 10, { bike: { ...p, light: 1 }, route: [u + .01, u + .2] });
     if (lt > 2.5) text(fb, '!', p.x - ox - 2, p.y - oy - 22 - (lt < 2.6 ? 3 : 0), C.red, { outline: C.ink });
-    if (lt > 2.6) { const s = (lt - 2.6) / .8; POST.push(u2 => { swirl(u2, s); mosaic(u2, 1 + Math.round(s * 6)); dissolve(u2, Math.max(0, s * 1.4 - .4)); }); }
+    if (lt > 2.6) { const s = (lt - 2.6) / .8; POST.push(u2 => { swirl(u2, s); mosaic(u2, 1 + Math.round(s * 6)); dissolve(u2, Math.min(.75, Math.max(0, s * 1.4 - .4))); }); }
   },
   // s09–s12 battle: the red light
   s09(t, lt) { battle1(t, lt, 0); },
@@ -422,7 +422,7 @@ const SHOTS = {
     headCone(fb, 150 + 21, 150 - 27, 1, 110, LIGHT);
     for (let k = 0; k < 7; k++) { const x = mod(260 - lt * 600 + k * 50, 340) - 10; fb.hline(x, x + 12, 70 + k * 12, C.slate); }      // speed lines
     S.railing(fb, s); S.splashes(fb, t, 150, 178, 22);
-    if (lt > 1.8) { const s2 = (lt - 1.8) / .8; POST.push(u2 => { swirl(u2, s2); mosaic(u2, 1 + Math.round(s2 * 6)); dissolve(u2, Math.max(0, s2 * 1.4 - .4)); }); }
+    if (lt > 1.8) { const s2 = (lt - 1.8) / .8; POST.push(u2 => { swirl(u2, s2); mosaic(u2, 1 + Math.round(s2 * 6)); dissolve(u2, Math.min(.75, Math.max(0, s2 * 1.4 - .4))); }); }
   },
   // s14 — battle: the flooded underpass
   s14(t, lt) {
@@ -480,7 +480,7 @@ const SHOTS = {
   // s18 — close-up: the kid's joy under the red umbrella
   s18(t, lt) {
     S.cuBack(fb, t, 'bus'); RAIN = .7;
-    umbrella(fb, 170, 120, 4.2, 1, -8);
+    umbrella(fb, 150, 104, 4.2, 1, 10); RECTS.push([86, 10, 170, 170]);
     const b = bust('kid', lt < .3 ? 'surprised' : 'joy', 2.6, { w: 140, h: 130, wet: 1 });
     fb.blit(b.spr, 96, 22 + (lt > .3 && lt < .45 ? -2 : 0));
   },
@@ -489,7 +489,7 @@ const SHOTS = {
     const u = lerp(.7, .78, clamp(lt / .8, 0, 1)), p = S.routePoint(u);
     const { ox, oy } = S.overworld(fb, t, p.x + 10, p.y, { bike: { ...p, light: 1 }, dog: 1, route: [u + .01, 1] });
     if (lt > .8) text(fb, '!', p.x - ox - 2, p.y - oy - 22, C.red, { outline: C.ink });
-    if (lt > 1.0) { const s = (lt - 1.0) / .6; POST.push(u2 => { swirl(u2, s); mosaic(u2, 1 + Math.round(s * 6)); dissolve(u2, Math.max(0, s * 1.4 - .4)); }); }
+    if (lt > 1.0) { const s = (lt - 1.0) / .6; POST.push(u2 => { swirl(u2, s); mosaic(u2, 1 + Math.round(s * 6)); dissolve(u2, Math.min(.75, Math.max(0, s * 1.4 - .4))); }); }
   },
   s20(t, lt) { battle3(t, lt, 0); },
   s21(t, lt) { battle3(t, lt, 1); },

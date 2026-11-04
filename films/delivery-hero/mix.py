@@ -200,7 +200,12 @@ for e in EV:
         i0, i1 = int(e['t'] * SR), int(e['t1'] * SR); fade = int(.01 * SR)
         mix[i0:i0 + fade] *= np.linspace(1, 0, fade)[:, None]; mix[i0 + fade:i1] = 0; mix[i1:i1 + fade] *= np.linspace(0, 1, fade)[:, None]
 # gentle bus compression + headroom (mux.sh does the loudness to −14 LUFS and the true-peak limit)
-pk = np.abs(mix).max(); mix = mix / pk * .89
+# peak limiter (lookahead 5 ms, release 60 ms): keeps hot transients ~7 dB under the old peak so loudnorm can meet −1.2 dBTP
+from scipy.ndimage import maximum_filter1d, uniform_filter1d
+pk = np.abs(mix).max(); mix = mix / pk
+env = maximum_filter1d(np.abs(mix).max(axis=1), int(.010 * SR))
+g = np.minimum(1, .42 / np.maximum(env, 1e-6)); g = -maximum_filter1d(-g, int(.010 * SR)); g = uniform_filter1d(g, int(.006 * SR))
+mix = mix * g[:, None]; mix = mix / np.abs(mix).max() * .89
 os.makedirs(os.path.join(HERE, 'out'), exist_ok=True)
 sf.write(os.path.join(HERE, 'out', 'mix.wav'), mix.astype(np.float32), SR, subtype='FLOAT')
 print('mix.wav', round(DUR, 2), 's, events', len(EV))
