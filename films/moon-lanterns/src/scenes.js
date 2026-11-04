@@ -81,7 +81,7 @@ export function village(variant, o = {}) {
     it.title = S.add(stripL, strip({ w: .2, h: .05, text: '中秋的灯', size: .034, font: 'MaShanZheng', name: 'title', paper: '#f3e2bd', ink: '#3a1810', spacing: .003 }), { x: .09, y: .085, reveal: { from: 'right', k: 0 }, vis: true });
     it.seal = S.add(stripL, piece({ w: .02, h: .02, ppm: 8000, color: '#c8322a', finish: { px: 2, rim: .2, under: .2 }, draw: x => { x.beginPath(); x.roundRect(-.007, -.007, .014, .014, .001); x.fill(); text(x, '月', 0, .0003, .0105, 'MaShanZheng', { fill: '#f7e9d2' }); } }), { x: .172, y: .072, vis: false });
     const capL = S.layer({ z: -.074, trans: .5, shadow: false, recv: false });
-    it.caption = S.add(capL, strip({ w: .16, h: .022, text: '八月十五 · 石崖渔村', size: .013, font: 'MaShanZheng', name: 'caption', paper: '#efdcb4', ink: '#3a1810', spacing: .001 }), { x: -.09, y: -.078, reveal: { from: 'left', k: 0 } });
+    it.caption = S.add(capL, strip({ w: .16, h: .022, text: '八月十五 · 石崖渔村', size: .013, font: 'MaShanZheng, NotoSerifSC', name: 'caption', paper: '#efdcb4', ink: '#3a1810', spacing: .001 }), { x: -.09, y: -.078, reveal: { from: 'left', k: 0 } });
   }
   // figures at the pier end (built on demand by the shots)
   const figL = S.layer({ z: -.072, trans: .1 });

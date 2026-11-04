@@ -181,12 +181,18 @@ Three layers throughout; music ducks under the radio crackle and the key light c
 
 ## 12. Not the demo (filled after reading DEMO.md)
 
+Read after the treatment was written. Six points compared; all six differ.
+
 | | Demo (The Last Night Train) | This film |
 |---|---|---|
-| Structure | a train's last run, halt by halt | one night in a village: home → fog → tower → chain → reunion, with a keepsake frame |
-| Opening | (see DEMO.md) a box shot and a title | the lamp switched off in a dark room, then on; title grows on the front sheet |
-| Signature shot | windows lighting car by car; a viaduct | a chain of villagers' lanterns lining a cliff path and a lighthouse gallery, burning through fog |
-| Camera path | lateral travel with the train | push into the box, tilt up a tower, rack focus to a lighthouse, dolly out from the tower, pull out of the box |
-| Score shape | (see DEMO.md) | one music-box theme, broken to a single piano note and silence, restated in a string swell |
-| Ending | windows going out at a terminus; a ticket end card | the lit lamp and a faded old rabbit lantern on a table; a closing line under the box |
-| Props | train, name boards, ticket | rabbit lantern, mooncakes, radio, lighthouse, festival lanterns (lotus, fish, star, carp) |
+| Structure | a train's last run, halt by halt, no figures, English narration | one night in a village told by jointed figures: home → fog → tower → chain → reunion, inside a keepsake frame; no voice |
+| Opening | a dark train at a lit halt; its windows come on car by car with rising glockenspiel notes | a dark room; the lamp clicks on (source, far sheets, holes), the title grows on the front sheet, the lens pushes into the box |
+| Signature shot | the train on a curved viaduct over a snowy valley; the tunnel blink | the dolly out from the dead lighthouse as the villagers' lanterns line the cliff path and the gallery and burn through the fog |
+| Camera path | push → pull-out with the engine → lateral travel alongside; crane down at the sea | push into the box, top-down insert, tilt up the cliff and the tower, rack focus to the lighthouse, dolly out, pull out of the box |
+| Score shape | 96 bpm harp ostinato locked to the wheel clacks; glockenspiel per window | five tempos (72/60/54/84/66); one music-box theme, broken to a single felt-piano note and a real silence, restated in a string swell on the last gallery lantern |
+| Ending | windows go out one by one at the terminus; a ticket drops for the end card | the family shares three mooncakes under the moon; rack focus into light; pull out to the lit lamp and a faded old rabbit lantern on a table |
+| Props | train, halts with name boards, ticket | rabbit lantern, mooncakes, radio, scissors, lighthouse, festival lanterns (lotus, fish, star, carp) |
+
+Engine: the demo renders with three.js (VSM shadows, a backlight shader, DoF and bloom passes). This film reproduces the same paper
+physics in Canvas2D (per-layer backlight with pulp mottle, cast shadows of each sheet on the next, per-layer depth of field, bloom),
+because the render VM has no GPU. Only the grain and mottle texture generators were taken from the demo as technique.

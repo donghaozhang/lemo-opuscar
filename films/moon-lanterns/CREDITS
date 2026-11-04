@@ -1,0 +1,26 @@
+《中秋的灯》 The Mid-Autumn Lantern — Paper-cut Lightbox 纸雕灯影
+
+Story, picture, score and sound are made in code in this folder. Every paper layer, the village, the sea, the lighthouse,
+the figures and the lanterns are drawn by src/ (a Canvas2D paper compositor: backlight, cast shadows, depth of field, bloom).
+No photos, footage, generated images or voices are used. The village, its people and the lighthouse are fiction.
+
+Music (written for this film; played on sampled instruments by core/audio/sampler.py and synthesized by core/audio/pluck.py and mix.py)
+- Piano: "Salamander Grand Piano V3" by Alexander Holm, licensed under CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/)
+  (played soft and low-passed as a felt piano)
+- Samples (CC0): VS Chamber Orchestra: Community Edition (Versilian Studios / Sam Gossner), Versilian Community Sample Library (Versilian Studios)
+  Instruments: violins, violins tremolo, violas, cellos, cellos spiccato, contrabass, harp, hand chimes, small gong, piano.
+- Physical modelling (core/audio/pluck.py, no samples): music box, pipa, guqin.
+- Synthesis (mix.py): a bamboo flute (xiao), the beds and all sound effects.
+
+Sound effects
+- Procedural (core/audio/sfx.py and mix.py): room tone, lamp hum, sea, wind, fog, village hum, gulls, crickets, switch clicks and
+  shimmers for every light, paper slides and rustles, scissor snips, lid, taps, foghorn, radio crackle, lamp buzz, steps on planks
+  and stone, wheel creak, window wipe, boat engine, boat bump, fog whooshes.
+
+Fonts (SIL Open Font License 1.1; fetched from github.com/google/fonts into fonts/)
+- Ma Shan Zheng (马善政毛笔楷书) — the title and the paper strips. https://github.com/google/fonts/tree/main/ofl/mashanzheng
+- Noto Serif SC — the subtitles (subset to the characters the film uses: fonts/NotoSerifSC-sub.ttf). https://github.com/notofonts/noto-cjk
+
+Tools
+- Headless Chromium (Playwright), ffmpeg 9 (loudness normalisation, encoding), numpy/scipy/soundfile, fontTools (subsetting).
+- Lemo-Opuscar core tools: core/render (frame capture, events, reading-time check, srt, mux), core/audio (sampler, pluck, sfx).
