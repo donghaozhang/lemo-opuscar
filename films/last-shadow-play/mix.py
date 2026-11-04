@@ -233,8 +233,9 @@ if sr != SR: m = soxr.resample(m, sr, SR)
 mus[:min(N, len(m))] = m[:N]
 k = np.clip(uniform_filter1d(key, int(.3 * SR)) * 1.8, 0, 1); mus *= (10 ** (-4 * k / 20))[:, None]
 fx = verb(fx, room_ir(.55), .16)
-mix = mus * .8 + fx + amb
-mix = np.stack([limit(mix[:, c], .95) for c in range(2)], 1)[:int(DUR * SR)]
+mix = (mus * .8 + fx + amb) * 1.6
+# master: gentle compression, then a look-ahead limiter low enough that the two-pass loudnorm to -14 LUFS lands at or below -1.2 dBTP
+mix = np.stack([limit(compress(mix[:, c], .3, 2.5, .003, .12), .44) for c in range(2)], 1)[:int(DUR * SR)]
 os.makedirs(os.path.join(D, 'out'), exist_ok=True)
 sf.write(os.path.join(D, 'out', 'mix.wav'), mix.astype(np.float32), SR)
 def rms(a, b): x = mix[int(a * SR):int(b * SR)]; return 20 * np.log10(np.sqrt((x ** 2).mean()) + 1e-9)

@@ -230,7 +230,7 @@ function camera(t) {
     case 'handsTwist': return [1090, 340, 2.2];
     case 'flip': { const x = mp ? mp.x : 900; return cc(lerp(640, x, .6), 520, 1.25); }
     case 'maiden': return cc(960, 600, 1.3);
-    case 'laugh': return [lerp(860, 900, u), 905, 2.0];
+    case 'laugh': return [lerp(880, 920, u), 770, 1.7];
     case 'eye': { const w = E(t, T.whip1, T.whip1 + .5); return L3(cc(1174, 490, 2.6), cc(760, 590, 2.5), w); }
     case 'swap': return cc(770, 590, lerp(2.5, 2.3, u));
     case 'boyHooked': return [1110, 540, 2.2];
@@ -254,7 +254,7 @@ function camera(t) {
     case 'staffUp': return [1010, 330, 1.4];
     case 'strike': { const w = E(t, T.whip2, T.strike - .1), cz = back(seg(t, T.strike, T.strike + 3 / 24), 1.3); return L3(L3(cc(520, 300, 1.3), cc(700, 560, 1.15), w), cc(700, 600, 1.3), cz * (t >= T.strike ? 1 : 0)); }
     case 'liftoff': return cc(lerp(680, 620, u), 520, 1.15);
-    case 'crowdCheer': return [1040, 890, 1.9];
+    case 'crowdCheer': return [1000, 790, 1.6];
     case 'gutter': return [1130, 180, 2.4];
     case 'pocketLook': return [1066, 350, 2.8];
     case 'torch': return [1080, 430, lerp(1.5, 1.45, u)];
@@ -279,8 +279,8 @@ export function frame(t, tr, fr, gl) {
   out.fade = 0; out.fadeCol = [0, 0, 0];
   if (t < T.match) { out.fade = 1; }
   if (id === 'stageLit') { const f = 1 - E(t, T.stageLit, T.stageLit + .35); out.fade = f * .85; out.fadeCol = [1, .9, .7]; }
-  if (id === 'walkoff') { out.fade = E(t, T.walkEnd - .2, 129.0) * .9; out.fadeCol = [.04, .025, .02]; }
-  if (id === 'dawnWide') { out.fade = (1 - E(t, 129.0, 129.9)) * .9; out.fadeCol = [.9, .85, .75]; }
+  if (id === 'walkoff') { out.fade = E(t, T.walkEnd - .4, 129.0) * .72; out.fadeCol = [.07, .045, .03]; }
+  if (id === 'dawnWide') { out.fade = (1 - E(t, 129.0, 130.2)) * .8; out.fadeCol = [.55, .45, .36]; }
   // the pillar wipes at the two truck-rounds (into backstage at 34.5 and 66.18)
   for (const tt of [34.5, 66.18]) { const w = seg(t, tt - .25, tt + .25); if (w > 0 && w < 1) { drawPillar(fr, lerp(2500, -600, w)); } }
   // placards
