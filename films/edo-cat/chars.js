@@ -641,17 +641,25 @@ export function boat(A, X, Y, s, dir = 1, o = {}) {
 }
 // a cat paw in close-up (insert): X,Y wrist, s px, claws 0..1, dir
 export function bigPaw(A, X, Y, s, ang, claws = 0, o = {}) {
+  // a scrawny foreleg with ragged fur and a mitten paw: four toe beans, claws sliding out between them
   const lw = 3 + s * .004;
   const P = p => { const q = rot(p, ang); return [X + q[0] * s, Y + q[1] * s]; };
-  const arm = limb([[-1.2, 0], [-.55, .02], [0, 0]].map(P), .34 * s, .3 * s);
-  const pad = polyS([[-.05, -.17], [.12, -.2], [.25, -.12], [.3, 0], [.25, .12], [.12, .2], [-.05, .17]].map(P));
-  A.group([arm, pad], CAT.white, lw);
-  A.atop(x => { x.fillStyle = CAT.ochre; x.beginPath(); smooth(x, [[-1.25, -.2], [-.8, -.22], [-.6, -.1], [-.75, .12], [-1.25, .2]].map(P), true); x.fill(); });
-  // toe lines
-  for (const yy of [-.08, .02, .1]) A.line([[.12, yy * .9], [.3, yy * 1.2]].map(P), lw * .7);
-  if (claws > .02) for (const yy of [-.12, -.03, .06, .14]) { const b = [.27 + .02 * Math.cos(yy * 9), yy * 1.15], tip = add(b, rot([.1 * claws + .02, .03 * claws], .3 * claws)); A.group([polyS([add(b, [0, -.018]), tip, add(b, [0, .018])].map(P))], '#efe6cf', lw * .5); }
-  // ribs of the leg (fur strokes)
-  for (let i = 0; i < 4; i++) A.line([[-.9 + i * .18, -.13], [-.85 + i * .18, -.08]].map(P), lw * .5);
+  const top = [], bot = [];
+  for (let i = 0; i <= 12; i++) { const u = i / 12, x = lerp(-1.5, -.08, u), w = lerp(.2, .15, u); top.push([x, -w - (i % 2 ? .035 : 0)]); bot.push([x, w + (i % 2 ? .03 : 0)]); }
+  const leg = polyL([...top, ...bot.reverse()].map(P));
+  const toes = [[.17, -.16], [.27, -.06], [.28, .06], [.19, .16]].map(([a, b]) => ell(P([a, b]), .085 * s, .075 * s, ang));
+  const palm = ell(P([.04, 0]), .2 * s, .19 * s, ang);
+  A.group([leg, palm, ...toes], CAT.white, lw);
+  A.atop(x => { x.fillStyle = CAT.ochre; x.beginPath(); smooth(x, [[-1.55, -.25], [-1.0, -.24], [-.75, -.1], [-.9, .1], [-1.2, .26], [-1.55, .25]].map(P), true); x.fill(); x.strokeStyle = mix(CAT.ochre, '#7a4a22', .5); x.lineWidth = s * .03; for (let i = 0; i < 3; i++) { x.beginPath(); smooth(x, [[-1.45 + i * .16, -.2], [-1.4 + i * .16, 0], [-1.45 + i * .16, .2]].map(P)); x.stroke(); } });
+  // toe gaps
+  for (const yy of [-.11, 0, .11]) A.line([[.12, yy], [.3, yy * 1.15]].map(P), lw * .8);
+  // claws: crescent hooks between the toes
+  if (claws > .02) for (const yy of [-.16, -.06, .05, .15]) {
+    const b = [.3 + .02 * Math.cos(yy * 9), yy * 1.05], tip = add(b, rot([.16 * claws + .02, .07 * claws], .1)), mid = add(L2(b, tip, .5), rot([0, -.035 * claws], .1));
+    A.group([polyS([add(b, [0, -.025]), mid, tip, add(L2(b, tip, .55), [0, .01]), add(b, [0, .025])].map(P))], '#f2ead6', lw * .55);
+  }
+  // fur strokes
+  for (let i = 0; i < 5; i++) A.line([[-1.2 + i * .2, -.12], [-1.12 + i * .2, -.05]].map(P), lw * .5);
 }
 // the fishmonger's hand laying the fish (insert)
 export function bigHand(A, X, Y, s, ang, o = {}) {

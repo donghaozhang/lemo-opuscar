@@ -167,7 +167,7 @@ const s06 = sheet('s06', {
     R.fig(A => { basketFig(A, 760, 900, 380); fish(A, [740, 870], 220, -.2, 0, 2.6); fish(A, [790, 905], 230, -.12, 0, 2.6); });
     // the cat sneaks in low from the left (each step on the pizzicato), then crouches behind the basket
     const u = seg(lt, 0, 2.7), cx = lerp(-160, 520, u), crouch = ss(seg(lt, 2.6, 3.1));
-    R.fig(A => catSide(A, cx, 885, 300, 1, blend(gait('sneak', (tq * 1.5) % 1, 'sneak', 1 - crouch), pose('crouch', { eye: .85, pupil: 1, brow: -.6 }), crouch), { t: tq, look: .3 }));
+    R.fig(A => catSide(A, cx, 885, 300, 1, blend(gait('sneak', (lt / (4 * SEC.A.b)) % 1, 'sneak', 1 - crouch), pose('crouch', { eye: .85, pupil: 1, brow: -.6 }), crouch), { t: tq, look: .3 }));
   },
 });
 function basketFig(A, cx, cy, w) { A.group([x => { x.ellipse(cx, cy, w / 2, w * .2, 0, 0, TAU); }], PAL.straw, 2.6); A.atop(x => { x.strokeStyle = mix(PAL.straw, '#6b4a22', .5); x.lineWidth = 2; for (let i = -8; i <= 8; i++) { x.beginPath(); x.moveTo(cx + i * w * .055, cy - w * .2); x.lineTo(cx + i * w * .05, cy + w * .2); x.stroke(); } x.fillStyle = '#7b9a4a'; x.beginPath(); x.ellipse(cx, cy - w * .02, w * .4, w * .12, 0, 0, TAU); x.fill(); }); }
@@ -256,16 +256,16 @@ const s13 = sheet('s13', {
   paint(ctx, t, R, lt) {
     const g = HIT.snatch - SH.s13.t0, down = eo(seg(lt, 0, g)), grip = ss(seg(lt, g - .05, g + .12));
     // the fish in the cat's jaws below; the talons strike from above
-    R.fig(A => catFace(A, 1350, 1250, 1100, fexpr('surprised', { gy: -.8, fish: 1, ear: .2 }), { t: lt }));
-    R.fig(A => talons(A, 980, lerp(-260, 640, down) + grip * 30, 420, grip));
+    R.fig(A => { catFace(A, 1420, 1080, 900, fexpr('surprised', { gy: -.8, ear: .2 }), { t: lt }); fish(A, [960, 860 - grip * lerp(0, 80, seg(lt, g, 1.3))], 900, Math.PI + .25, .1, 4); });
+    R.fig(A => talons(A, 900, lerp(-300, 690, down) - grip * lerp(0, 80, seg(lt, g, 1.3)), 380, grip));
   },
 });
 const s14 = sheet('s14', {
   sky: x => { SKY.dawn(x); }, col: x => { rect(x, PAL.woodL, 0, 900, W, 935); }, key: x => { K(x, [[0, 900], [W, 900]], 3, { taper: [0, 0] }); K(x, [[0, 935], [W, 935]], 3, { taper: [0, 0] }); },
   cam: push(1, 1.02),
   paint(ctx, t, R, lt) {
-    const tq = q8(lt), up = eo(seg(lt, 0, 1.6));
-    R.fig(A => kite(A, lerp(1000, 760, up), lerp(380, -260, up), 900, -1, Math.sin(tq * 12), { fish: 1, claws: 1, t }));
+    const tq = q8(lt), up = eo(seg(lt, 0, 2));
+    R.fig(A => kite(A, lerp(1050, 700, up), lerp(420, 60, up), 760, -1, Math.sin(tq * 12), { fish: 1, claws: 1, t }));
     // the cat jumps and snaps on air
     const j = Math.sin(clamp((lt - .25) / .8) * Math.PI), snap = lt > .55 && lt < .9;
     R.fig(A => catSide(A, 1100, 900 - j * 120, 430, -1, blend(pose('stand', { ha: -.5 }), pose('leap', { ha: -.7, jaw: snap ? .9 : 0, eye: 1.2, pupil: .2, brow: .7 }), j), { t: tq }));
@@ -291,7 +291,7 @@ const s19 = sheet('s19', {
     [[300, 1], [820, -1], [1300, 1], [1700, -1]].forEach(([x0, d], i) => R.fig(A => person(A, x0 + d * lt * 90, 880, 1300, d, 'umbrella', (tq * .9 + i * .25) % 1, { ucol: ['#c9b07a', PAL.ai, '#b8412f', '#8b8a80'][i] })));
     const u = seg(lt, 0, 1.8), cx = lerp(2100, -300, u), y = 880 - Math.abs(Math.sin(u * 9)) * 30;
     R.fig(A => catSide(A, cx, y, 300, -1, gait('run', (tq * 2.6) % 1), { t: tq }));
-    R.fig(A => person(A, 1500, 1900, 2600, -1, 'umbrella', .2, { ucol: '#c9b07a', utilt: .2 }));
+    R.fig(A => { A.group([x => { x.moveTo(1050, 330); x.quadraticCurveTo(1500, -120, 2050, 120); x.lineTo(2050, 420); x.quadraticCurveTo(1600, 300, 1050, 330); }], '#c9b07a', 3); for (let i = 0; i < 7; i++) A.line([[1700 + i * 10, -60], [1080 + i * 150, 330 - i * 10]], 2); A.atop(x => { x.fillStyle = PAL.ai; x.beginPath(); x.arc(1700, -40, 160, 0, TAU); x.fill(); }); });
     rainLines(ctx, t);
   },
 });
@@ -543,13 +543,13 @@ const s51 = sheet('s51', {
   sky: x => { bokashi(x, 0, 0, W, 900, '#1a2440', 1, .55, { rough: 26, seed: 2, col2: '#3a4a6c' }); bokashi(x, 0, 700, W, 1100, PAL.beniL, 0, .6, { rough: 20, seed: 5 }); bokashi(x, 0, 1100, W, BRT, '#1d2a44', .8, 1, { rough: 14, seed: 31, col2: '#0d1424' }); },
   col: x => { rect(x, '#3b2e24', 0, 560, W, 640); for (let X = 100; X < W; X += 300) rect(x, '#2b221b', X, 640, X + 40, 1500); rect(x, '#5d6272', 0, 1560, W, BRT); x.strokeStyle = '#4a3a2c'; x.lineWidth = 14; x.beginPath(); x.moveTo(0, 440); x.lineTo(W, 440); x.stroke(); for (let X = 60; X < W; X += 200) rect(x, '#4a3a2c', X, 440, X + 16, 560); },
   key: x => { K(x, [[0, 560], [W, 560]], 3, { taper: [0, 0] }); K(x, [[0, 640], [W, 640]], 3, { taper: [0, 0] }); for (let X = 100; X < W; X += 300) { x.strokeStyle = S; x.lineWidth = 2.4; x.strokeRect(X, 640, 40, 860); } K(x, [[0, 1560], [W, 1560]], 3); K(x, [[0, 434], [W, 434]], 2.6); K(x, [[0, 448], [W, 448]], 2); for (let X = 60; X < W; X += 200) { x.lineWidth = 2; x.strokeRect(X, 440, 16, 120); } ripples(x, 1250, 1550, 0, W, 4, S); },
-  cam: (lt, d) => { const u = ss(seg(lt, .4, 2.6)); return { cx: 960, cy: lerp(BRT - 540, 540, u), z: 1 }; },
+  cam: (lt, d) => { const u = ss(seg(lt, .4, 2.6)); return { cx: 960, cy: lerp(BRT - 540, 600, u), z: 1 }; },
   paint(ctx, t, R, lt) {
     const tq = q8(lt);
     R.fig(A => { catSide(A, 1000, 1580, 260, 1, pose('sit', { ha: .2, eye: .6 }), { t: tq }); kitten(A, 1200, 1575, 190, { E: fexpr('eat'), t: tq, dip: .6 }); fish(A, [1230, 1560], 200, 0, 0, 2.4); });
     const l = 760 + Math.sin(tq * 9) * 2;
     R.D(0, x => lanternGlow(x, 1060, 520, 420, .9));
-    R.fig(A => monger(A, 1000, 560, 520, 1, { ...MP.lantern, ha: .55, neck: .25, brow: .2, eye: .7 }, { lantern: true, lit: true }));
+    R.fig(A => monger(A, 1000, 600, 480, 1, { ...MP.lantern, ha: .55, neck: .25, brow: .2, eye: .7 }, { lantern: true, lit: true }));
   },
 });
 const s52 = sheet('s52', {

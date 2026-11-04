@@ -1,0 +1,267 @@
+[
+{
+"t": 0.0,
+"stem": "perc",
+"cue": "hyōshigi 1"
+},
+{
+"t": 0.6667,
+"stem": "perc",
+"cue": "hyōshigi 2"
+},
+{
+"t": 1.3333,
+"stem": "shamisen",
+"cue": "pizz ostinato"
+},
+{
+"t": 2.6667,
+"stem": "koto",
+"cue": "koto: the view opens"
+},
+{
+"t": 3.2667,
+"stem": "shakuhachi",
+"cue": "cat motif"
+},
+{
+"t": 4.2167,
+"stem": "shamisen",
+"cue": "seal: chin"
+},
+{
+"t": 8.3,
+"stem": "shakuhachi",
+"cue": "kitten: low ro"
+},
+{
+"t": 10.8667,
+"stem": "koto",
+"cue": "koto: kitten"
+},
+{
+"t": 12.6667,
+"stem": "shamisen",
+"cue": "resolve: rising"
+},
+{
+"t": 15.3333,
+"stem": "shamisen",
+"cue": "sneak steps"
+},
+{
+"t": 19.4833,
+"stem": "shakuhachi",
+"cue": "yawn (shakuhachi bend)"
+},
+{
+"t": 21.3833,
+"stem": "shamisen",
+"cue": "tremolo before the hook"
+},
+{
+"t": 22.7333,
+"stem": "shamisen",
+"cue": "HOOK snap"
+},
+{
+"t": 24,
+"stem": "shamisen",
+"cue": "freeze: sawari A3"
+},
+{
+"t": 26.6667,
+"stem": "perc",
+"cue": "TAKE: hyōshigi"
+},
+{
+"t": 27,
+"stem": "taiko",
+"cue": "SHOUT: taiko"
+},
+{
+"t": 28.3,
+"stem": "shamisen",
+"cue": "dash run"
+},
+{
+"t": 29.3333,
+"stem": "shamisen",
+"cue": "proud trot (yō)"
+},
+{
+"t": 30.6666,
+"stem": "all",
+"cue": "STOP (ma)"
+},
+{
+"t": 32.2133,
+"stem": "perc",
+"cue": "kotsuzumi pon"
+},
+{
+"t": 32.3333,
+"stem": "taiko",
+"cue": "SNATCH: ōdaiko"
+},
+{
+"t": 33.4333,
+"stem": "shamisen",
+"cue": "tension tremolo"
+},
+{
+"t": 36,
+"stem": "taiko",
+"cue": "FURY"
+},
+{
+"t": 37.3333,
+"stem": "taiko",
+"cue": "roll into the chase"
+},
+{
+"t": 38.6667,
+"stem": "koto",
+"cue": "koto gliss: rain"
+},
+{
+"t": 47.3031,
+"stem": "perc",
+"cue": "UMBRELLA"
+},
+{
+"t": 50.4849,
+"stem": "koto",
+"cue": "koto gliss: snow"
+},
+{
+"t": 56.594,
+"stem": "shakuhachi",
+"cue": "sly breath"
+},
+{
+"t": 59.5758,
+"stem": "taiko",
+"cue": "BELL accent"
+},
+{
+"t": 60.9394,
+"stem": "taiko",
+"cue": "SNOW DUMP"
+},
+{
+"t": 63.6667,
+"stem": "koto",
+"cue": "koto gliss: fields"
+},
+{
+"t": 72.0485,
+"stem": "taiko",
+"cue": "SPLASH"
+},
+{
+"t": 75.9394,
+"stem": "koto",
+"cue": "koto gliss: pass"
+},
+{
+"t": 84.803,
+"stem": "perc",
+"cue": "hyōshigi accelerando"
+},
+{
+"t": 86.4697,
+"stem": "taiko",
+"cue": "roll to the sea"
+},
+{
+"t": 89.803,
+"stem": "taiko",
+"cue": "THE SEA: ōdaiko"
+},
+{
+"t": 90.403,
+"stem": "shakuhachi",
+"cue": "awe phrase"
+},
+{
+"t": 90.803,
+"stem": "taiko",
+"cue": "heartbeat"
+},
+{
+"t": 95.803,
+"stem": "perc",
+"cue": "spray"
+},
+{
+"t": 97.803,
+"stem": "koto",
+"cue": "koto tremolo"
+},
+{
+"t": 101.803,
+"stem": "all",
+"cue": "SILENCE (music cut, tails too)"
+},
+{
+"t": 106.803,
+"stem": "taiko",
+"cue": "CATCH: ōdaiko"
+},
+{
+"t": 106.803,
+"stem": "shamisen",
+"cue": "catch: sawari D3"
+},
+{
+"t": 108.803,
+"stem": "taiko",
+"cue": "CRASH"
+},
+{
+"t": 110.803,
+"stem": "shamisen",
+"cue": "rewind run"
+},
+{
+"t": 114.103,
+"stem": "koto",
+"cue": "reprint: koto per block"
+},
+{
+"t": 117.3485,
+"stem": "koto",
+"cue": "koto lullaby"
+},
+{
+"t": 121.2848,
+"stem": "shakuhachi",
+"cue": "motif returns (soft)"
+},
+{
+"t": 131.1575,
+"stem": "shakuhachi",
+"cue": "motif resolves"
+},
+{
+"t": 132.803,
+"stem": "perc",
+"cue": "GIFT: rin"
+},
+{
+"t": 136.4394,
+"stem": "koto",
+"cue": "BLINK: harmonic"
+},
+{
+"t": 137.3485,
+"stem": "koto",
+"cue": "last phrase"
+},
+{
+"t": 140.9848,
+"stem": "shamisen",
+"cue": "END: sawari left ringing"
+}
+]

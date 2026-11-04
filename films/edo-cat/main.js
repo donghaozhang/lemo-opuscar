@@ -110,8 +110,8 @@ const SCROLL = {
   s35(t, lt, d) { const u = ease(seg(lt, .1, d - .9)); return { cx: VC('pass')[0], cy: lerp(540, -540, u) }; },
   s39(t, lt, d) { const u = ease(seg(lt, 1.0, d - .3)), z = lerp(1, .82, Math.sin(Math.PI * u)); return { cx: lerp(VC('pass')[0], VC('sea')[0], u), cy: lerp(-560, 540, ss(seg(lt, .8, d - .2))), z }; },
   s40() { return { cx: VC('sea')[0] + 0, cy: 540 }; },
-  s45(t, lt, d) { const u = ease(seg(lt, 0, 1.6)); return { cx: VC('sea')[0] - 120 * u, cy: lerp(540, 150, u), z: lerp(1, .78, u) }; },
-  s46(t, lt, d) { const u = ease(seg(lt, 0, 1.3)); return { cx: VC('sea')[0] - 120 * (1 - u), cy: lerp(150, 540, u), z: lerp(.78, 1, u) }; },
+  s45(t, lt, d) { const u = ease(seg(lt, .2, 2.0)); return { cx: VC('sea')[0] - 40 * u, cy: lerp(540, 250, u), z: lerp(1, .9, u) }; },
+  s46(t, lt, d) { const u = ease(seg(lt, 0, 1.4)); return { cx: VC('sea')[0] - 40 * (1 - u), cy: lerp(250, 540, u), z: lerp(.9, 1, u) }; },
   s47(t, lt, d) { const u = ease(seg(lt, 0, d)); return { cx: lerp(VC('sea')[0], VC('bridge')[0], u), cy: 540, z: 1 - .12 * Math.sin(Math.PI * u) }; },
   s48() { return { cx: VC('bridge')[0], cy: 540 }; },
   s55(t, lt, d) { const z = lerp(1.08, 1, ss(lt / d)); return { cx: VC('bridge')[0] + 120 * (1 - ss(lt / d)), cy: 540 - 40 * (1 - ss(lt / d)), z }; },
@@ -145,25 +145,23 @@ function runners(id, t, lt, d, M) {
 // —— the catch above the border (s45) and the fall back (s46): figures escape the sheet ——
 function catchScene(id, t, lt, M) {
   const s = at('sea', 0, 0), P = (x, y) => [s[0] + x, s[1] + y];
-  const G = waveShape(SEAV.rise(t), SEAV.crash(t));
+  const G = waveShape(SEAV.rise(t), SEAV.crash(t)), boatP = [G.face[2][0] - 30, G.face[2][1] + 40];
   if (id === 's45') {
-    // slow motion: the fish flung from the lip up out of the print; the cat leaps from the prow after it
-    const u = seg(lt, 0, 2.0), slow = lt < 2 ? lt : 2 + (lt - 2) * .6;
-    const fx = lerp(G.tip[0] + 40, 980, ss(u)), fy = lerp(G.tip[1], -170, eo(u)) + (lt > 2 ? (lt - 2) * 40 : 0);
-    const boat = [G.face[0][0] + 40, G.face[0][1] + 60];
-    const cu = seg(lt, .35, 2.0), cx = lerp(boat[0], fx + 60, ss(cu)), cy = lerp(boat[1], fy + 70, eo(cu));
+    // slow motion: the fish is flung from the lip up over the top border into the mount; the cat leaps out of the print after it
+    const ct = HIT.catch - SH.s45.t0, u = seg(lt, 0, ct);
+    const fx = lerp(G.tip[0], 900, ss(u)), fy = lerp(G.tip[1], -190, eo(u));
+    const cu = seg(lt, .45, ct), cx = lerp(boatP[0] - 10, fx + 90, ss(cu)), cy = lerp(boatP[1] - 30, fy + 95, eo(cu));
     runner(M, A => {
-      if (lt < 2.0) fish(A, P(fx, fy), 120, -lt * 3.2, Math.sin(lt * 7) * .4, 2.4);
-      const Pc = lt < .35 ? pose('crouch', { eye: 1.2, pupil: 1 }) : lt < 2.0 ? blend(pose('leap', { eye: 1.3, pupil: 1, jaw: .7, brow: .6 }), pose('leap', { jaw: 0, eye: .9 }), seg(lt, 1.7, 2)) : pose('leap', { eye: .9, jaw: 0, ha: -.3 });
-      catSide(A, ...P(cx, cy), 130, -1, Pc, { t: q8(t), fish: lt >= 2.0 ? 1 : 0 });
+      if (lt < ct) fish(A, P(fx, fy), 170, -lt * 2.6, Math.sin(lt * 6) * .4, 2.6);
+      const Pc = lt < .45 ? blend(pose('crouch', { eye: 1.2, pupil: 1, rot: .3 }), pose('crouch', { eye: 1.3, pupil: 1, hy: -.38, rot: .4 }), ss(lt / .45)) : lt < ct ? blend(pose('leap', { eye: 1.3, pupil: 1, jaw: .8, brow: .6, rot: .5 }), pose('leap', { jaw: .3, eye: 1.2, rot: .2 }), seg(lt, ct - .3, ct)) : pose('leap', { eye: .7, jaw: 0, ha: -.2, brow: -.3, rot: .1 * Math.sin((lt - ct) * 3) });
+      catSide(A, ...P(cx, cy), 210, -1, Pc, { t: q8(t), fish: lt >= ct ? 1 : 0 });
     });
   }
   if (id === 's46') {
-    const u = ss(seg(lt, 0, 1.4)), a = [960 + 60, -100 + 70], b = [G.face.at(-1)[0] + 120, 790];
-    runner(M, A => catSide(A, ...P(lerp(a[0], b[0], u), lerp(a[1], b[1], u) - Math.sin(u * Math.PI) * 60), 120, -1, blend(pose('leap', { ha: -.3 }), pose('crouch', { ear: -.2 }), u), { t: q8(t), fish: 1 }));
+    const u = ss(seg(lt, 0, 1.4)), a = [990, -95], b = [640 + 60, 850 - 70];
+    runner(M, A => catSide(A, ...P(lerp(a[0], b[0], u), lerp(a[1], b[1], u) - Math.sin(u * Math.PI) * 80), 190, -1, blend(pose('leap', { ha: -.2, rot: -.5 * u }), pose('crouch', { ear: -.2, eye: .8 }), ss(seg(lt, 1.1, 1.5))), { t: q8(t), fish: 1 }));
   }
 }
-
 // —— screen overlays: the fishmonger's shout (horizontal cartouche) ——
 const SHOUT = { t0: HIT.shout, t1: SH.s11.t1 + .05, text: '站——住！' };
 function subtitle(t) {

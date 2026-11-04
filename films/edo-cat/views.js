@@ -420,31 +420,41 @@ export const PASS = {
 
 // ————————————————————— SEA + the wave —————————————————————
 export const SEA = { hz: 430, shore: 820 };
-const WV = { x: 1500, base: 860 };
-// wave geometry: rises on the right, curls leftward over the boat. r: 0..1 rise, c: 0..1 crash
+const WV = { base: 860 };
+// the great wave (original): rises on the right, its lip curls leftward; r 0..1 rise, c 0..1 crash
+const WF = { back: [[1990, 860], [1930, 720], [1820, 500], [1680, 310], [1520, 180], [1380, 128]],
+  lip: [[1250, 132], [1140, 175], [1070, 245], [1048, 320], [1075, 382], [1125, 398]],
+  curl: [[1150, 362], [1185, 322]],
+  face: [[1215, 330], [1170, 450], [1100, 600], [990, 740], [840, 830], [700, 860]] };
 export function waveShape(r, c = 0) {
-  const h = 120 + 640 * r, cx = WV.x - 140 * r, top = WV.base - h;
-  const back = [[1980, WV.base], [1880, WV.base - h * .15], [1760, WV.base - h * .45], [1640, WV.base - h * .78], [cx + 60, top + 10], [cx - 40, top]];
-  const lipLen = 260 * r * (1 + c * .6), la = -.2 - c * 1.6;
-  const lip = []; for (let i = 1; i <= 6; i++) { const u = i / 6, a = la + u * (1.8 + c), R = lipLen * (1 - u * .45); lip.push([cx - 40 - Math.cos(-.25 + u * 1.1) * lipLen * u * 1.05 - c * 80 * u, top + Math.sin(u * 2.4 + la) * R * .3 + u * u * lipLen * .55 + c * 120 * u]); }
-  const face = [[cx - 120 - 120 * r, WV.base - h * .55], [cx - 160 - 160 * r, WV.base - h * .2], [cx - 260 - 200 * r, WV.base]];
-  return { h, cx, top, back, lip, face, tip: lip.at(-1) };
+  const low = ([x, y]) => [x + (1 - r) * 120, WV.base - (WV.base - y) * (.12 + .88 * r)];
+  const curl = ss(seg(r, .35, 1)), crest = low(WF.back.at(-1));
+  const L = ([x, y]) => { const q = low([x, y]), dx = (q[0] - crest[0]) * (.25 + .75 * curl), dy = (q[1] - crest[1]) * (.25 + .75 * curl); const a = -c * 1.3, ca = Math.cos(a), sa = Math.sin(a); return [crest[0] + dx * ca - dy * sa - c * 60, crest[1] + dx * sa + dy * ca + c * 260]; };
+  const back = WF.back.map(low), lip = WF.lip.map(L), cu = WF.curl.map(L);
+  const face = WF.face.map((p, i) => { const q = low(p); return i < 2 ? L(p) : [lerp(q[0], q[0] + 80, 1 - curl), q[1] + c * 40 * (i < 3 ? 1 : 0)]; });
+  const h = WV.base - crest[1];
+  return { h, back, lip, cu, face, crest, tip: lip.at(-1), top: crest, outline: [...back, ...lip, ...cu, ...face] };
 }
-export function drawWave(x, r, c, t12, R) {
-  if (r <= 0) return;
-  const G = waveShape(r, c), body = [...G.back, ...G.lip, ...G.face];
-  x.save(); x.beginPath(); smooth(x, body, true); x.clip();
-  const g = x.createLinearGradient(0, G.top, 0, WV.base); g.addColorStop(0, '#6f95bb'); g.addColorStop(.35, PAL.prus); g.addColorStop(1, '#0f2344');
-  x.fillStyle = g; x.fillRect(0, 0, W, 1100);
-  // flow lines following the back slope
-  x.strokeStyle = 'rgba(244,236,214,.8)'; x.lineCap = 'round';
-  for (let k = 0; k < 9; k++) { x.lineWidth = 3; x.beginPath(); smooth(x, G.back.map(([a, b], i) => [a - 40 - k * 46, b + 20 + k * 30 + Math.sin(i + k) * 6])); x.stroke(); }
+export function drawWave(x, r, c, t12) {
+  if (r <= 0) return null;
+  const G = waveShape(r, c);
+  x.save(); x.beginPath(); smooth(x, G.outline, true); x.clip();
+  // three bands: light near the crest → Prussian → deep in the hollow, bokashi between (wide soft strokes)
+  const g = x.createLinearGradient(0, G.crest[1], 0, WV.base); g.addColorStop(0, '#7aa0c4'); g.addColorStop(.3, PAL.prus); g.addColorStop(1, '#13284a'); x.fillStyle = g; x.fillRect(0, 0, W, 1100);
+  x.lineCap = 'round'; x.lineJoin = 'round';
+  for (const [w, col] of [[260, 'rgba(15,35,68,.35)'], [150, 'rgba(15,35,68,.45)'], [70, 'rgba(10,25,50,.5)']]) { x.strokeStyle = col; x.lineWidth = w; x.beginPath(); smooth(x, G.face.map(([a, b]) => [a + 30, b])); x.stroke(); }
+  // white flow lines following the back slope, in groups of three
+  x.strokeStyle = 'rgba(244,236,214,.88)';
+  for (let k = 0; k < 7; k++) for (let j = 0; j < 3; j++) { const off = 60 + k * 85 + j * 16; x.lineWidth = 3.2 - j * .6; x.beginPath(); smooth(x, G.back.slice(1).map(([a, b], i) => [a - off * .8, b + off * .7 + Math.sin(i * 1.3 + k) * 8])); x.stroke(); }
   x.restore();
-  x.strokeStyle = PAL.prusD; x.lineWidth = 3.2; x.lineJoin = 'round'; x.beginPath(); smooth(x, body, true); x.stroke();
-  // foam claws along the crest + lip
-  const Rn = mulberry(5 + Math.floor(t12 * 12) % 3);
-  const crest = [...G.back.slice(3), ...G.lip];
-  for (let i = 0; i < crest.length - 1; i++) { const [a, b] = crest[i], [a2, b2] = crest[i + 1], ang = Math.atan2(b2 - b, a2 - a) - 1.0; for (let k = 0; k < 2; k++) claw(x, lerp(a, a2, k / 2), lerp(b, b2, k / 2), ang - .2, (40 + Rn() * 40) * r, 20 * r, -.9, { lw: 2.2, sub: 1 }); }
+  x.strokeStyle = PAL.prusD; x.lineWidth = 3.4; x.lineJoin = 'round'; x.beginPath(); smooth(x, G.outline, true); x.stroke();
+  // foam: claws hooking inward (to the left / down) along the crest and the lip, spray in clusters
+  const Rn = mulberry(5 + Math.floor(t12 * 12) % 3), crestLine = [...G.back.slice(3), ...G.lip.slice(0, 4)];
+  for (let i = 0; i < crestLine.length - 1; i++) {
+    const [a, b] = crestLine[i], [a2, b2] = crestLine[i + 1], n = Math.atan2(b2 - b, a2 - a) - Math.PI / 2;
+    for (let k = 0; k < 3; k++) { const s = (.6 + Rn() * .5) * (.35 + .65 * r); claw(x, lerp(a, a2, k / 3), lerp(b, b2, k / 3), n - .5, 80 * s, 34 * s, -1.0, { lw: 2.4, sub: 2, ink: PAL.prusD }); }
+  }
+  if (r > .6) { const sp = G.lip.slice(1); for (let i = 0; i < 26; i++) { const p = sp[i % sp.length], d = 30 + Rn() * 120, a = Math.PI + Rn() * 1.6 - .6, rr = i % 7 === 0 ? 11 : 3 + Rn() * 5; x.fillStyle = '#f4ecd6'; x.beginPath(); x.arc(p[0] + Math.cos(a) * d, p[1] + Math.sin(a) * d - 20, rr, 0, TAU); x.fill(); x.strokeStyle = PAL.prusD; x.lineWidth = 1.6; x.stroke(); } }
   return G;
 }
 function seaLayer(x, part) {
@@ -480,9 +490,9 @@ export const SEAV = {
     // the boat: beached (s40) → pushed into the surf (s41) → on the wave face (s45) → down the back (s46)
     let bp, tilt = 0;
     if (t < SH.s41.t0) bp = [760, 838];
-    else if (t < SH.s45.t0) { const u = ss(seg(t, SH.s41.t0, SH.s43.t1)); bp = [lerp(760, G.face[0][0] + 40, u), lerp(838, G.face[0][1] + 60, u)]; tilt = -.45 * u; }
-    else if (t < SH.s46.t0) { bp = [G.face[0][0] + 40, G.face[0][1] + 60]; tilt = -.45; }
-    else { const u = ss(seg(t, SH.s46.t0, SH.s46.t1)); bp = [lerp(G.face[0][0] + 40, G.face.at(-1)[0] + 120, u), lerp(G.face[0][1] + 60, 830, u)]; tilt = lerp(-.45, .1, u); }
+    else if (t < SH.s45.t0) { const u = ss(seg(t, SH.s41.t0, SH.s43.t1)); bp = [lerp(760, G.face[2][0] - 30, u), lerp(838, G.face[2][1] + 40, u)]; tilt = -.5 * u; }
+    else if (t < SH.s46.t0) { bp = [G.face[2][0] - 30, G.face[2][1] + 40]; tilt = -.5; }
+    else { const u = ss(seg(t, SH.s46.t0, SH.s46.t1)); bp = [lerp(G.face[2][0] - 30, 640, u), lerp(G.face[2][1] + 40, 850, u)]; tilt = lerp(-.5, .05, u); }
     R.fig(A => boat(A, bp[0], bp[1], 230, 1, { tilt, oar: true }));
     if (t < SH.s41.t1) [[-150, 1], [150, -1]].forEach(([dx, d], i) => R.fig(A => person(A, 760 + dx + (t >= SH.s41.t0 ? (t - SH.s41.t0) * 80 : 0), 860, 120, -d, 'fisher', (tq * 1.2 + i * .5) % 1)));
     // kite: with the fish until the spray hits it (s42), then up and away

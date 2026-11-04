@@ -1,0 +1,6 @@
+out/
+music/stems/
+music/*.wav
+mix.wav
+fonts/src/
+*.mp4
