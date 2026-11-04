@@ -1,0 +1,4 @@
+out/
+tools/.venv/
+frames/
+*.wav
