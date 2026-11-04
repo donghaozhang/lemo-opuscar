@@ -116,10 +116,10 @@ function fibers(x, n, col, a, lw, seed, len = 60) {
 // Make a colour block look "printed": goma-zuri speckles + wood grain
 export function inkify(c, { speck = .5, grain = 0, gx = 0, gy = 0, baren = 0, bx = 0, by = 0 } = {}) {
   const x = c.getContext('2d'); x.save();
-  for (let oy = 0; oy < c.height; oy += H) {
-    if (grain) { x.globalCompositeOperation = 'source-atop'; x.globalAlpha = grain; x.drawImage(TX.grain, gx, gy + oy, W, H); x.drawImage(TX.grain, gx - W, gy + oy, W, H); x.drawImage(TX.grain, gx + W, gy + oy, W, H); }
-    if (baren) { x.globalCompositeOperation = 'destination-out'; x.globalAlpha = baren; x.drawImage(TX.baren, bx, by + oy); x.drawImage(TX.baren, bx + (bx > 0 ? -W : W), by + oy); }
-    if (speck) { x.globalCompositeOperation = 'destination-out'; x.globalAlpha = speck; x.drawImage(TX.speck, 0, oy, W, H); }
+  for (let oy = 0; oy < c.height; oy += H) for (let ox = 0; ox < c.width; ox += W) {
+    if (grain) { x.globalCompositeOperation = 'source-atop'; x.globalAlpha = grain; x.drawImage(TX.grain, ox + gx, gy + oy, W, H); x.drawImage(TX.grain, ox + gx - W, gy + oy, W, H); x.drawImage(TX.grain, ox + gx + W, gy + oy, W, H); }
+    if (baren) { x.globalCompositeOperation = 'destination-out'; x.globalAlpha = baren; x.drawImage(TX.baren, ox + bx, by + oy); x.drawImage(TX.baren, ox + bx + (bx > 0 ? -W : W), by + oy); }
+    if (speck) { x.globalCompositeOperation = 'destination-out'; x.globalAlpha = speck; x.drawImage(TX.speck, ox, oy, W, H); }
   }
   x.restore(); return c;
 }
@@ -181,7 +181,7 @@ export function fillPath(x, pts, col, closed = true) { x.fillStyle = col; x.begi
 
 // bokashi: hand-wiped gradation (generated per pixel, edge offset per column at low frequency, no seams)
 export function bokashi(x, x0, y0, x1, y1, col, a0, a1, { rough = 22, seed = 3, col2, ease = 1 } = {}) {
-  const CH = x.canvas.height, X0 = Math.max(0, Math.floor(x0)), X1 = Math.min(W, Math.ceil(x1));
+  const CH = x.canvas.height, CW = x.canvas.width, X0 = Math.max(0, Math.floor(x0)), X1 = Math.min(CW, Math.ceil(x1));
   const Y0 = Math.max(0, Math.floor(Math.min(y0, y1) - rough * 1.4)), Y1 = Math.min(CH, Math.ceil(Math.max(y0, y1) + rough * 1.4));
   const w = X1 - X0, h = Y1 - Y0; if (w <= 0 || h <= 0) return;
   const c = mk(w, h), cx = c.getContext('2d'), id = cx.createImageData(w, h), d = id.data;

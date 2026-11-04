@@ -10,7 +10,7 @@ export const CAT = { white: '#f7f0de', ochre: '#d39a45', dark: '#4a4540', pink: 
 const FC = mk(), FK = mk();
 const fc = FC.getContext('2d'), fk = FK.getContext('2d');
 let BB = null;   // screen-space bbox being drawn
-export function figure(dst, fn, { reg = [1.7, 2.1], speck = .22, grain = .06, bbox = null } = {}) {
+export function figure(dst, fn, { reg = [1.7, 2.1], speck = .22, grain = .06, bbox = null, colour = 1 } = {}) {
   const m = dst.getTransform();
   // screen bbox (default: whole frame)
   let x0 = 0, y0 = 0, x1 = W, y1 = H;
@@ -31,7 +31,7 @@ export function figure(dst, fn, { reg = [1.7, 2.1], speck = .22, grain = .06, bb
   fc.globalAlpha = 1; fk.globalAlpha = 1; fc.globalCompositeOperation = 'source-over'; fk.globalCompositeOperation = 'source-over';
   dst.save(); dst.setTransform(1, 0, 0, 1, 0, 0);
   const w = x1 - x0, h = y1 - y0;
-  dst.drawImage(FC, x0, y0, w, h, x0 + reg[0], y0 + reg[1], w, h);
+  if (colour > 0) { dst.globalAlpha = colour; dst.drawImage(FC, x0, y0, w, h, x0 + reg[0], y0 + reg[1], w, h); dst.globalAlpha = 1; }
   dst.drawImage(FK, x0, y0, w, h, x0, y0, w, h);
   dst.restore();
 }
