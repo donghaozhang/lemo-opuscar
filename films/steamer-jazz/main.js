@@ -127,8 +127,8 @@ function zzz(x, y, t, k = 1) { for (let i = 0; i < 3; i++) { const ph = (t * .7 
 // ———————————————— global actor states (functions of time) ————————————————
 // bun inventory: the 8 buns of the night (7 + the best); where they are depends on t
 const SEQ = { // key times
-  nod: at('s06', 1.4), wake: SH.s07.t0, countIn: SH.s09.t0, band: SH.s10.t0, ratGrab: at('s21', 2.8), see: SH.s22.t0,
-  topple: at('s25', .6), spill: SH.s26.t0, wind: at('s35', .8), dawn: at('s36', .6), ring: SH.s37.t0,
+  nod: at('s06', 1.4), wake: SH.s07.t0, countIn: SH.s09.t0, band: SH.s10.t0, ratGrab: at('s21', 2.5), see: SH.s22.t0,
+  topple: at('s25', 5 / 6), spill: SH.s26.t0, wind: at('s35', .8), dawn: at('s36', .6), ring: SH.s37.t0,
 };
 // Wang (kitchen): kneading, yawn, nod off; asleep until the ring
 function wangState(t) {
@@ -201,7 +201,7 @@ function kitchen(t, o = {}) {
   const ps = pinState(t); if (!o.noPin) C.pin({ x: ps.x, y: 960 + (ps.y || 0), k: .7, roll: ps.roll, ex: ps.ex, sx: (ps.sx || 1) * br.sx, sy: (ps.sy || 1) * br.sy });
   if (!o.noCleaver) C.cleaver({ x: 1440, y: 960 + hop(t, 10), k: .5, ex: t < SEQ.wake ? 'asleep' : t < SEQ.band ? 'sleepy' : t < SEQ.see ? 'grin' : 'determined', sx: br.sx, sy: br.sy });
   // the best bun on its saucer (until the rat grabs it)
-  if (t < SEQ.ratGrab && t >= at('s15', 1.6)) { shape(ell(1520, 960, 46, 10), { fill: P.pale }); C.bun(1520, 954, .8, { best: true }); }
+  if (t < SEQ.ratGrab && t >= at('s15', 1.5)) { shape(ell(1520, 960, 46, 10), { fill: P.pale }); C.bun(1520, 954, .8, { best: true }); }
   if (o.extra) o.extra();
 }
 // the boy's face pressed to the frosted window, seen from inside (frost overlay + the rubbed peephole)
@@ -230,30 +230,29 @@ ev(SEQ.wake + .1, 'eye'); hit('wake', SEQ.wake + .1);
 ev(at('s08', .3), 'stretch'); ev(at('s08', .6), 'inhale'); ev(at('s08', 2.2), 'exhale');
 for (let i = 0; i < 4; i++) { ev(SH.s09.t0 + i * .5, 'tap'); } hit('countin', SH.s09.t0, 'countin', 0);
 // the number
-hit('band', SEQ.band, 'number', 0);
+hit('band', SEQ.band, 'number', 0); ev(SEQ.band, 'puff');
 for (let i = 0; i < 8; i++) ev(at('s11', i * .5), 'roll', { g: .6 });
 for (let i = 0; i < 12; i++) ev(at('s12', i * .25), 'chop');
 for (let i = 0; i < 8; i++) ev(at('s13', i * .5), 'pleat');
 ev(at('s13', 3.0), 'hopin'); ev(at('s13', 3.5), 'hopin');
 for (let i = 0; i < 6; i++) ev(at('s14', i * .5), i % 2 ? 'lid' : 'puff');
-ev(at('s15', .5), 'pour', { d: 1.0 }); ev(at('s15', 1.6), 'plate'); hit('bestbun', at('s15', 1.6), 'number', 37);
+ev(at('s15', .5), 'pour', { d: 1.0 }); ev(at('s15', 1.5), 'plate'); hit('bestbun', at('s15', 1.5), 'number', 39);
 ev(at('s16', .4), 'rub'); ev(at('s16', 1.5), 'growl'); ev(SH.s16.t0, 'bed', { name: 'wind', t1: SH.s17.t0, gain: .6 }); hit('growl', at('s16', 1.5), 'number', 45);
 ev(at('s17', 1.0), 'growl', { g: .6 });
-ev(at('s18', 1.0), 'morph'); hit('peak', SH.s18.t0, 'number', 56);
+ev(at('s18', 1.0), 'morph'); hit('peak', SH.s18.t0, 'number', 56); ev(SH.s18.t0, 'puff');
 ev(at('s19', .2), 'snore', { small: 1 });
 ev(at('s20', .5), 'sniff'); ev(at('s20', 1.2), 'sniff');
-for (let i = 0; i < 6; i++) ev(at('s21', .25 + i * .5), 'tiptoe');
-ev(SEQ.ratGrab, 'grab'); hit('grab', SEQ.ratGrab, 'number', 79.6);
+for (let i = 0; i < 5; i++) ev(at('s21', i * .5), 'tiptoe');
+ev(SEQ.ratGrab, 'grab'); hit('grab', SEQ.ratGrab, 'number', 77);
 ev(SEQ.see, 'whistle'); hit('see', SEQ.see);
 // chase
 hit('chase', SH.s23.t0, 'chase', 0);
 for (let i = 0; i < 8; i++) ev(at('s23', i * 10 / 24 * 2), 'scamper');
 for (let i = 0; i < 8; i++) ev(at('s24', i * .4167), 'basket');
-ev(SEQ.topple, 'topple'); hit('topple', SEQ.topple, 'chase', 24);
+ev(SEQ.topple, 'topple'); hit('topple', SEQ.topple, 'chase', 18);
 ev(at('s25', 1.4), 'door'); ev(at('s25', 1.5), 'tumble', { d: 1.5 });
 for (let i = 0; i < 8; i++) ev(at('s26', .2 + i * .36), 'bunsnow');
-for (let i = 0; i < 8; i++) { ev(at('s27', .6 + i * .625), 'catch'); }
-hit('catch1', at('s27', .6), 'chase', 32);
+for (let i = 0; i < 7; i++) { ev(at('s27', 5 / 6 + i * .625), 'catch'); hit('catch' + i, at('s27', 5 / 6 + i * .625), 'chase', 34 + i * 1.5); }
 ev(at('s28', .3), 'skid'); ev(at('s28', 1.2), 'scamper'); ev(at('s28', .9), 'catch');
 // the choice (solo clarinet, snow, wind)
 ev(SH.s29.t0, 'bed', { name: 'wind', t1: SH.s33.t0, gain: .9 });
@@ -273,7 +272,7 @@ ev(SEQ.ring, 'ring', { d: 1.9 }); hit('ring', SEQ.ring);
 ev(at('s38', .2), 'take'); ev(at('s38', .25), 'boing');
 ev(at('s39', 1.4), 'give'); ev(at('s39', 2.2), 'pat');
 // finale
-hit('finale', SH.s38.t0, 'finale', 0);
+hit('finale', SH.s38.t0, 'finale', 0); ev(SH.s38.t0, 'whoosh', { g: .6 });
 ev(SH.s40.t0, 'bed', { name: 'morning', t1: DUR, gain: .5 });
 for (let i = 0; i < 8; i++) ev(at('s40', i * .4167), 'run');
 ev(SH.s41.t0, 'paper'); for (let i = 0; i < 7; i++) ev(at('s41', .15 + i * .2), 'print');
@@ -281,7 +280,7 @@ CARD('s41', 0, 10 / 3, '王记包子 开门啦！', { hidden: 1 });
 for (let i = 0; i < 10; i++) ev(at('s42', i * .4167), 'shuffle', { g: .5 });
 for (let i = 0; i < 8; i++) ev(at('s43', i * .4167), 'knead');
 ev(at('s43', 3.4), 'wink');
-ev(at('s44', .3), 'morph'); ev(at('s44', 1.6), 'iris'); hit('iris', at('s44', 1.6), 'finale', 0);
+ev(at('s44', .3), 'morph'); ev(at('s44', 1.5), 'iris'); hit('iris', at('s44', 1.5), 'finale', 54);
 CARD('s44', .5, 2.5, '完', { hidden: 1 });
 SUBS.unshift({ t0: .9, t1: 4.0, text: '蒸笼爵士' });
 
@@ -377,7 +376,7 @@ const SHOTS = {
   // the kettle pours and crowns the best bun; steam notes
   s15(t, lt) {
     setCam({ x: 1700, y: 900, z: 1.5 });
-    kitchen(t, { amp: .05, extra: () => { for (let i = 0; i < 3; i++) { const ph = (lt * .7 + i / 3) % 1; note(2010 + Math.sin(ph * 6 + i) * 20 + i * 30, 760 - ph * 260, .9); } if (lt < 1.6) { const k = seg(lt, .8, 1.6); C.bun(lerp(1880, 1520, k), lerp(880, 954, k) - Math.sin(k * Math.PI) * 80, .8, { best: true }); } } });
+    kitchen(t, { amp: .05, extra: () => { for (let i = 0; i < 3; i++) { const ph = (lt * .7 + i / 3) % 1; note(2010 + Math.sin(ph * 6 + i) * 20 + i * 30, 760 - ph * 260, .9); } if (lt < 1.5) { const k = seg(lt, .7, 1.5); C.bun(lerp(1880, 1520, k), lerp(880, 954, k) - Math.sin(k * Math.PI) * 80, .8, { best: true }); } } });
     GRADE = NIGHT_KIT(t);
   },
   // outside: the newsboy at the frosted window rubs a peephole, watches, stomach growls
@@ -438,8 +437,8 @@ const SHOTS = {
     setCam({ x: lerp(2150, 1700, ss(seg(lt, 0, 3))), y: 1000, z: 1.6 }); kitchen(t, { amp: .05 });
     const st = Math.floor(lt * 2), ph = (lt * 2) % 1, x = lerp(2340, 1580, Math.min(1, (st + ss(ph)) / 6));
     const grab = t >= SEQ.ratGrab;
-    C.rat({ x: lt < 2.8 ? x : lerp(1580, 1700, seg(lt, 2.8, 4)), y: lt < 2.3 ? 1180 : 1180 - Math.sin(seg(lt, 2.3, 2.8) * Math.PI) * 220 - (lt > 2.8 ? 0 : 0) - (lt > 2.55 && lt < 2.8 ? 0 : 0), k: .5, ex: grab ? 'happy' : 'sly', tail: 'q', legs: [{ x: -22, y: -Math.abs(Math.sin(ph * Math.PI)) * 18 }, { x: 22, y: -Math.abs(Math.cos(ph * Math.PI)) * 18 }], arms: grab ? [{ x: -50, y: -60, hand: 'open', hk: .7 }, { x: 60, y: -150, hand: 'grab', hk: .7 }] : null });
-    if (grab) C.bun(lerp(1580, 1700, seg(lt, 2.8, 4)) + 34, 1180 - 70 - 30, .55, { best: true });
+    C.rat({ x: lt < 2.5 ? x : lerp(1580, 1700, seg(lt, 2.5, 4)), y: lt < 2.0 ? 1180 : 1180 - Math.sin(seg(lt, 2.0, 2.5) * Math.PI) * 220 - (lt > 2.8 ? 0 : 0) - (lt > 2.55 && lt < 2.8 ? 0 : 0), k: .5, ex: grab ? 'happy' : 'sly', tail: 'q', legs: [{ x: -22, y: -Math.abs(Math.sin(ph * Math.PI)) * 18 }, { x: 22, y: -Math.abs(Math.cos(ph * Math.PI)) * 18 }], arms: grab ? [{ x: -50, y: -60, hand: 'open', hk: .7 }, { x: 60, y: -150, hand: 'grab', hk: .7 }] : null });
+    if (grab) C.bun(lerp(1580, 1700, seg(lt, 2.5, 4)) + 34, 1180 - 70 - 30, .55, { best: true });
     GRADE = NIGHT_KIT(t);
   },
   // close-up: the kettle sees — eyes pop, the steam whistles straight up (band stop: everything freezes)
@@ -492,9 +491,9 @@ const SHOTS = {
   s27(t, lt) {
     const camx = lerp(1300, 3100, ss(seg(lt, 0, 5.6))); setCam({ x: camx, y: 680, z: .8 }); bg('lane');
     const bx = lerp(1250, 3200, lt / 5.833);
-    for (let i = 0; i < 8; i++) { const ct = .6 + i * .625; if (lt > ct) continue; const x = bx + 180 + i * 90 - (i * 30), y = 900 - Math.abs(Math.sin(lt * 7 + i)) * 30; C.bun(x, y, 1.0, { rot: lt * 8 + i, best: i === 7 }); }
-    const caught = Math.min(8, Math.max(0, Math.floor((lt - .6) / .625) + 1));
-    const reach = ((lt - .6) % .625) < .25 && lt > .6 && lt < .6 + 8 * .625;
+    for (let i = 0; i < 8; i++) { const ct = 5 / 6 + i * .625; if (lt > ct) continue; const x = bx + 180 + i * 90 - (i * 30), y = 900 - Math.abs(Math.sin(lt * 7 + i)) * 30; C.bun(x, y, 1.0, { rot: lt * 8 + i, best: i === 7 }); }
+    const c0 = 5 / 6 - .2; const caught = Math.min(7, Math.max(0, Math.floor((lt - 5 / 6) / .625) + 1));
+    const reach = ((lt - c0) % .625) < .25 && lt > c0 && lt < c0 + 7 * .625;
     runner('boy', t, bx, 900, 1.0, 1, { reach, caught });
     runner('rat', t, bx + 420, 900, .5, 1);
     snow(t, 1);
@@ -655,7 +654,7 @@ const SHOTS = {
     const k = ss(seg(lt, .3, 1.1));
     const R = fat('完', 1060 + 0, 560 - k * 60, 300 * (.3 + .7 * k), { face: P.white });
     if (lt > .5) TXT.push({ id: 'end', text: '完', ...R });
-    const r = lt < 1.6 ? 1200 : lerp(1200, 0, ei(seg(lt, 1.6, 2.4)));
+    const r = lt < 1.5 ? 1200 : lerp(1200, 0, ei(seg(lt, 1.5, 2.3)));
     iris(1060, 500, r);
   },
 };
