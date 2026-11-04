@@ -38,3 +38,4 @@ Sample libraries: vsco2ce, vcsl (fetched earlier), freepats (ukulele, nylon guit
 | 18:03 | final render | frames 2340 / 3360 |
 | 18:13 | final render | frames 2700 / 3360 |
 | 18:23 | final render | frames 3060 / 3360 |
+18:54 UTC · FINAL: render 3 done (3360 frames), muxed −14.0 LUFS / −3.7 dBTP, no black frames; readcheck 3/3; cuecheck 68/68 within 75 ms; glyphs 79/79; delivered to deliveries/monster-friend (final.mp4 91 MB, final-720p.mp4 26 MB, poster.jpg, subtitles.srt, README.md)
