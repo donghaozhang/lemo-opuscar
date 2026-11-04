@@ -1,0 +1,17 @@
+《愚公移山》 — third-party assets used in the film
+
+Fonts
+- Noto Serif SC (weights 600 and 900), © Google / Adobe, SIL Open Font License 1.1.
+  Source: npm @fontsource/noto-serif-sc 5.3.1 (only the unicode-range subsets holding the film's characters are loaded).
+
+Music samples (CC0)
+- VS Chamber Orchestra: Community Edition (Versilian Studios), CC0 — cellos, cello spiccato/pizzicato, contrabass,
+  contrabass pizzicato, violas, timpani, gong (tam-tam), bass drum.
+- Versilian Community Sample Library (VCSL, Versilian Studios), CC0 — woodblock, frame drum.
+  Fetched with the library's tools/fetch.sh; played through core/audio/sampler.py.
+
+Text
+- Caption lines from 《列子·汤问》 (Liezi, "Tang Wen"), public domain.
+
+Everything else — picture, characters, the woodcut engine adaptation, the score, the log drum, struck metal, folk drone
+and all Foley — was made in code for this film. No voice, no AI-generated images, no stock footage, no map data.
