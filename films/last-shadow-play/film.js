@@ -226,7 +226,7 @@ function camera(t) {
     case 'boyPhone': return [1062, 528, 2.8];
     case 'rodHand': return [1180, 450, 2.3];
     case 'seat': { const p = E(t, T.pushIn, t1); return L3([960, 540, 1.1], cc(960, 540, 1.0), p); }
-    case 'entrance': { const cz = back(seg(t, t1 > T.monkeyIn ? T.monkeyIn : t0, T.monkeyIn + 3 / 24), 1.3); return L3(cc(960, 540, 1.0), cc(640, 420, 1.55), cz).map((v, i) => i === 2 ? v - .04 * E(t, T.freeze1, t1) : v); }
+    case 'entrance': { const cz = back(seg(t, t1 > T.monkeyIn ? T.monkeyIn : t0, T.monkeyIn + 3 / 24), 1.3); return L3(cc(960, 540, 1.0), cc(660, 480, 1.5), cz).map((v, i) => i === 2 ? v - .04 * E(t, T.freeze1, t1) : v); }
     case 'handsTwist': return [1090, 340, 2.2];
     case 'flip': { const x = mp ? mp.x : 900; return cc(lerp(640, x, .6), 520, 1.25); }
     case 'maiden': return cc(960, 600, 1.3);
