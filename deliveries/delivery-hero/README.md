@@ -1,0 +1,12 @@
+# 《外卖勇者》
+
+At 23:40 in the rain, a delivery rider takes the night's last order (one bowl of longevity noodles before midnight) and fights through a city that plays like a mid-90s console RPG. Battery is HP and the clock is the timer. He meets a red light he can neither fight nor flee, a flooded underpass that soaks his phone, a soaked kid at a bus stop who gets his spare red umbrella, a guard dog that only wants a pat, and a boss: a broken lift and 28 dark floors of stairs. At door 2803 he finds an old lady alone on her birthday, with no candle. He spends his last 9 % of battery holding the phone's flashlight up as a candle and sings to her. At 00:00 she blows it out and the phone dies. Then the red umbrella comes up the stairs: the kid is her grandson. Save point, 「温暖 +1」, the rain stops. The film is 149.8 s in the 16-bit Pixel RPG style, at 1920×1080 and 24 fps. Everything was made in code: a 320×180 indexed framebuffer with palette LUTs (colour-cycled rain and neon, step fades, protected red and gold, a palette swap when the rain stops), a capsule-limb rig and parametric faces shared by the sprites, the 32×32 portraits and the close-up busts, an original chiptune score (pulse, triangle, noise and synthesised drums with SNES-style echo; the overworld, battle, boss, tender and level-up themes), and synthesised Foley. The only borrowed tune is the public-domain birthday song, sung by the rider's text blips. On-screen text uses Fusion Pixel Font (OFL), drawn on the native grid. Checks run on the final file:
+- **Loudness:** −14.0 LUFS integrated; true peak −3.7 dBTP (target ≤ −1).
+- **Cue check:** all 24 visual hits are on their music beat, score accent or sound event with 0 ms offset.
+- **Readcheck:** 40/40 on-screen texts are held long enough to read.
+- **Blackdetect** (d ≥ 0.1 s): one hit, the deliberate 0.17 s step fade-in from black at 0:00.
+- **CJK glyph check:** no glyphs are missing. It checks the 263 characters in the source against the font, and 600 rendered frames for missing glyphs.
+- **Review:** two full review passes with contact sheets at 1 fps, plus 0.2 s strips of key actions. The sheets and the model and expression sheets are in `films/delivery-hero/stills/`.
+- **No LemoLab sign-off** in the source or the last frames.
+
+Files: `final.mp4` (1080p, 49 MB), `final-720p.mp4` (13 MB), `poster.jpg`, `subtitles.srt`. Source and one-command rebuild: `films/delivery-hero/` (`build.sh`, `TREATMENT.md`, `CREDITS`).

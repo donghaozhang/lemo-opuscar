@@ -10,3 +10,4 @@
 11:25Z render 2: picture rendering (3595 frames, 4 workers)
 11:31Z render 2 done (-14.0 LUFS, peak -3.7 dBFS); review pass 2: item menu off the rider's head, stairwell pay-off lit by 2803's spill, umbrella shaft off the kid's face; glyphcheck runtime OK; final render started
 11:33Z final render: picture rendering (3595 frames)
+11:41Z delivered: final.mp4 49 MB, final-720p 13 MB, -14.0 LUFS, TP -3.7, cuecheck/readcheck/glyphcheck OK, blackdetect only the 0.17 s opening fade
