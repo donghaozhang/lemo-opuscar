@@ -554,7 +554,7 @@ export function buildTown() {
       else if (id === 's18') { const Cm = CAMS.s18; cam.position.set(...Cm.p(t)); cam.fov = Cm.fov[0]; cam.lookAt(...Cm.l(t)); focusP = new THREE.Vector3(.5, 0, -4); aper = 380; tiltC = .5; }
       else if (id === 's19') { const mx = C.mo.root.position.x; cam.position.set(mx + 2.4, 2.6, -4.2); cam.fov = 30; cam.lookAt(mx + .9, .8, 1.0); focusP = C.mo.root.position.clone().setY(.9); aper = 260; }
       else if (id === 's20') { cam.position.set(3.6, 2.2, -.2); cam.fov = 30; cam.lookAt(.1, .55, -3.2); focusP = new THREE.Vector3(.2, .6, -3.3); aper = 180; }
-      else if (id === 's21') { cam.position.set(3.0, 2.6, -3.0); cam.fov = 38; cam.lookAt(BX, DECK + .4, -12.6); focusP = new THREE.Vector3(BX, DECK, -12.6); aper = 260; }
+      else if (id === 's21') { cam.position.set(3.0, 2.6, -3.0); cam.fov = 38; cam.lookAt(BX, DECK + .4, -12.6); focusP = new THREE.Vector3(BX, DECK, -12.6); aper = 260; hemi.intensity += 2.2; sun.intensity += .9; SK.u.k.value += 1.6; bolt.intensity += 1.5; LSt.exp += .35; fill.intensity = 2.2; fill.position.set(BX - 3, DECK + 1.5, -9.5); }   // the storm sky's afterglow keeps the insert readable between flashes
       else if (id === 's22') { const hp = C.xs3.headPos(); cam.position.set(hp.x + .8, hp.y + .25, hp.z + 1.15); cam.fov = 27; cam.lookAt(hp.x, hp.y - .02, hp.z); focusP = hp; aper = 90; fill.intensity = 2.2; fill.position.copy(hp).add(new THREE.Vector3(.4, .6, 1.2)); }
       else if (id === 's23') { const hp = C.lz3.headPos(); cam.position.set(standP.x + 1.75, hp.y + .25, standP.z + 1.25); cam.fov = 27; cam.lookAt(hp.x, hp.y - .05, hp.z); focusP = hp; aper = 110; }
       else if (id === 's24') { const Cm = CAMS.s24; cam.position.set(...Cm.p(t)); cam.fov = lerp(Cm.fov[0], Cm.fov[1], seg(t, 102.6, 106.6)); cam.lookAt(...Cm.l(t)); focusP = onBoat(0, .5, 0); aper = 420; }
@@ -563,7 +563,7 @@ export function buildTown() {
       else if (id === 's27' || id === 's28') { const hp = C.lz3.headPos(true), lp = onBoat(-.6, 1.3, 2.15); cam.position.copy(onBoat(1.9, 2.0, 4.3)); cam.fov = 28; cam.lookAt(lp.clone().lerp(hp, .7)); focusP = lp.clone().lerp(hp, .6); aper = 110; }
       else if (id === 's29') { cam.position.set(8.8, 4.4, -19.0); cam.fov = 38; cam.lookAt(2.6, .2, -30); focusP = new THREE.Vector3(2.5, .3, -29); aper = 230; }
       else if (id === 's30') { const hp = C.lz3.headPos(true); cam.position.copy(hp).add(new THREE.Vector3(1.5, .2, 1.1)); cam.fov = 28; cam.lookAt(hp.x, hp.y - .05, hp.z); focusP = hp; aper = 110; }
-      if (id !== 's22' && id !== 's26' && id !== 's25') { fill.intensity = (lit * .5 + .55) * (onPier ? 1 : .9); fill.position.copy((onPier ? standP : onBoat(.3, .34, 2.3))).add(new THREE.Vector3(.5, 1.5, 1.8)); }
+      if (id !== 's22' && id !== 's26' && id !== 's25' && id !== 's21') { fill.intensity = (lit * .5 + .55) * (onPier ? 1 : .9); fill.position.copy((onPier ? standP : onBoat(.3, .34, 2.3))).add(new THREE.Vector3(.5, 1.5, 1.8)); }
       // rain follows the camera's target
       const fp = focusP || new THREE.Vector3(0, 0, -6); RB[0] = fp.x - 22; RB[3] = fp.x + 22; RB[1] = fp.y - 3; RB[4] = fp.y + 18; RB[2] = fp.z - 22; RB[5] = fp.z + 14; RAIN.userData.update(t, [-7 - windK * 6, 0]);
       splashBox = [fp.x - 10, WATER + .02, fp.z - 10, fp.x + 10, 0, fp.z + 8]; splash.userData.update(t);
