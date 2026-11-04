@@ -156,7 +156,11 @@ mix = 1.0 * mus + .9 * fol + 1.0 * amb
 # true digital silence before the giants (and a near-silence before the answer handled by the score)
 s0, s1 = int(SH['G4']['t0'] * SR), int(SH['H1']['t0'] * SR); f = int(.06 * SR)
 mix[s0 - f:s0] *= np.linspace(1, 0, f)[:, None]; mix[s0:s1] = 0
-mix = mix / max(np.abs(mix).max(), 1e-6) * .89
+# level to about −16 LUFS-ish (RMS) and catch the transients with a look-ahead limiter, so the master meets TP ≤ −1 dB
+from core.audio.sfx import limit
+rms = np.sqrt((mix ** 2).mean()); mix = mix * (10 ** (-19 / 20) / max(rms, 1e-9))
+mix = np.stack([limit(mix[:, 0], ceil=.42), limit(mix[:, 1], ceil=.42)], 1).astype(np.float32)
+mix[s0:s1] = 0
 os.makedirs(os.path.join(HERE, 'out'), exist_ok=True)
 sf.write(os.path.join(HERE, 'out', 'mix.wav'), mix, SR, subtype='PCM_24')
 print('mix.wav', round(DUR, 2), 's')

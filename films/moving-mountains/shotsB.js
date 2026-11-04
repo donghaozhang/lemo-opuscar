@@ -420,7 +420,7 @@ SHOTS.I1 = {   // CU: the scoffer speechless — jaw dropped, eyes wide, the fan
       const fy = 760 + 900 * ss(seg(lk, .7, 1.6)) ** 2, fa = -PI / 2 - .6 + seg(lk, .7, 1.6) * 3;
       tool(m, 'fan', 1380, fy, fa, 3.2, 1e9, { open: 1 - seg(lk, .7, 1.2) });
       // the red sunrise behind him, a thin glow on the carved sky
-      WC.plate(c, [WC.ellipse(1640, 60, 300, 220, 40)], .45);
+      { const gr = c.createRadialGradient(1900, 40, 40, 1900, 40, 760); gr.addColorStop(0, 'rgba(0,0,0,.75)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = gr; c.fillRect(900, -300, 1400, 1300); }
     });
   },
   ev: () => [{ lt: .2, type: 'bonk', g: 1 }, { lt: 1.2, type: 'fan_drop' }],
@@ -431,7 +431,7 @@ SHOTS.I2 = {   // CU: Yu Gong at peace, eyes closed, a red rim on his beard
     plate(g, t, lt, sh, { x: PW / 2, y: PH / 2, z: lerp(1.02, 1.0, lt / 2.2) }, (m, c) => {
       ST.carve(m, roadPlate().sky);
       drawFace(m, mul(T(PW / 2 + 30, 400), S(1.15)), 'yugong', e);
-      WC.plate(c, [[[1260, -100], [2000, -100], [2000, 1100], [1240, 1100], [1190, 600], [1230, 200]]], .6);
+      { const gr = c.createRadialGradient(1950, 200, 60, 1950, 200, 900); gr.addColorStop(0, 'rgba(0,0,0,.8)'); gr.addColorStop(.6, 'rgba(0,0,0,.35)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = gr; c.fillRect(800, -300, 1500, 1500); }
     });
   },
   ev: () => [],

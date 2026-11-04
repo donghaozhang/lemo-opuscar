@@ -320,7 +320,10 @@ SHOTS.C4 = {
       // the pick: swings in from upper left (anticipation inside the cut), strikes, recoils
       const ang = key([[0, -1.35], [HIT, -.15], [HIT + .1, -.24], [HIT + .35, -.6], [1.43, -.75]], lt, x => x);
       const hx = ix - 250 * Math.cos(ang) * 0 , pv = [ix - 520, iy - 260];
-      tool(m, 'pick', ix - 600 * Math.cos(ang + .38), iy - 600 * Math.sin(ang + .38) + 60, ang + .38, 2.4, 1e9);
+      { const px = ix - 600 * Math.cos(ang + .38), py = iy - 600 * Math.sin(ang + .38) + 60;   // a carved white halo so the black pick reads on the dark rock
+        m.save(); m.translate(px, py); m.rotate(ang + .38); m.scale(2.4, 2.4);
+        INK.taper(m, [[-40, 0], [250, 0]], 34, '#fff', { spline: false, a: .02, b: .02 }); INK.poly(m, [[214, -24], [266, -28], [278, -110], [258, -128], [264, 0], [270, 70], [244, 128], [214, 60]], '#fff'); m.restore();
+        tool(m, 'pick', px, py, ang + .38, 2.4, 1e9); }
     });
   },
   ev: () => [{ lt: .18, type: 'pick_hit', g: 1.2 }],
