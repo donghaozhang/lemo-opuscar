@@ -94,7 +94,7 @@ function mkPoly(pts, col, o = {}) {
 }
 function drawPoly(c, s, p, col, am) {
   const cc = col || s.col; let x0 = 1e9, x1 = -1e9; for (const [x] of s.pts) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); }
-  c.save(); if (p < 1) { c.beginPath(); c.rect(x0 - 10, -1e5, (x1 - x0 + 20) * p, 2e5); c.clip(); }
+  c.save(); if (p < 1) { const R = x0 - 30 + (x1 - x0 + 60) * p; c.beginPath(); c.moveTo(-1e5, -1e5); for (let y = -1e5; y <= 1e5; y += 2e5 / 60) c.lineTo(R + (vnoise(y * .013 + x0 * .01) - .5) * 70, y); c.lineTo(-1e5, 1e5); c.closePath(); c.clip(); }
   for (let k = 0; k < s.passes; k++) {
     c.beginPath(); s.pts.forEach(([x, y], i) => { const j = s.J[k][i]; i ? c.lineTo(x + j[0], y + j[1]) : c.moveTo(x + j[0], y + j[1]); }); c.closePath();
     c.fillStyle = rgba(cc, s.a / s.passes * 1.6 * am); c.fill();

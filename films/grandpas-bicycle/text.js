@@ -22,8 +22,8 @@ function hand(ctx, id, txt, x, y, p, o = {}) {
 function mono(ctx, id, txt, x, y, p, o = {}) {
   if (p <= 0) return;
   const size = o.size || 26;
-  ctx.save(); ctx.font = `500 ${size}px ${FONT_MONO}`; ctx.letterSpacing = `${Math.round(size * .18)}px`; ctx.textAlign = o.align || 'left'; ctx.textBaseline = 'middle';
-  const w = ctx.measureText(txt).width, x0 = o.align === 'right' ? x - w : o.align === 'center' ? x - w / 2 : x;
+  ctx.save(); ctx.font = `500 ${size}px ${FONT_MONO}`; const ls = Math.round(size * .18); ctx.letterSpacing = `${ls}px`; ctx.textAlign = o.align || 'left'; ctx.textBaseline = 'middle';
+  const w = ctx.measureText(txt).width + ls * txt.length, x0 = o.align === 'right' ? x - w : o.align === 'center' ? x - w / 2 : x;
   ctx.beginPath(); ctx.rect(x0 - 6, y - size, (w + 12) * eo(p), size * 2); ctx.clip();
   ctx.shadowColor = rgba(PAPERC, .95); ctx.shadowBlur = 10;
   ctx.fillStyle = rgba(o.col || BROWNT, o.a ?? .9); ctx.fillText(txt, x, y); ctx.fillText(txt, x, y);
@@ -34,8 +34,8 @@ function mono(ctx, id, txt, x, y, p, o = {}) {
 function serif(ctx, id, txt, x, y, p, o = {}) {
   if (p <= 0) return;
   const size = o.size || 40, wgt = o.w || 400;
-  ctx.save(); ctx.font = `${wgt} ${size}px ${FONT_SERIF}`; ctx.letterSpacing = `${o.track ?? Math.round(size * .06)}px`; ctx.textAlign = o.align || 'center'; ctx.textBaseline = 'middle';
-  const w = ctx.measureText(txt).width, x0 = o.align === 'left' ? x : o.align === 'right' ? x - w : x - w / 2;
+  ctx.save(); ctx.font = `${wgt} ${size}px ${FONT_SERIF}`; const ls = o.track ?? Math.round(size * .06); ctx.letterSpacing = `${ls}px`; ctx.textAlign = o.align || 'center'; ctx.textBaseline = 'middle';
+  const w = ctx.measureText(txt).width + ls * txt.length, x0 = o.align === 'left' ? x : o.align === 'right' ? x - w : x - w / 2;
   ctx.beginPath(); ctx.rect(x0 - 10, y - size * .8, (w + 20) * (o.wipe === false ? 1 : eo(p)), size * 1.6); ctx.clip();
   ctx.globalAlpha *= (o.wipe === false ? ss(p) : 1);
   ctx.shadowColor = rgba(PAPERC, 1); ctx.shadowBlur = Math.max(10, size * .4);

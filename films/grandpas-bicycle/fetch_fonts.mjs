@@ -2,7 +2,7 @@
 // the CJK characters used in the page's scripts; IBM Plex Mono for measured labels. Run from the project folder: node fetch_fonts.mjs
 import fs from 'fs';
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
-const src = ['text.js', 'timeline.js', 'main.js', 'scenes.js'].filter(f => fs.existsSync(f)).map(f => fs.readFileSync(f, 'utf8')).join('');
+const src = ['text.js', 'timeline.js', 'main.js', 'shots.js', 'sheets.js'].filter(f => fs.existsSync(f)).map(f => fs.readFileSync(f, 'utf8')).join('');
 const cjk = [...new Set([...src].filter(c => c.charCodeAt(0) > 0x2e80))].join('');
 const latin = '0123456789 .,:!?()·—«»《》（）：！，。、abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+-×≈°%kmc';
 const chars = [...new Set(cjk + latin)].join('');

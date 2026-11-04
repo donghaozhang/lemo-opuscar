@@ -2,16 +2,19 @@
 // Profile view: world x along the lane (100 px per metre), ground at y = 0, the wall behind. Deep view: looking down the
 // lane in one-point perspective, for the shots about distance. Objects are built as strokes at the shot's zoom and cached.
 const LANE = { x0: -800, x1: 5600, end: 5000, wallH: 230, gate: 250, window: 470, lamp: 4900 };
-const SPR = new Map();
+const SPR = new Map(), ZDIRECT = 2.2;
+// zoom quantised to ten steps per octave: a push rebuilds its sprites a few times, not every frame
+const zq = z => Math.pow(2, Math.round(Math.log2(z) * 10) / 10);
 function spriteAt(key, z, build) {
   const k = key + '@' + z.toFixed(3); let s = SPR.get(k);
-  if (!s) { const S = build(z); s = { S, spr: sprite(S) }; SPR.set(k, s); if (SPR.size > 400) { const first = SPR.keys().next().value; SPR.delete(first); } }
+  if (!s) { const S = build(z); s = { S, spr: z > ZDIRECT ? bboxOf(S) : sprite(S) }; SPR.set(k, s); if (SPR.size > 160) { const first = SPR.keys().next().value; SPR.delete(first); } }
   return s;
 }
-// draw a cached object at screen (X, Y) with paint-in progress p (1 = finished sprite)
-function drawObj(ctx, obj, X, Y, p = 1, alpha = 1, skew = 0) {
-  ctx.setTransform(1, 0, skew, 1, X, Y); ctx.globalAlpha = alpha;
-  if (p >= 1) ctx.drawImage(obj.spr.cv, obj.spr.x0, obj.spr.y0); else drawList(ctx, obj.S, p);
+function bboxOf(S) { const [x0, y0, x1, y1] = bbox(S); return { cv: null, x0, y0, x1, y1 }; }
+// draw a cached object at screen (X, Y) with paint-in progress p (1 = finished sprite); s = residual scale (z / zq)
+function drawObj(ctx, obj, X, Y, p = 1, alpha = 1, skew = 0, s = 1) {
+  ctx.setTransform(s, 0, skew * s, s, X, Y); ctx.globalAlpha = alpha;
+  if (p >= 1 && obj.spr.cv) ctx.drawImage(obj.spr.cv, obj.spr.x0, obj.spr.y0); else if (p >= 1) { for (const st of obj.S) drawS(ctx, st); } else drawList(ctx, obj.S, p);
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1;
 }
 // the objects of the profile lane for one season (world placement; builders make strokes in local px at scale z)
@@ -29,14 +32,14 @@ function laneWorld(season) {
     O.push({ kind: 'end', x: LANE.end, y: 0, par: .9, order: 0, key: 'end' + season, build: z => withSeed(77, () => { const S = []; S.push(mk(qcurve(0, -LANE.wallH * .9 * z, 420 * z, -LANE.wallH * .9 * z, 0, 8), LANE.wallH * 1.8 * z, mixc(P.wall2, P.sky, .35), { prof: 'even', nb: 0, a: .55, rib: 1, rough: .05 })); S.push(mk(qcurve(0, -LANE.wallH * 1.75 * z, 420 * z, -LANE.wallH * 1.75 * z, 0, 8), 8 * z, mixc(P.wall2, INKB, .4), { prof: 'even', nb: 3, a: .8 })); return S; }) });
     O.push({ kind: 'lamp', x: LANE.lamp, y: 0, par: .92, order: 2, key: 'lamp' + season, build: z => withSeed(78, () => { const S = []; lampStrokes(S, 0, 330 * z, z, season === 'winter' ? 1 : 0); return S; }) });
     O.push({ kind: 'gate', x: LANE.gate, y: 0, par: .9, order: 1, key: 'gate' + season, build: z => withSeed(79, () => { const S = []; gateStrokes(S, 0, LANE.wallH * .95 * z, season, z); return S; }) });
-    if (season === 'winter') O.push({ kind: 'window', x: LANE.window, y: 0, par: .9, order: 1, key: 'win' + season, build: z => withSeed(80, () => { const S = []; S.push(mk(qcurve(0, -150 * z, 60 * z, -150 * z, 0, 5), 70 * z, '#e8b764', { prof: 'even', nb: 0, a: .9, rib: 1, rough: .03 })); S.push(mk(qcurve(-4 * z, -115 * z, 64 * z, -115 * z, 0, 5), 7 * z, '#4a3a2e', { prof: 'even', nb: 0, a: .9 })); S.push(mk(qcurve(-4 * z, -187 * z, 64 * z, -187 * z, 0, 5), 7 * z, '#4a3a2e', { prof: 'even', nb: 0, a: .9 })); S.push(mk(qcurve(30 * z, -185 * z, 30 * z, -117 * z, 0, 5), 4 * z, '#4a3a2e', { prof: 'even', nb: 0, a: .8 })); return S; }) });
+    if (season === 'winter') O.push({ kind: 'window', x: LANE.window, y: 0, par: .9, order: 1, key: 'win' + season, build: z => withSeed(80, () => { const S = []; S.push(mkPoly([[0, -60 * z], [110 * z, -60 * z], [110 * z, -220 * z], [0, -220 * z]], '#e8b764', { a: .85, jit: 2 * z })); for (const [ax, ay, bx, by, w] of [[-5, -57, 115, -57, 8], [-5, -223, 115, -223, 8], [-4, -60, -4, -220, 7], [114, -60, 114, -220, 7], [55, -60, 55, -220, 4], [0, -132, 110, -132, 4]]) S.push(mk(qcurve(ax * z, ay * z, bx * z, by * z, 0, 5), w * z, '#4a3a2e', { prof: 'flat', nb: 0, a: .9 })); S.push(mk(qcurve(-8 * z, -230 * z, 118 * z, -230 * z, 0, 5), 9 * z, P.snow, { prof: 'flat', nb: 0, a: .95, rough: .3 })); return S; }) });
     // trees behind the wall (crowns above the coping) and a few on the lane side near the far end
     let k = 0;
     for (let x = 600; x < LANE.end - 200; x += rnd(520, 700), k++) {
       const sc = rnd(.9, 1.15), seedK = 300 + k;
       O.push({ kind: 'tree', x, y: -140, par: .86, order: 1, sway: .006, key: 'tree' + season + k, build: z => withSeed(seedK, () => laneTree(sc * z, season).S) });
     }
-    for (const [x, sc, sd] of [[3300, 1.2, 401], [4500, 1.1, 402]]) O.push({ kind: 'tree', x, y: 0, par: 1, order: 4, sway: .006, key: 'ftree' + season + x, build: z => withSeed(sd, () => laneTree(sc * z, season).S) });
+    for (const [x, sc, sd] of [[2900, 1.2, 401], [3900, 1.1, 402]]) O.push({ kind: 'tree', x, y: 0, par: 1, order: 4, sway: .006, key: 'ftree' + season + x, build: z => withSeed(sd, () => laneTree(sc * z, season).S) });
     // ground: a band of wash in segments with texture
     for (let x = LANE.x0; x < LANE.x1; x += 600) {
       const seedK = 2000 + x;
@@ -46,9 +49,10 @@ function laneWorld(season) {
         S.push(mkPoly([[-2, 120 * z], [602 * z, 120 * z], [602 * z, 215 * z], [-2, 215 * z]], P.ground, { a: .25, jit: 3 * z }));
         S.push(mkPoly([[-2, 205 * z], [602 * z, 205 * z], [602 * z, 300 * z], [-2, 300 * z]], P.ground, { a: .1, jit: 4 * z }));
         S.push(mk(qcurve(-2, 3 * z, 602 * z, 3 * z, rnd(-2, 2) * z, 10), 5 * z, mixc(P.ground, INKB, .45), { prof: 'flat', nb: 4, a: .75, rough: .3 }));  // the kerb line
-        for (let i = 0; i < 14; i++) { const xx = rnd(0, 600) * z, yy = rnd(12, 130) * z; S.push(mk(qcurve(xx, yy, xx + rnd(20, 60) * z, yy + rnd(-2, 2) * z, rnd(-3, 3), 4), rnd(2, 4) * z, mixc(P.ground, INKB, .3), { prof: 'leaf', nb: 0, a: .35 })); }
-        if (season === 'school' || season === 'leaving') for (let i = 0; i < 16; i++) { const xx = rnd(0, 600) * z, yy = rnd(8, 120) * z; S.push(mk(qcurve(xx, yy, xx + rnd(6, 10) * z, yy + rnd(-1, 1) * z, 1, 3), rnd(4, 6) * z, pick(P.leaves), { prof: 'leaf', nb: 0, a: .7 })); }
-        if (season === 'spring') for (let i = 0; i < 12; i++) { const xx = rnd(0, 600) * z, yy = rnd(8, 120) * z; S.push(mk(qcurve(xx, yy, xx + 5 * z, yy, 0, 3), 4 * z, pick(P.blossom), { prof: 'leaf', nb: 0, a: .8 })); }
+        if (z < 2.6) for (let i = 0; i < 14; i++) { const xx = rnd(0, 600) * z, yy = rnd(12, 130) * z; S.push(mk(qcurve(xx, yy, xx + rnd(20, 60) * z, yy + rnd(-2, 2) * z, rnd(-3, 3), 4), rnd(2, 4) * z, mixc(P.ground, INKB, .3), { prof: 'leaf', nb: 0, a: .35 })); }
+        if (z >= 2.6) for (let i = 0; i < 6; i++) { const xx = rnd(0, 600) * z, yy = rnd(12, 130) * z; S.push(mk(qcurve(xx, yy, xx + rnd(80, 200) * z, yy + rnd(-3, 3) * z, rnd(-3, 3), 6), rnd(3, 6) * z, mixc(P.ground, INKB, .12), { prof: 'leaf', nb: 4, a: .14 })); }
+        if ((season === 'school' || season === 'leaving') && z < 4) for (let i = 0; i < 16; i++) { const xx = rnd(0, 600) * z, yy = rnd(8, 120) * z; S.push(mk(qcurve(xx, yy, xx + rnd(6, 10) * z, yy + rnd(-1, 1) * z, 1, 3), rnd(4, 6) * z, pick(P.leaves), { prof: 'leaf', nb: 0, a: .7 })); }
+        if (season === 'spring' && z < 4) for (let i = 0; i < 12; i++) { const xx = rnd(0, 600) * z, yy = rnd(8, 120) * z; S.push(mk(qcurve(xx, yy, xx + 5 * z, yy, 0, 3), 4 * z, pick(P.blossom), { prof: 'leaf', nb: 0, a: .8 })); }
         if (season === 'winter') { S.push(mkPoly([[-2, 0], [602 * z, 0], [602 * z, 125 * z], [-2, 125 * z]], P.snow, { a: .8, jit: 3 * z })); S.push(mk(qcurve(-2, 4 * z, 602 * z, 4 * z, 0, 8), 10 * z, P.snow, { prof: 'flat', nb: 0, a: .9, rough: .3 })); }
         return S; }) });
     }
@@ -62,14 +66,14 @@ function drawLane(ctx, season, cam, t, o = {}) {
   // sky: a wash across the top of the sheet, stronger in winter
   const skyA = (o.skyA ?? (season === 'winter' ? .7 : season === 'leaving' ? .45 : .32)) * clamp(reveal(cam.x));
   if (skyA > 0) { const gy = sy(cam, -LANE.wallH * 1.2); const g = ctx.createLinearGradient(0, 0, 0, Math.max(60, gy)); g.addColorStop(0, rgba(P.sky, skyA)); g.addColorStop(1, rgba(P.sky, 0)); ctx.fillStyle = g; ctx.fillRect(0, 0, 1920, Math.max(60, gy)); }
-  const W = laneWorld(season);
+  const W = laneWorld(season), zz = zq(z), s = z / zz;
   for (const ob of W) {
     const X = (ob.x - cam.x * ob.par) * z + 960, Y = (ob.y - cam.y) * z + 540;
-    const obj = spriteAt(ob.key, z, ob.build);
-    if (X + obj.spr.x1 < -80 || X + obj.spr.x0 > 2000 || Y + obj.spr.y0 > 1160 || Y + obj.spr.y1 < -80) continue;
+    const obj = spriteAt(ob.key, zz, ob.build);
+    if (X + obj.spr.x1 * s < -80 || X + obj.spr.x0 * s > 2000 || Y + obj.spr.y0 * s > 1160 || Y + obj.spr.y1 * s < -80) continue;
     const p = reveal(ob.x, ob.kind); if (p <= 0) continue;
     const sk = ob.sway && p >= 1 ? ob.sway * (Math.sin(t * 1.15 + ob.x) + .4 * Math.sin(t * 2.7 + ob.x * 2)) : 0;
-    drawObj(ctx, obj, X, Y, p, ob.kind === 'tree' && ob.par < 1 ? .9 : 1, sk);
+    drawObj(ctx, obj, X, Y, p, (ob.kind === 'tree' && ob.par < 1 ? .9 : 1) * (o.alpha ?? 1), sk, s);
   }
 }
 // season weather: falling leaves, snow, petals (screen space, deterministic)

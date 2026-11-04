@@ -1,0 +1,26 @@
+《外公的单车》 Grandpa's Bicycle — asset sources and licences
+================================================================
+
+MUSIC
+  Original score written for this film (score.py), rendered with the library's sampler (core/audio/sampler.py) from:
+  Piano: "Salamander Grand Piano V3" by Alexander Holm, licensed under CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/)
+  Samples (CC0): FreePats project (freepats.zenvoid.org) — nylon-string guitar; VS Chamber Orchestra: Community Edition
+  (Versilian Studios / Sam Gossner) — clarinet, flute, oboe, violin, viola and cello sections; Versilian Community Sample
+  Library (Versilian Studios) — glockenspiel.
+
+VOICE
+  None. The film has no narration or spoken dialogue; the two spoken lines appear as handwritten notes and in the .srt.
+
+SOUND EFFECTS AND AMBIENCE
+  All synthesised in code for this film (mix.py, numpy/scipy): brush and pencil on paper, page turns, the bicycle bell,
+  chain, falls, steps, cloth, cicadas, sparrows, songbirds, wind, a clock, a distant train, mist. No recordings.
+
+FONTS (SIL Open Font License 1.1, downloaded from Google Fonts by fetch_fonts.mjs into fonts/)
+  Noto Serif SC — Google / Adobe (subset to the characters used): the title and the stamp
+  Long Cang (龙藏体) — zihun / Google Fonts: the handwritten journal notes and the two spoken lines
+  IBM Plex Mono — IBM / Mike Abbink, Bold Monday: the measured labels
+
+PAPER, STROKES, FIGURES, PROPS, THE LANE
+  All generated in code for this film (paper.py, engine.js, figures.js, props.js, lane.js, acting.js, shots.js).
+  engine.js is the Watercolor Brush style's stroke engine from the Lemo-Opuscar library (MIT), extended with a flat profile
+  and polygon washes. No photographs, samples or third-party artwork.

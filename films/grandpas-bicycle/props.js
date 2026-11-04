@@ -68,9 +68,9 @@ function bellStrokes(S, cx, cy, r, dir, lever = 0) {
 function stickStrokes(S, x0, y0, len, z, dir, lean = 0) {
   // a hooked cane: the shaft, a curved handle at the top, a rubber foot
   const top = [x0 + Math.sin(lean) * len * dir, y0 - Math.cos(lean) * len];
-  const s = mk(qcurve(x0, y0, top[0], top[1], 0, 8), 3.2 * z, '#5a3b25', { prof: 'even', nb: z > 1.5 ? 3 : 0, a: .92, rib: .85 });
+  const s = mk(qcurve(x0, y0, top[0], top[1], 0, 8), 4.6 * z, '#7a5436', { prof: 'even', nb: z > 1.5 ? 3 : 0, a: .95, rib: .9 });
   S.push(s, edgeOf(s, -1, Math.max(.8, .5 * z), INKB, .5));
-  S.push(mk(qctrl(top[0], top[1], top[0] - dir * 2 * z, top[1] - 12 * z, top[0] - dir * 13 * z, top[1] - 6 * z, 8), 3.4 * z, '#5a3b25', { prof: 'even', nb: 0, a: .92 }));
+  S.push(mk(qctrl(top[0], top[1], top[0] - dir * 2 * z, top[1] - 14 * z, top[0] - dir * 16 * z, top[1] - 7 * z, 8), 4.8 * z, '#7a5436', { prof: 'even', nb: 0, a: .95 }));
   dab(S, x0, y0 + 1 * z, 2.6 * z, 1.6 * z, INKB, .85);
 }
 function satchelStrokes(S, cam, R, C, dir) {

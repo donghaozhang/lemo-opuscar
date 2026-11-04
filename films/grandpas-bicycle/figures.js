@@ -118,7 +118,7 @@ function drawHead(S, C, hc, r, dir, turn, E, z, o = {}) {
   if (C.hair === 'long') { back(-dir * r * .45, r * .9, r * .55, r * 1.3, .92); back(-dir * r * .3, r * 1.6, r * .45, r * .9, .85); }
   if (C.hair === 'tied') { back(-dir * r * .95, r * .1, r * .38, r * .42, .95); }
   if (C.hair === 'bob') { back(-dir * r * .25, r * .35, r * .95, r * .95, .9); }
-  if (C.hair === 'pigtails') { const p = L(-dir * r * .95 * (1 - turn * .35), r * .25); dab(S, p[0], p[1], r * .22, r * .5, hairCol, .95, tilt + .35 * dir); const q = L(-dir * r * 1.0 * (1 - turn * .35), r * .62); dab(S, q[0], q[1], r * .16, r * .08, '#c8442a', .95, tilt); }
+  if (C.hair === 'pigtails') { const wd = o.wind || 0; const p = L(-dir * r * (.95 * (1 - turn * .35) + wd * .3), r * .25 - wd * r * .15); dab(S, p[0], p[1], r * .22, r * .5, hairCol, .95, tilt + .35 * dir + wd * .8 * dir); const q = L(-dir * r * (1.0 * (1 - turn * .35) + wd * .1), r * .62 - wd * r * .05); dab(S, q[0], q[1], r * .16, r * .08, '#c8442a', .95, tilt); }
   // face: a wash and a lighter inner dab
   const f1 = L(0, r * .05); dab(S, f1[0], f1[1], r * .92, r * 1.02, skin, .95, tilt, r > 30 ? 3 : 0);
   const f2 = L(dir * r * .12, r * .3); dab(S, f2[0], f2[1], r * .5, r * .48, mixc(skin, SKIN2, .3), .3, tilt);
@@ -169,7 +169,7 @@ function drawHead(S, C, hc, r, dir, turn, E, z, o = {}) {
     for (let i = 0; i <= 6; i++) { const u = i / 6 - .5; pts.push(L(cx0 + u * ew * 2.1, lidY + (E.open > .12 ? -Math.cos(u * Math.PI) * eh * .25 : Math.cos(u * Math.PI) * eh * .15))); }
     S.push(mk(pts, Math.max(.9, r * .055), INKF, { prof: 'even', nb: 0, a: .85 * vis, rough: .2 }));
     if (E.open < .12) { }
-    else { const lw = []; for (let i = 0; i <= 5; i++) { const u = i / 5 - .5; lw.push(L(cx0 + u * ew * 1.8, ey + eh * .95 - Math.cos(u * Math.PI) * eh * .1)); } S.push(mk(lw, Math.max(.6, r * .03), INKF, { prof: 'even', nb: 0, a: .35 * vis })); }
+    else { const lw = []; for (let i = 0; i <= 5; i++) { const u = i / 5 - .5; lw.push(L(cx0 + u * ew * 1.8, ey + eh * .85 + Math.cos(u * Math.PI) * eh * .12)); } S.push(mk(lw, Math.max(.6, r * .03), INKF, { prof: 'even', nb: 0, a: .35 * vis })); }
     // brow
     const inner = cx0 - dir * ew * .9 * (exr * dir > 0 ? 1 : -1), outer = cx0 + dir * ew * 1.1 * (exr * dir > 0 ? 1 : -1);
     const by = -r * .4 - E.browH * r * .14, bi = by + E.brow * r * -.13, bo = by + E.brow * r * .09;
@@ -181,7 +181,7 @@ function drawHead(S, C, hc, r, dir, turn, E, z, o = {}) {
   else { const n0 = L(dir * r * .12, r * .08), n1 = L(dir * r * .2, r * .26); S.push(mk([n0, n1], Math.max(1, r * .055), mixc(skin, INKF, .45), { prof: 'tip', nb: 0, a: .5 })); }
   // mouth
   { const mx = dir * r * lerp(.62, .02, turn), my = r * .5, mw = r * .26 * (.6 + .4 * turn) * (1 + E.mouthO * .2), cur = E.smile * r * .09;
-    const pts = []; for (let i = 0; i <= 6; i++) { const u = i / 6 - .5; pts.push(L(mx + u * mw * 2, my - Math.cos(u * Math.PI) * cur + (E.smile > 0 ? 0 : 0))); }
+    const pts = []; for (let i = 0; i <= 6; i++) { const u = i / 6 - .5; pts.push(L(mx + u * mw * 2, my + Math.cos(u * Math.PI) * cur - cur * .5)); }
     S.push(mk(pts, Math.max(1, r * .055), '#7a3b2e', { prof: 'even', nb: 0, a: .85, rough: .2 }));
     if (E.mouthO > .2) { const op = L(mx, my + cur * .3 + r * .04); dab(S, op[0], op[1], mw * .7, r * .1 * E.mouthO, '#8a3a2e', .85, tilt); }
   }
@@ -226,7 +226,7 @@ function drawFigure(ctx, C, P, cam, o = {}) {
     if (P.knee) { const k = sp(cam, L0.knee); dab(S1, k[0] + dir * 1.5 * z, k[1], 3.2 * z, 2.6 * z, '#b8432e', .55 * P.knee); }
     // head
     const hc = sp(cam, R.head);
-    drawHead(S2, C, hc, C.head * z, dir, turn, E, z, { tilt: (R.neckA) * dir * .6 + (P.headRoll || 0) });
+    drawHead(S2, C, hc, C.head * z, P.headDir ?? dir, turn, E, z, { tilt: (R.neckA) * dir * .6 + (P.headRoll || 0), wind: P.wind || 0 });
     // near arm (over the torso)
     const A0 = R.arms[0];
     limbS(S2, sp(cam, A0.root), sp(cam, A0.elbow), W('armW') * 1.15, C.top, z);
