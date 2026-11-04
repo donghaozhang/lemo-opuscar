@@ -4,3 +4,4 @@
 12:11Z cast rig, close-up faces, props, world plates in progress
 12:22Z all 44 shots draw; model/expression sheets + style frames in stills/
 12:26Z score (music/score.py) + Foley/mix (mix.py) written; first full render starting
+12:36Z first full render: frames 1800/3488
