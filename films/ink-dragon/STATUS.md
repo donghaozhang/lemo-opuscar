@@ -24,3 +24,4 @@ SwiftShader (software), 4 cores. Sample libraries vsco2ce + vcsl fetched. Music 
 | 11:38 | final render | frames 1800 / 3168 |
 | 11:48 | final render | frames 2340 / 3168 |
 | 11:58 | final render | frames 2880 / 3168 |
+| 12:12 | final + delivery | final render muxed: −14.0 LUFS, TP −3.3 dBTP, no black frames; readcheck 7/7, cue check 45/45 within 75 ms, 31/31 glyphs; deliveries/ink-dragon: final.mp4 65 MB, final-720p.mp4 24 MB, poster, srt, README |

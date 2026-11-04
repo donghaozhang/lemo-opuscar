@@ -195,7 +195,7 @@ cloud is seen), L-cut at 104 (rain tail over the studio).
   hidden-tip entries and tapered exits, written on the painting in a vertical column beside the colophon, world-anchored;
   the vermilion 白文 seal (lines knocked out of an irregular red square, ink-paste speckles) is pressed at 125.0. The seal
   reads 墨龙 (two characters).
-- No LemoLab credit, no watermark: this is the owner's film.
+- No library credit, no watermark: this is the owner's film.
 
 ## 10. Checks before delivery
 
