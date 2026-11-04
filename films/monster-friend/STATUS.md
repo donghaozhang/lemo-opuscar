@@ -13,3 +13,4 @@ Sample libraries: vsco2ce, vcsl (fetched earlier), freepats (ukulele, nylon guit
 12:34 UTC · model sheet and expression sheet rendered (stills/modelsheet.jpg, stills/expressions.jpg); eyes, brows and 13+13 expressions checked
 13:22 UTC · film script written (36 shots, 7 pages, page turns); style frames across every page checked (stills/styleframes_*.jpg)
 13:31 UTC · score (6 sections, 68 cues within 75 ms), Foley mix (183 events), events.json; first full render starting (3360 frames)
+| 13:42 | render 1 | frames 360 / 3360 |
