@@ -20,3 +20,4 @@ Sample libraries: vsco2ce, vcsl (fetched earlier), freepats (ukulele, nylon guit
 | 14:22 | render 1 | frames 1920 / 3360 |
 | 14:32 | render 1 | frames 2340 / 3360 |
 | 14:42 | render 1 | frames 2700 / 3360 |
+| 14:52 | render 1 | frames 3060 / 3360 |
