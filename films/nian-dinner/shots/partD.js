@@ -292,7 +292,7 @@ ev(TT.paste, 'pat'); ev(TT.paste + .1, 'pat'); ev(TT.sneeze2, 'sneezesmall'); ev
 const EC = {};
 function endBits() { if (EC.l) return EC; EC.l = [...END].map((c, i) => textPiece(c, 140, PAL.red, 'Ma Shan Zheng', 400, 80 + i)); EC.w = EC.l.reduce((s, p) => s + p.w - 24 + 14, 0); EC.top = strip(900, 25); EC.seal = seal('福', 90, 27); return EC; }
 export function shotOutsideEnd(g, t, sh) {
-  const V = kit(), ec = endBits(), u = seg(t, TT.outside, TT.endCard + 1.0), C = cam(HERO.x - 140 - 160 * eio(u), GROUND - 60 + 90 * eio(u), lerp(1.25, .7, eio(u)));
+  const V = kit(), ec = endBits(), u = seg(t, TT.outside, TT.endCard + 1.0), C = cam(HERO.x - 140 - 160 * eio(u), GROUND - 160 + 30 * eio(u), lerp(1.25, .82, eio(u)));
   const hp = V.houses[HERO.i], h = HOUSES[HERO.i];
   const texts = [];
   const WM = mul(mul(C, mul(T(h.x, GROUND + h.g), S(h.s))), T(hp.win.x, hp.win.y)), wc = pt(WM, [0, 0]), p = cutPieces().full, sc = hp.win.h / (2 * CR) * 1.3;
@@ -309,7 +309,7 @@ export function shotOutsideEnd(g, t, sh) {
     ec.l.forEach((p, i) => { const s = pop(t, TT.endCard + i / 4, 1.18); if (s) put(g, p, [s, 0, 0, s, x + (1 - s) * p.w / 2, y0 + (1 - s) * p.h / 2], { shadow: 1.4 }); x += p.w - 24 + 14; });
     if (t >= TT.endCard + 1.2) { const s = pop(t, TT.endCard + 1.2, 1.5); put(g, ec.seal, [s, 0, 0, s, 960 + ec.w / 2 + 24 - 45 * (s - 1), y0 + 130 - 45 * (s - 1)], { shadow: 1 }); }
     if (t >= TT.endCard) texts.push({ id: 'end', text: END, x0: 960 - ec.w / 2, y0, x1: 960 + ec.w / 2, y1: y0 + 180 });
-    if (t >= TT.endCard + 1.4) { g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = E_(t, TT.endCard + 1.4, TT.endCard + 1.9); ink(g, '字体：Noto Serif SC · Ma Shan Zheng（OFL）  乐器采样：VSCO 2 CE · VCSL · Karoryfer（CC0）', 960, 1040, 22, '#fff1d6'); g.restore(); if (t >= TT.endCard + 1.9) texts.push({ id: 'credits', text: '字体：Noto Serif SC · Ma Shan Zheng（OFL）  乐器采样：VSCO 2 CE · VCSL · Karoryfer（CC0）', x0: 300, y0: 1010, x1: 1620, y1: 1050 }); }
+    if (t >= TT.endCard + 1.4) { g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = E_(t, TT.endCard + 1.4, TT.endCard + 1.9); ink(g, '字体 OFL · 采样 CC0', 960, 1040, 24, '#fff1d6'); g.restore(); if (t >= TT.endCard + 1.9) texts.push({ id: 'credits', text: '字体 OFL · 采样 CC0', x0: 760, y0: 1010, x1: 1160, y1: 1050 }); }
   }
   return texts;
 }

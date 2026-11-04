@@ -13,7 +13,7 @@ export const SECS = [
 ];
 let acc = 0;
 for (const s of SECS) { s.t = acc; s.beat = 60 / s.bpm; s.dur = s.beats * s.beat; acc += s.dur; }
-export const DUR = Math.ceil(acc * 4) / 4 + .5;     // 144.75: the end card holds to the end
+export const DUR = Math.ceil(acc * 4) / 4 + 3.5;     // 147.75: the end card holds to the end
 const S = Object.fromEntries(SECS.map(s => [s.id, s]));
 export const tb = (id, b) => S[id].t + (b - 1) * S[id].beat;   // time of beat b (1-based) of section id; fractions allowed
 export const secAt = t => { for (let i = SECS.length - 1; i >= 0; i--) if (t >= SECS[i].t) return SECS[i]; return SECS[0]; };

@@ -156,11 +156,11 @@ zheng(HIT['eyes'], 'A5', 1.5, .5, .9, .4); wb(HIT['peek'], .6, 'c', 1.0, .3); wb
 # the offer: the groove returns gently; the gulp: a low suona "wump"; the clink: a small gong
 for rep in range(2): melody(HIT['offer'] + rep * 4 * B_D, SNEAK, 'pipa', B_D, .5, 0, .85, trem_min=9)
 for b in range(27, 31): wb(tb('D', b), .4, 'b', .85); wb(tb('D', b + .5), .3, 'c', .75)
-suona(HIT['gulp'], 'D4', .55, .7, 1.1, scoop=3.0, bright=.7); bd(HIT['gulp'], .8, 1.0); wb(HIT['gulp'], .6, 'c', 1.0, 0)
+suona(HIT['gulp'] - .07, 'D4', .55, .7, 1.1, scoop=3.0, bright=.7); bd(HIT['gulp'], .8, 1.0); wb(HIT['gulp'], .6, 'c', 1.0, 0)
 gong(HIT['clink'], 'small', .5, .9)
 # two faces: the suona's own playful tune, then the dizi laughs
 TH3 = [('D5', .5), ('E5', .5), ('F#5', .5), ('A5', .5), ('B5', 1), ('A5', .5), ('F#5', .5), ('E5', .5), ('D5', .5), ('E5', 1)]
-melody(HIT['nianHappy'] - .04, TH3, 'suona', B_D, .55, 0, .9); wb(HIT['nianHappy'], .9, 'a', 1.2, 0); drum(HIT['nianHappy'], 'large', .8, 1.1)
+melody(HIT['nianHappy'] - .09, TH3, 'suona', B_D, .55, 0, .9); wb(HIT['nianHappy'], .9, 'a', 1.2, 0); drum(HIT['nianHappy'], 'large', .8, 1.1)
 zheng_bars(HIT['nianHappy'], ['D', 'A'], B_D, .38, .85)
 groove(HIT['nianHappy'], 2, B_D, .5, .85, wbv=.45)
 for i in range(6): dizi(HIT['girlLaugh'] + i * .14, ['A5', 'B5'][i % 2], .12, .5, .7)
@@ -226,7 +226,7 @@ for i in range(6): drum(HIT['squat'] + i * .14, 'small_muted', .4 + .06 * i, .9)
 clash(HIT['lift'], 'crash', .95, 1.3); bd(HIT['lift'], 1.0, 1.3); tamtam(HIT['lift'] - .03, .5, 1.0)
 add(STEMS['winds'], glide(suona_tone('D5', 1.4, .75, scoop=.3), [(0, 0), (.5, 0), (.9, 7), (1.3, 7)], 1.3), HIT['lift'], 1.1, -.1)
 for i, p in enumerate(['D3', 'A3', 'D4', 'F#4', 'A4', 'D5']): zheng(HIT['free'] - .02 + i * .012, p, 2.5, .65, .9)
-clash(HIT['free'], 'short', .8, 1.1); bd(HIT['free'], 1.0, 1.2); suona(HIT['free'], 'D6', 1.2, .65, 1.0, scoop=1.0)
+clash(HIT['free'], 'short', .8, 1.1); bd(HIT['free'], 1.0, 1.2); suona(HIT['free'] - .07, 'D6', 1.2, .65, 1.0, scoop=1.0)
 dizi(HIT['free'], 'D6', 1.2, .5, .6)
 # the gallop downhill: x.xx x.xx on bass drum and frame drum, suona triumphant
 def gallop(t0, n):
@@ -271,7 +271,7 @@ for k in ['fireworks1', 'fireworks2']: clash(HIT[k], 'crash', .6, .9); gliss(HIT
 # the table: lighter, warm; the gulp; the paste; the sneeze; the smile
 melody(tb('I', 9), TH1[14:21], 'dizi', B_I, .5, 0, .8); melody(tb('I', 9), TH1[14:21], 'pipa', B_I, .5, 0, .8)
 zheng_bars(tb('I', 9), HARM1[4:6], B_I, .4, .9); groove(tb('I', 9), 2, B_I, .5, .85, wbv=.4)
-suona(HIT['gulp2'], 'D4', .5, .65, 1.0, scoop=3.0, bright=.7); bd(HIT['gulp2'], .8, 1.0); wb(HIT['gulp2'], .6, 'c', 1.0, 0)
+suona(HIT['gulp2'] - .12, 'D4', .5, .65, 1.0, scoop=3.0, bright=.7); bd(HIT['gulp2'], .8, 1.0); wb(HIT['gulp2'], .6, 'c', 1.0, 0)
 wb(HIT['paste'], .8, 'c', 1.1, 0)
 suona(HIT['sneeze2'] - .15, 'A5', .12, .4, .8, scoop=.4); suona(HIT['sneeze2'], 'D5', .35, .5, .9, scoop=2.5); wb(HIT['sneeze2'], .5, 'a', .9)
 for i in range(4): dizi(HIT['smile'] + i * .12, ['A5', 'B5'][i % 2], .1, .45, .65)

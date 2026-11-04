@@ -171,7 +171,7 @@ for e in ev:
     elif ty == 'gallop': add(fx, thud(1), t, G[ty], 0); add(fx, thud(.7), t + .18, G[ty] * .7, .2)
     elif ty == 'crunch': add(fx, crunch(1), t, G[ty] * gn, rng.random() * .3 - .15)
     elif ty == 'step': add(fx, step(1), t, G[ty] * gn, rng.random() * .3 - .15)
-    elif ty == 'sneeze': add(big, sneeze(1), t - .09, G[ty], -.1)
+    elif ty == 'sneeze': add(big, sneeze(1), t - .24, G[ty], -.1)
     elif ty == 'sneezesmall': add(fx, sneeze_small(1), t - .03, G[ty], -.2)
     elif ty == 'paperflap': add(fx, flap(1), t, G[ty], .2)
     elif ty == 'crackers': add(fx, crackers(e.get('dur', 1.2)), t, G[ty] * gn, .5)
