@@ -1,0 +1,19 @@
+《蒸笼爵士》 — credits for third-party material
+
+Fonts
+- ZCOOL QingKe HuangYou (站酷庆科黄油体), © The ZCOOL QingKe HuangYou Project Authors, SIL Open Font License 1.1 — titles, sign, headline.
+- ZCOOL XiaoWei (站酷小薇), © 2018 The ZCOOL XiaoWei Project Authors, SIL Open Font License 1.1 — title cards, door card.
+  Both from npm @fontsource/zcool-qingke-huangyou 5.3.0 and @fontsource/zcool-xiaowei 5.3.0; only the subset files covering the
+  characters used are included (fonts/used/). Licence texts: fonts/OFL-*.txt.
+
+Music
+- Original score (music/score.py). Sampled instruments via the library's core/audio/sampler.py:
+Samples (CC0): VS Chamber Orchestra: Community Edition (Versilian Studios), Versilian Community Sample Library (Versilian Studios)
+- Banjo: physically modelled (core/audio/pluck.py), no samples. Slide whistle, brushes: synthesised.
+
+Sound effects
+- All Foley and ambience synthesised in code (mix.py); no recordings.
+
+Pictures
+- Everything drawn in code. Rendering engine pieces (constant-width ink + line boil, film gate and damage, pie eyes, gloves, shoes,
+  steam, watercolour washes) come from this library's 1930s Rubber Hose Cartoon style demo (styles/rubber-hose/demo).

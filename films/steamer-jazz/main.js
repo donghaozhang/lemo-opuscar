@@ -190,7 +190,7 @@ function kitchen(t, o = {}) {
   // stove + flame + kettle
   C.stove({ x: 1880, y: 1180, k: 1.1, glow: 1, sx: br.sx, sy: br.sy });
   const fs = flameState(t); C.flame({ x: 1880, y: 1136, k: .38, t, ...fs });
-  const ks = kettleState(t); C.kettle({ x: 1880, y: 975 + (ks.y || 0), k: .7, t, sx: br.sx, sy: br.sy, ...ks });
+  const ks = kettleState(t); C.kettle({ ...ks, x: 1880, y: 975 + (ks.y || 0), k: .7, t, sx: br.sx, sy: br.sy });
   // steamer stack
   if (!o.noSteamer) { const st = steamerState(t); C.steamer({ x: 1640, y: 1180, k: .95, t, sx: br.sx, sy: br.sy, ...st, ...(o.steamer || {}) }); }
   // Wang
@@ -342,7 +342,7 @@ const SHOTS = {
     GRADE = NIGHT_KIT(t);
   },
   // the number: wide, everything dances
-  s10(t, lt) { setCam({ x: 1300, y: 760, z: .62 }); kitchen(t, { amp: .07, hop: 10 }); GRADE = NIGHT_KIT(t); },
+  s10(t, lt) { setCam({ x: lerp(1500, 1400, lt / 4), y: 860, z: .9 }); kitchen(t, { amp: .07, hop: 10 }); GRADE = NIGHT_KIT(t); },
   // medium: the pin rolls the dough flat
   s11(t, lt) {
     setCam({ x: 1330, y: 880, z: 2.3 });
@@ -489,7 +489,7 @@ const SHOTS = {
   },
   // trucking pan along the lane: the buns roll, the newsboy runs and stretches to catch each one on a note
   s27(t, lt) {
-    const camx = lerp(1300, 3100, ss(seg(lt, 0, 5.6))); setCam({ x: camx, y: 680, z: .8 }); bg('lane');
+    const camx = lerp(1300, 3100, ss(seg(lt, 0, 5.6))); setCam({ x: camx, y: 620, z: .95 }); bg('lane');
     const bx = lerp(1250, 3200, lt / 5.833);
     for (let i = 0; i < 8; i++) { const ct = 5 / 6 + i * .625; if (lt > ct) continue; const x = bx + 180 + i * 90 - (i * 30), y = 900 - Math.abs(Math.sin(lt * 7 + i)) * 30; C.bun(x, y, 1.0, { rot: lt * 8 + i, best: i === 7 }); }
     const c0 = 5 / 6 - .2; const caught = Math.min(7, Math.max(0, Math.floor((lt - 5 / 6) / .625) + 1));
@@ -690,6 +690,15 @@ function render(t) {
   post(F, t, { jump });
 }
 window.DUR = DUR; window.render = render; window.EV = EV.sort((a, b) => a.t - b.t); window.SUBS = SUBS.sort((a, b) => a.t0 - b.t0);
-window.TEXTS = t => { render(t); return TXT.map(x => ({ id: x.id, text: x.text, x0: x.x0, y0: x.y0, x1: x.x1, y1: x.y1 })); };
+// TEXTS without rendering: the same visibility rules as the shots, boxes measured with the same fonts
+function measureBox(text, font, cx, cy, size, pad = 0) { sg.save(); sg.font = font; const w = sg.measureText(text).width; sg.restore(); return { x0: cx - w / 2 - pad, x1: cx + w / 2 + pad, y0: cy - size * .7 - pad, y1: cy + size * .7 + pad }; }
+window.TEXTS = t => {
+  const out = [], s = shotAt(t), lt = t - s.t0;
+  for (const c of CARDS) if (!c.hidden && t >= c.t0 && t < c.t1) out.push({ id: 'card' + c.t0, text: c.text, ...measureBox(c.text, '46px XiaoWei', 960, c.y ?? 960, 46, 60) });
+  if (s.id === 's01' && lt > 1.0) out.push({ id: 'title', text: '蒸笼爵士', ...measureBox('蒸笼爵士', '190px Huang', 960, 430, 190, 40) });
+  if (s.id === 's41') out.push({ id: 'headline', text: '王记包子 开门啦！', ...measureBox('王记包子 开门啦！', '120px Huang', 960, 470, 120) });
+  if (s.id === 's44' && lt > .5 && lt < 2.3) out.push({ id: 'end', text: '完', x0: 900, x1: 1220, y0: 330, y1: 700 });
+  return out;
+};
 window.TIMELINE = { dur: DUR, shots: shotList, sections: SECT, hits: HITS };
 window.READY = true;
