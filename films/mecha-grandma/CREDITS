@@ -1,0 +1,13 @@
+《机甲外婆》 Mecha Grandma — third-party assets in this film
+
+Fonts (SIL Open Font License 1.1; licence texts in fonts/), via npm @fontsource:
+- Noto Sans SC (Google / Adobe) — titles, phone screens, HUD, signs; only the unicode-range chunks used
+- ZCOOL QingKe HuangYou (ZCOOL) — the neon signs
+- Barlow Semi Condensed (Jeremy Tribby) — HUD numerals, sheet labels
+- Kanit (Cadson Demak) — the Latin title line
+
+Code adapted from this library's 80s Cel Anime engine (styles/cel-anime-80s/demo): cel.js, post.js (tape + CRT pass),
+fx.js, the plate painter (plates.js) and the synthesis kernels of the score.
+
+Everything else — characters, the mech, the drone, sets, plates, the original score (synthesised in numpy) and all
+Foley — was made in code for this film. No voice, no samples, no stock images, footage or recordings.
