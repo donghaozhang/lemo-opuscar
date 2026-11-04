@@ -45,7 +45,7 @@ window.render = t => {
   } else post.dof.tiltAmt = 0;
   if (Q.has('nodof')) post.dof.maxCoc = 0;
   post.composer.render();
-  drawOverlay(t);
+  if (!Q.has('noui')) drawOverlay(t); else document.getElementById('ov').getContext('2d').clearRect(0, 0, W, H);   // ?noui=1: poster frames
 };
 window.TEXTS = texts;
 // sound events for the mixer (foley on the frame)
