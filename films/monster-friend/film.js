@@ -73,7 +73,7 @@ function camera(t) {
     case 's06': return [640, 1050, 2.9];
     case 's07': return [900, 1120, 1.1];
     case 's08': return FULL;
-    case 's09': return [1900, 1000, 2.4];
+    case 's09': return [1960, 1000, 2.4];
     case 's10': return [1060, 790, 2.3];
     case 's11': return [1060, 790, 2.3];
     case 's12': return [1050, 820, 1.3];
@@ -438,7 +438,7 @@ function actorsPage5(t) {
   // Dou Dou and the monster (drawn 82.4–83.0)
   const de = el(t, 82.4, 83.0, 82.8, 83.4); if (t >= 82.4) { DRAW.l = de.pl; DRAW.f = de.pf; playActors(t); DRAW.l = 1; DRAW.f = 1; }
   // 你好 drawn in the air between them, in a purple crayon bubble
-  if (t >= HIT.nihao && t < 100.6) { const u = pr(t, HIT.nihao, HIT.nihao + .8); PG.speechBubble(FX, 1760, 850, 330, 190, [1600, 960], 801, { on: true, pl: Math.min(1, u * 1.6) }); PG.letter(TXS, TXM, '你好', 1760, 890, 120, pr(t, HIT.nihao + .2, HIT.nihao + .8), 33, { shadow: false, col: K.purple, track: 10 }); TEXTBOX.push({ id: 'nihao', text: '你好', box: titleBox(1760, 890, 120, 2, 10) }); }
+  if (t >= HIT.nihao && t < 100.6) { const u = pr(t, HIT.nihao, HIT.nihao + .8); PG.speechBubble(FX, 1700, 840, 330, 190, [1570, 950], 801, { on: true, pl: Math.min(1, u * 1.6) }); PG.letter(TXS, TXM, '你好', 1700, 880, 120, pr(t, HIT.nihao + .2, HIT.nihao + .8), 33, { shadow: false, col: K.purple, track: 10 }); TEXTBOX.push({ id: 'nihao', text: '你好', box: titleBox(1700, 880, 120, 2, 10) }); }
   // the wax twinkle at 105.5
   if (t >= HIT.twinkle && t < HIT.twinkle + .8) { const u = pr(t, HIT.twinkle, HIT.twinkle + .8), a = Math.sin(u * Math.PI); [[2110, 700], [2030, 660], [2150, 790]].forEach(([x, y], i) => { const r = 14 + 26 * a; line(FX, [[x - r, y], [x + r, y]], { w: 4, col: K.white, p: a, seed: 810 + i, wob: .2 }); line(FX, [[x, y - r], [x, y + r]], { w: 4, col: K.white, p: a, seed: 820 + i, wob: .2 }); }); }
 }
@@ -458,7 +458,7 @@ function balloonState(t) {
   if (t < 104.8) { const u = ss(pr(t, HIT.freed, 104.8)); const x = lerp(B[0], 2080, u), y = lerp(B[1], 760, u) + 30 * Math.sin(u * Math.PI * 2); PG.balloon(G1.f, G1.l, x, y, 46, 830, { on: true, pl: 1, pf: 1 }, { string: [[x, y + 60], [x - 10 + 10 * u, y + 160], [lerp(x, 2060, u), lerp(y + 260, 1010, u)]] }); return; }
   // in Ni Ni's hand (right hand up): the string to her hand
   const hx = t < 110 ? 2060 : t < 115 ? 1900 : 1960, hy = t < 110 ? 1010 : t < 115 ? 1210 : 950;
-  const bx = hx + 40 + 8 * Math.sin(stepT(t) * 1.1), by = hy - 300 - 10 * Math.sin(stepT(t) * .7);
+  const bx = hx + 40 + 8 * Math.sin(stepT(t) * 1.1), by = hy - (t >= 122 ? 200 : 300) - 10 * Math.sin(stepT(t) * .7);
   PG.balloon(G1.f, G1.l, bx, by, 46, 830, { on: true, pl: 1, pf: 1 }, { string: [[bx, by + 60], [lerp(bx, hx, .5) + 10, lerp(by + 60, hy, .5)], [hx, hy]] });
 }
 function playActors(t) {   // Dou Dou and the purple monster on the playground; from 110 the yellow monster too
