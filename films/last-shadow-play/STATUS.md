@@ -26,3 +26,4 @@
 | 13:45 | render 3 (final) | frames done ≈ 29700 / 3360 |
 | 13:54 | render 2 | frames done ≈ 30780 / 3360 |
 | 13:55 | render 3 (final) | frames done ≈ 30780 / 3360 |
+| 13:57 | final | render 3 muxed: -14.0 LUFS, TP -1.8 dBTP, blackdetect only the pre-match 0.6 s; deliverables encoded (60.5 MB / 18.0 MB) and committed to deliveries/last-shadow-play/ |

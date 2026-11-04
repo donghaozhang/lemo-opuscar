@@ -26,4 +26,11 @@ sampler (VSCO 2 CE, VCSL, Karoryfer erhu, all CC0) and physical-modelling pluck,
 
 | Check | Result |
 |---|---|
-| CHECKS_TABLE | |
+| Cue check (`tools/cuecheck.py`, 72 picture and score cues against the beat grid) | 0.0 ms worst deviation |
+| Reading time (`core/render/readcheck.mjs`, step 0.25 s) | all placards and plaques long enough after the pass-2 fix (P2, L1, P3 and 完 were extended) |
+| Loudness (`ffmpeg ebur128` on `final.mp4`) | −14.0 LUFS integrated, LRA 10.1 LU, true peak −1.8 dBTP |
+| Black frames (`blackdetect d=0.3 pic_th=0.98`) | only 0.00–0.63 s: the black before the match is struck (shot 1, intended); the walk-off at 128 s keeps the ember and passes |
+| CJK glyphs (`tools/cjkcheck.py` + every text frame inspected on the contact sheets) | every on-screen character is inside the subset fonts' unicode ranges; no missing-glyph boxes seen |
+| Review passes | three full renders; contact sheets at 1 fps in `films/last-shadow-play/stills/contact{1,2,3}_*.jpg`; 0.2 s strips of the fall, the grab, the hand-over |
+| Demo sign-off | none; the film carries no library credit and no watermark |
+| Sizes | `final.mp4` 60.5 MB (1920×1080, 24 fps, 140.0 s), `final-720p.mp4` 18.0 MB |
