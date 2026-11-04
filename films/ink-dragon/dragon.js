@@ -205,7 +205,7 @@ export function dragon(A, T, S0, X = {}) {
         if (lidB > .02) { const hw = Math.sqrt(Math.max(0, 1 - (lyB / rl) * (lyB / rl))) * r; Td.beginPath(); Td.moveTo(-hw, lyB); Td.lineTo(hw, lyB); Td.stroke(); }
         Td.restore();
         if (lid < .92) {   // a black pupil in the paper-white eye; the vermilion is a small fleck in it (画龙点睛), drawn last on the colour layer
-          const pr = Math.max(r * .42 * e.pr, 1.6), px = sx + e.pupil[0] * r * .3 * dir, py = sy + e.pupil[1] * rl * .3;
+          const pr = Math.max(r * .33 * e.pr, 1.6), px = sx + e.pupil[0] * r * .34 * dir, py = sy + e.pupil[1] * rl * .34;
           Td.save(); Td.globalAlpha = .95 * pi * e.k * clamp(eyeK * 1.5); Td.fillStyle = '#000'; Td.beginPath(); Td.ellipse(px, py, pr, pr * .95, 0, 0, 7); Td.fill(); Td.restore();
           if (eyeK > 0) { const c = A.cc; c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = clamp(eyeK * am * .96); const pt = new DOMPoint(px - pr * .3 * dir, py - pr * .25).matrixTransform(xf), prs = Math.max(pr * .38 * xf.a, 1.2); c.fillStyle = `rgb(${VERM.join(',')})`; c.beginPath(); c.ellipse(pt.x, pt.y, prs, prs, 0, 0, 7); c.fill(); c.restore(); }
         }

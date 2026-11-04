@@ -213,9 +213,9 @@ export function painterSide(L, x, y, s = 1, o = {}) {
   draw(L, mk([T([10, -6]), T([20, 6]), T([10, 18])], { w: 2.6 * s, tone: .72, dry: .45, prof: 'tip', seed: 924 }), 1, am);     // ear
   // the back and shoulders behind, rising and breathing; sits up with lift
   const bx = x + 150 * s + 20 * s * lift, by0 = y - 40 * s;
-  mass(L.wet, [[bx - 60 * s, by0], [bx + 20 * s, by0 - 150 * s - br - 90 * s * lift], [bx + 110 * s, by0 - 170 * s - br - 90 * s * lift], [bx + 190 * s, by0 - 80 * s - 60 * s * lift], [bx + 210 * s, by0 + 10 * s]], .2 * am, 3 * s, 95, [bx, by0 - 170 * s, bx, by0 + 10 * s, 1.1, .5]);
-  draw(L, mk([[bx + 200 * s, by0 + 10 * s], [bx + 190 * s, by0 - 90 * s - 60 * s * lift], [bx + 110 * s, by0 - 172 * s - br - 90 * s * lift]], { w: 24 * s, tone: .66, darkDir: [1, 0], side: .85, brWet: true, body: .22, dry: .42, wet: .9, prof: 'robe', seed: 925 }), 1, am);   // the back
-  draw(L, mk([[bx - 50 * s, by0 - 4 * s], [bx + 10 * s, by0 - 140 * s - br - 80 * s * lift], [bx + 100 * s, by0 - 168 * s - br - 90 * s * lift]], { w: 14 * s, tone: .5, darkDir: [-1, 0], side: .8, brWet: true, body: .15, dry: .5, wet: .8, prof: 'robe', seed: 926 }), 1, am);   // the chest side / collar
+  mass(L.wet, [[bx - 40 * s, by0], [bx + 20 * s, by0 - 120 * s - br - 90 * s * lift], [bx + 90 * s, by0 - 138 * s - br - 90 * s * lift], [bx + 150 * s, by0 - 70 * s - 60 * s * lift], [bx + 165 * s, by0 + 10 * s]], .18 * am, 3 * s, 95, [bx, by0 - 140 * s, bx, by0 + 10 * s, 1.1, .5]);
+  draw(L, mk([[bx + 158 * s, by0 + 10 * s], [bx + 150 * s, by0 - 80 * s - 60 * s * lift], [bx + 90 * s, by0 - 140 * s - br - 90 * s * lift]], { w: 22 * s, tone: .66, darkDir: [1, 0], side: .85, brWet: true, body: .22, dry: .42, wet: .9, prof: 'robe', seed: 925 }), 1, am);   // the back
+  draw(L, mk([[bx - 34 * s, by0 - 4 * s], [bx + 10 * s, by0 - 112 * s - br - 80 * s * lift], [bx + 84 * s, by0 - 136 * s - br - 90 * s * lift]], { w: 13 * s, tone: .5, darkDir: [-1, 0], side: .8, brWet: true, body: .15, dry: .5, wet: .8, prof: 'robe', seed: 926 }), 1, am);   // the chest side / collar
   return { face: T([-40, 0]), nose: T([-58, 14]) };
 }
 
