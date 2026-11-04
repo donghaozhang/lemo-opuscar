@@ -110,7 +110,7 @@ export function kid(C, o) {
     arms = turn === 2 ? [[[0, -186], [40, -168], [86, -160]]] : [[[-36 * wide, -186], [-52 * wide, -146], [-58 * wide, -112]], [[36 * wide, -186], [70, -170], [104, -162]]];
   } else if (pose === 'cover') {   // both hands over the mouth
     legs = [[[-18, -92], [-19, -50], [-20, -10]], [[18, -92], [19, -50], [20, -10]]];
-    arms = [[[-36 * wide, -186], [-48 * wide, -150], [-13, -232]], [[36 * wide, -186], [48 * wide, -150], [13, -232]]];
+    arms = [[[-36 * wide, -186], [-50 * wide, -150], [-11, -248]], [[36 * wide, -186], [50 * wide, -150], [11, -248]]];
   } else if (pose === 'lie') {     // in bed, head left, feet right: upper body only shown above the blanket
     headC = [0, -258]; legs = []; arms = [[[-36 * wide, -186], [-56 * wide, -150], [-40, -124]], [[36 * wide, -186], [56 * wide, -150], [40, -124]]]; bodyTop = -200;
   } else if (pose === 'lean') {    // leaning back, feet skidding (being nudged)

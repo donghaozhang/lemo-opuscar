@@ -73,7 +73,7 @@ function camera(t) {
     case 's06': return [640, 1050, 2.9];
     case 's07': return [900, 1120, 1.1];
     case 's08': return FULL;
-    case 's09': return [1960, 1000, 2.4];
+    case 's09': return [2020, 1000, 2.4];
     case 's10': return [1060, 790, 2.3];
     case 's11': return [1060, 790, 2.3];
     case 's12': return [1050, 820, 1.3];

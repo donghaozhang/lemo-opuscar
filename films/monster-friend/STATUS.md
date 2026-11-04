@@ -29,3 +29,4 @@ Sample libraries: vsco2ce, vcsl (fetched earlier), freepats (ukulele, nylon guit
 | 16:24 | render 2 | frames 1980 / 3360 |
 | 16:34 | render 2 | frames 2460 / 3360 |
 | 16:44 | render 2 | frames 2880 / 3360 |
+17:03 UTC · render 2 done (80 min), −14.0 LUFS, no black frames; review pass 2 (stills/r2_sheet1-6.jpg, 0.2 s strips of the five action beats): two fixes (insert framing, hands over the mouth); final render next
