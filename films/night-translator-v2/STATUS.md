@@ -17,3 +17,4 @@ One line about every 10 minutes during long renders (UTC, step, frames done / to
 - 2026-11-04 09:03 UTC — render 3 (final, after review pass 2) — 2940 / 3540 frames
 - 2026-11-04 09:09 UTC — render 3 finished; mastering — 3360 / 3540 frames
 - 2026-11-04 09:28 UTC — delivered to deliveries/night-translator-v2/ — 3360 / 3540 frames
+- 2026-11-04 09:28 UTC — correction: render 3 completed all 3539 / 3539 frames; delivered to deliveries/night-translator-v2/
