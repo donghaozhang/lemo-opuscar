@@ -1,0 +1,219 @@
+{
+ "fps": 24,
+ "dur": 132,
+ "secs": [
+  {
+   "id": "night",
+   "t": 0,
+   "bpm": 60,
+   "beats": 30
+  },
+  {
+   "id": "into",
+   "t": 30,
+   "bpm": 72,
+   "beats": 24
+  },
+  {
+   "id": "cloud",
+   "t": 50,
+   "bpm": 96,
+   "beats": 40
+  },
+  {
+   "id": "hush",
+   "t": 75,
+   "bpm": 60,
+   "beats": 7
+  },
+  {
+   "id": "dive",
+   "t": 82,
+   "bpm": 120,
+   "beats": 20
+  },
+  {
+   "id": "rain",
+   "t": 92,
+   "bpm": 120,
+   "beats": 24
+  },
+  {
+   "id": "dawn",
+   "t": 104,
+   "bpm": 60,
+   "beats": 18
+  },
+  {
+   "id": "seal",
+   "t": 122,
+   "bpm": 60,
+   "beats": 10
+  }
+ ],
+ "shot": {
+  "s01": 0,
+  "s02": 3.5,
+  "s03": 8,
+  "s04": 13,
+  "s05": 19,
+  "s06": 25,
+  "s07": 30,
+  "s08": 38.333333333333336,
+  "s09": 44.166666666666664,
+  "s10": 50,
+  "s11": 53.125,
+  "s11b": 69.375,
+  "s11c": 70.625,
+  "s12": 75,
+  "s13": 82,
+  "s14": 86,
+  "s15": 92,
+  "s16": 104,
+  "s17": 112,
+  "s18": 118,
+  "s19": 126,
+  "end": 132
+ },
+ "hit": {
+  "dropFall": 3,
+  "dropLand": 3.5833333333333335,
+  "bloom": 3.6666666666666665,
+  "tailCurl": 4.5,
+  "headLift": 6,
+  "eyeOpen": 7,
+  "shake": 8.5,
+  "stretch": 10.5,
+  "sneeze": 11.291666666666666,
+  "lookAround": 12,
+  "snort": 16.5,
+  "tiptoe0": 15,
+  "colophon": 20.5,
+  "ashFlake1": 26.208333333333332,
+  "eyeToVillage": 27,
+  "inhale": 28,
+  "dive": 29.416666666666668,
+  "ripple": 30,
+  "ridgePass": 34,
+  "boat": 41,
+  "slow": 42.5,
+  "cliffDrum": 46,
+  "snoreJ": 48.33333333333333,
+  "ashFlake2": 51,
+  "snore2": 52,
+  "land": 54.375,
+  "throat": 55.625,
+  "tap": 56.25,
+  "mumble": 56.875,
+  "roll": 57.5,
+  "bite": 58.125,
+  "tug0": 58.75,
+  "yank": 60.625,
+  "flung": 61.25,
+  "landHead": 61.875,
+  "puff": 62.5,
+  "inhale2": 63.75,
+  "roar": 64.375,
+  "cloudEye": 65.625,
+  "gust": 66.25,
+  "blownOff": 66.875,
+  "climbBack": 68.125,
+  "eyeUp": 70.625,
+  "browSettle": 72.5,
+  "rise": 73.125,
+  "drip2": 78,
+  "curl": 80.5,
+  "diveStroke": 82,
+  "rollStart": 82.20833333333333,
+  "bloomIn": 86,
+  "wake": 87.5,
+  "lookBelly": 89,
+  "thunder": 90,
+  "firstDrops": 91,
+  "rainWide": 92,
+  "pinesDrip": 94,
+  "riverFill": 96,
+  "boatFloat": 97.5,
+  "bowlFill": 98,
+  "drink": 99,
+  "dance": 99.5,
+  "redDrop": 103,
+  "plip": 104,
+  "brighten": 106,
+  "stir": 107.5,
+  "headUp": 109,
+  "lookPainting": 110.5,
+  "touch": 114,
+  "eyeInkstone": 116,
+  "brushUp": 118,
+  "dip": 118.79166666666667,
+  "write0": 119.5,
+  "write1": 123.5,
+  "sealPress": 125,
+  "inkPush": 126,
+  "eyeOpen2": 128,
+  "eyeClose2": 129.5,
+  "snore3": 130,
+  "dryOut": 130.5
+ },
+ "subs": [
+  {
+   "id": "L1",
+   "text": "家山久旱，盼雨。",
+   "t0": 20.5,
+   "t1": 25,
+   "kind": "colophon"
+  },
+  {
+   "id": "L2",
+   "text": "香尽之前，须借得雨来。",
+   "t0": 25.5,
+   "t1": 29.4
+  },
+  {
+   "id": "L3",
+   "text": "云不肯醒。",
+   "t0": 71,
+   "t1": 75
+  },
+  {
+   "id": "L4",
+   "text": "借不来，便自己做雨。",
+   "t0": 76,
+   "t1": 81.5
+  },
+  {
+   "id": "L5",
+   "text": "雨来了。",
+   "t0": 97,
+   "t1": 101.5
+  },
+  {
+   "id": "L6",
+   "text": "墨龙借雨",
+   "t0": 119.5,
+   "t1": 126,
+   "kind": "title"
+  },
+  {
+   "id": "L7",
+   "text": "墨还在砚里。",
+   "t0": 128,
+   "t1": 131.5
+  }
+ ],
+ "silence": [
+  [
+   75,
+   82
+  ],
+  [
+   130,
+   132
+  ]
+ ],
+ "write": {
+  "t0": 119.5,
+  "t1": 123.5
+ }
+}

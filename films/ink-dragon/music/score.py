@@ -51,7 +51,6 @@ H(HIT['sneeze'], 'E6', .5, .2, .9, dur=.4, release=.3); mark('sneeze', HIT['snee
 G(12.2, 'C4', .7, .45, .1, .8); G(12.7, 'A3', .9, .45, -.1, .8, vib=(4.5, .15, .3))
 # the walk: a curious phrase that stops dead at the snort
 for tt, p in [(13.5, 'A3'), (14.3, 'C4'), (15.0, 'D4'), (15.8, 'E4')]: G(tt, p, .5, .55, 0, .85, pos=.12)
-mark('snort', HIT['snort'])
 G(HIT['snort'] + 1.1, 'D4', .4, .5, 0, .8, pos=.12); G(HIT['snort'] + 1.55, 'C4', .5, .45, 0, .8, pos=.12)
 # the drought: the xiao sings, the low strings sink
 for t0, p, d, g in [(19.5, 'E4', 2.0, .6), (21.5, 'D4', 1.5, .58), (23.0, 'C4', 1.5, .58), (24.5, 'A3', 1.4, .6)]: xiao(t0, p, d, .5, -.2, g, att=.4)
@@ -89,7 +88,7 @@ D(HIT['cliffDrum'], 'timpani', 'drum1', .85, .9); mark('cliffDrum', HIT['cliffDr
 G(HIT['cliffDrum'], 'C2', 2.4, .75, 0, 1.0)
 for off, p, d in [(0, 'G4', .8), (.83, 'A4', .8), (1.67, 'C5', .8), (2.5, 'D5', 2.4)]: xiao(SHOT['s09'] + off, p, d, .55, -.15, .7, att=.2)
 # the cloud's snore, rhymed on the guqin: a low slide down
-mark('snoreJ', HIT['snoreJ']); G(HIT['snoreJ'], 'D3', 1.0, .5, .2, .9, bend=[(0, 0), (.2, 0), (.9, -2)])
+mark('snoreJ', HIT['snoreJ']); G(HIT['snoreJ'], 'D3', 1.0, .6, .2, .9, bend=[(0, 0), (.2, 0), (.9, -2)], pos=.1)
 
 # ================= 云 the cloud 50–75 @96 =================
 b = 60 / 96
@@ -108,7 +107,7 @@ mark('land', HIT['land']); D(HIT['land'], 'frame_drum', 'large', .5, .6); G(HIT[
 bounce(HIT['land'] + .4, HIT['throat'] - .1, .4)
 mark('throat', HIT['throat']); G(HIT['throat'], 'E4', .12, .5, 0, .8, pos=.1); G(HIT['throat'] + .13, 'D4', .12, .5, 0, .8, pos=.1)
 mark('tap', HIT['tap']); H(HIT['tap'], 'A5', .55, .1, .9, dur=.5)
-mark('mumble', HIT['mumble']); G(HIT['mumble'], 'G2', .9, .5, .2, .9, bend=[(0, 0), (.2, 1), (.5, -1), (.8, 0)])
+mark('mumble', HIT['mumble']); G(HIT['mumble'], 'G2', .9, .6, .2, .9, bend=[(0, 0), (.2, 1), (.5, -1), (.8, 0)], pos=.1); D(HIT['mumble'], 'woodblock', 'b', .3, .35, .2)
 mark('roll', HIT['roll']); G(HIT['roll'], 'D3', 1.0, .5, .2, .8, bend=[(0, 0), (.1, 0), (.9, -4)])
 mark('bite', HIT['bite']); G(HIT['bite'], 'C4', .2, .55, -.1, .8, pos=.08)
 # the tug: a repeated figure that accelerates, with the woodblock
@@ -117,8 +116,8 @@ while t < HIT['yank'] - .05:
     G(t, seq[min(k, len(seq) - 1)], .18, .45 + .02 * k, (k % 2 - .5) * .3, .75, pos=.1)
     if k % 2 == 0: D(t, 'woodblock', 'c', .35 + .02 * k, .45, .2)
     t += max(.09, .26 - .014 * k); k += 1
-mark('yank', HIT['yank']); add(st['guqin'], P.strum('guqin', ['D3', 'C3', 'A2', 'G2', 'F2', 'D2', 'C2'], .8, .8, spread=.012), HIT['yank'], 1.0, 0); D(HIT['yank'], 'timpani', 'drum5', .6, .6)
-mark('flung', HIT['flung']); G(HIT['flung'], 'A3', .7, .6, .2, .9, bend=[(0, 0), (.05, 0), (.55, 7)])
+mark('yank', HIT['yank']); add(st['guqin'], P.strum('guqin', ['D3', 'C3', 'A2', 'G2', 'F2', 'D2', 'C2'], .8, .8, spread=.007), HIT['yank'], 1.0, 0); D(HIT['yank'], 'timpani', 'drum5', .6, .6)
+mark('flung', HIT['flung']); G(HIT['flung'], 'A3', .7, .72, .2, .9, bend=[(0, 0), (.05, 0), (.55, 7)], pos=.1)
 mark('landHead', HIT['landHead']); D(HIT['landHead'], 'bass_drum', None, .55, .8); D(HIT['landHead'], 'woodblock', 'c', .6, .5)
 G(HIT['landHead'] + .3, 'E3', .5, .4, 0, .7, vib=(7, .3, .05)); G(HIT['landHead'] + .8, 'D3', .5, .35, 0, .7, vib=(6, .25, .05))
 bounce(HIT['puff'] + .2, HIT['inhale2'] - .3, .4)
@@ -184,7 +183,7 @@ mark('dance', HIT['dance']); D(HIT['dance'], 'frame_drum', 'large', .7, .8)
 mark('redDrop', HIT['redDrop']); H(HIT['redDrop'], 'D6', .55, 0, 1.0, dur=1.2, release=.8)
 
 # ================= 晨 dawn 104–122 @60 =================
-mark('plip', HIT['plip']); G(HIT['plip'], 'C2', None, .55, 0, 1.0)
+mark('plip', HIT['plip']); G(HIT['plip'], 'C2', None, .55, 0, 1.0); H(HIT['plip'], 'C5', .4, 0, .7, dur=1.0)
 xiao(HIT['brighten'], 'D4', 4.0, .4, -.15, .6, att=1.2)
 mark('stir', HIT['stir']); G(HIT['stir'], 'A3', 1.2, .45, .1, .8, vib=(4.5, .18, .4))
 mark('headUp', HIT['headUp']); G(HIT['headUp'], 'E4', 1.0, .45, 0, .8)
