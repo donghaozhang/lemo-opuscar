@@ -6,5 +6,5 @@ while ! grep -q '^EXIT' "$LOG"; do
   grep -q '^EXIT' "$LOG" && break
   DONE=$(grep -E '^w[0-9]+ ' "$LOG" | awk '{split($2,a,"/"); s[$1]=a[1]} END {t=0; for (k in s) t+=s[k]; print t}')
   printf "| %s | %s | frames %s / %s |\n" "$(date -u +%H:%M)" "$STEP" "${DONE:-0}" "$TOTAL" >> films/monster-friend/STATUS.md
-  git add -f films/monster-friend/STATUS.md && git commit -qm "ink-dragon: render progress" && git push -q origin cloud/film-2-fable
+  git add -f films/monster-friend/STATUS.md && git commit -qm "monster-friend: render progress" && git push -q origin cloud/film-2-fable
 done

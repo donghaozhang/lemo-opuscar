@@ -4,11 +4,12 @@ import json, os, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); D = os.path.join(HERE, '..')
 tol = float(sys.argv[sys.argv.index('--tol') + 1]) if '--tol' in sys.argv else 25.0
 TL = json.load(open(os.path.join(D, 'timeline.json'))); SC = json.load(open(os.path.join(D, 'music', 'score.json')))
-marks, onsets = SC['marks'], SC['selfcheck']['onsets']
+marks, onsets = SC['marks'], SC['selfcheck']['onsets']; silent = set(SC.get('silent', []))
 HIT, SHOT = TL['hit'], TL['shot']
 # which timeline hits the score marks correspond to (mark name → timeline time)
 pairs = {}
 for k, t in marks.items():
+    if k in silent: continue   # a section anchor or a beat that is silent by design: no onset to measure
     if k in HIT: pairs[k] = (HIT[k], t)
     elif k in SHOT: pairs[k] = (SHOT[k], t)
 bad = 0
