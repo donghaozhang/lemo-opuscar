@@ -178,7 +178,7 @@ SH.city = (t, u) => {
   NIGHT_OUT();
   cam(960, mv(u, 0, 4, 300, 560), mv(u, 0, 4, 1.0, 1.06), 0, 0, t);
   city(t, NIGHT, {
-    streak: () => { const v = seg(t, 1.9, 3.7); if (v > 0 && v < 1) { const x = lerp(1640, 1240, v), y = lerp(-120, 470, ei(v)); stroke([[x + 60, y - 90], [x, y]], 6, { line: C.glow }); dot(x, y, 7, C.glowS); } },
+    streak: () => { const v = seg(t, 1.6, 3.8); if (v > 0 && v < 1) { const x = lerp(1700, 1240, v), y = lerp(40, 470, v); shape(ell(x, y, 46, 46, 20), { fill: C.glow, alpha: .25, stroke: false }); stroke([[x + 150, y - 230 * (.4 + ei(v))], [x, y]], 9, { line: C.glow }); dot(x, y, 12, C.glowS); if (hash(K12(t)) > .5) dot(x + 20, y - 30, 5, '#ffd25a'); } },
   });
   rain(t, { n: 170 });
 };
@@ -216,7 +216,7 @@ SH.coins = (t, u, d, s) => {
   for (let i = 0; i < 3; i++) {
     const ts = T[i] - .45, v = seg(t, ts, T[i] + .35); if (v <= 0 || v >= 1) continue;
     const hx = lerp(1600, COINS[i][0] + 70, eo(Math.min(1, v * 1.6))) + (v > .6 ? (v - .6) * 900 : 0);
-    bigArm([2300, 700], [hx + 40, COINS[i][1] + 10], 1, C.lSkin, C.sleeve, { ang: Math.PI * .95 });
+    bigArm([hx + 640, COINS[i][1] + 420], [hx + 40, COINS[i][1] + 10], 1, C.lSkin, C.sleeve, { ang: Math.PI * .8 });
   }
 };
 SH.liuSigh = (t, u) => {
@@ -232,7 +232,7 @@ SH.fall = (t, u, d) => {
   cam(lerp(1300, 1100, v), lerp(120, 480, ss(v)), 1.25, 0, 3, t);
   city(t, NIGHT);
   const spin = Math.sin(t * 22) * .35;
-  saucer(sx, sy, .34, { glow: hash(K12(t)) > .4 ? .9 : .2, tilt: spin, t, smoke: 1 });
+  saucer(sx, sy, .5, { glow: hash(K12(t)) > .4 ? .9 : .2, tilt: spin, t, smoke: 1 });
   for (let i = 0; i < 4; i++) { const ph = (t * 3 + i * .25) % 1; dot(sx - 40 + ph * 90 * (i % 2 ? 1 : -1), sy + 20 + ph * 60, 4, '#ffd25a'); }
   rain(t, { n: 170 });
 };
@@ -294,8 +294,8 @@ SH.cellRoof = (t, u) => {
   cell(960, 600, 2.3, { glow: fl * .9, level: 0, t });
   text('能量 0%', 960, 300, { font: `40px ${FONT}`, fill: hash(K12(t)) > .5 && t < 33 ? '#ff4a3a' : '#ff8a7a', outlineW: 8, outlineCol: INK });
   // Zug's hands holding it, one finger tapping
-  bigArm([-200, 1200], [690, 700], 1, C.zSkin, C.suit, { ang: 0 });
-  bigArm([2100, 1200], [1230, 700 - tap * 60], 1, C.zSkin, C.suit, { ang: Math.PI, fist: tap > .2 });
+  bigArm([520, 1250], [690, 720], 1, C.zSkin, C.suit, { ang: -.3 });
+  bigArm([1400, 1250], [1230, 720 - tap * 60], 1, C.zSkin, C.suit, { ang: Math.PI + .3, fist: tap > .2 });
   rain(t, { n: 120 });
 };
 SH.door = (t, u) => {
@@ -378,7 +378,7 @@ SH.potIn = (t, u) => {
   shop(t, { liu: null, pot: false, stools: false, front: () => {
     fillOnly(ell(1040, 470, 160, 160, 30), '#d6321f', { alpha: .25, boil: .3 });   // the lantern behind the steam
     pot(1040, lerp(600, 668, ei(dv)), .78, { t, heat: t > 53.45 ? 1 : 0, boil: t > 53.3 ? 1 : .3, steam: 1 });
-    if (t < 53.5) for (const s of [-1, 1]) bigArm([1040 + s * 420, 300], [1040 + s * 180, lerp(590, 650, ei(dv)) - seg(t, 53.15, 53.5) * 120], .5, C.lSkin, C.sleeve, { ang: s < 0 ? 0 : Math.PI });
+    if (t < 53.5) for (const s of [-1, 1]) bigArm([1040 + s * 300, 420], [1040 + s * 180, lerp(590, 650, ei(dv)) - seg(t, 53.15, 53.5) * 120], .5, C.lSkin, C.sleeve, { ang: s < 0 ? 0 : Math.PI });
   } });
 };
 SH.cellBelt = (t, u) => {
@@ -624,16 +624,16 @@ SH.street = (t, u) => {
 SH.launch = (t, u) => {
   NIGHT_OUT();
   const v = t - 114.4;
-  const y = v < 0 ? 96 : 96 - (v * v * 2600 + v * 400);
-  cam(1000, mv(u, 0, 1.5, 60, -500, ei), 1.6, 0, decay(t, 114.4, 14, 3), t);
+  const y = v < 0 ? 96 : 96 - (v * v * 700 + v * 260);
+  cam(1000, Math.min(60, y + 40), 1.6, 0, decay(t, 114.4, 14, 3), t);
   alley(t, NIGHT, { roof: () => { saucer(1000, y, .55, { glow: 1, t, sq: v < 0 ? 1 : lerp(1.0, 1.5, clamp(v * 3)) }); if (v > 0) for (let i = 0; i < 5; i++) puff(1000 + (i - 2) * 70, 120, seg(t, 114.4, 115.4), Math.PI / 2 + (i - 2) * .5, 1.2, '#cfeaf0'); } });
   screenRect(C.glow, .12 * clamp(1 - v));
   rain(t, { n: 140 });
 };
 SH.cityUp = (t, u, d) => {
   NIGHT_OUT();
-  cam(960, mv(u, 0, d, 560, 250), mv(u, 0, d, 1.05, 1.0), 0, 0, t);
-  city(t, NIGHT, { streak: () => { const v = seg(t, 115.9, 117.9); if (v > 0 && v < 1) { const x = lerp(1060, 1500, v), y = lerp(560, -500, eo(v)); stroke([[x - 40, y + 140], [x, y]], 8, { line: C.glow }); dot(x, y, 9, C.glowS); } if (t > 117.9) { const tw = pulse(t, 117.95, .5); if (tw > 0) { for (let i = 0; i < 4; i++) stroke([[1500, -500], [1500 + Math.cos(i * Math.PI / 2) * 40 * tw, -500 + Math.sin(i * Math.PI / 2) * 40 * tw]], 5, { line: C.glowS }); } } } });
+  cam(960, mv(u, 0, d, 560, 340), mv(u, 0, d, 1.05, 1.0), 0, 0, t);
+  city(t, NIGHT, { streak: () => { const v = seg(t, 115.9, 117.9); if (v > 0 && v < 1) { const x = lerp(1060, 1500, v), y = lerp(600, -40, eo(v)); shape(ell(x, y, 50, 50, 20), { fill: C.glow, alpha: .25, stroke: false }); stroke([[x - 70, y + 260], [x, y]], 11, { line: C.glow }); dot(x, y, 14, C.glowS); } if (t > 117.9) { const tw = pulse(t, 117.95, .5); if (tw > 0) { for (let i = 0; i < 4; i++) stroke([[1500, -40], [1500 + Math.cos(i * Math.PI / 2) * 60 * tw, -40 + Math.sin(i * Math.PI / 2) * 60 * tw]], 6, { line: C.glowS }); } } } });
   rain(t, { n: 100 });
 };
 function morningAlley(t, o = {}) {
@@ -664,7 +664,7 @@ SH.signTear = (t, u) => {
 SH.liuMorning = (t, u) => {
   light('#ffe0c0', .1);
   const [dx, dy, dw, dh] = SHOP.door;
-  cam(dx + 85, dy + 160, 3.2, 0, 0, t);
+  cam(dx + 95, dy + 132, 3.0, 0, 0, t);
   morningAlley(t, { door: (dx, dy) => { renzheng(dx + 85, dy + 100, .5); } });
   queue(t, dx - 40, 4, .62, { look: [1, 0] });
   liu({ x: dx + 100, y: dy + dh + 20, s: .62, face: -1, look: [-.8, .1], lid: .5, mouth: { sm: .55 }, blink: blinkAt(t, [128.3]), brow: { tilt: -.05, h: 2 }, armR: { h: [0, -60], bend: 20, fist: true, hold: hp => { push(); translate(hp[0], hp[1]); rotate(-1.2); shape(noodle([0, 0], [-170, 0], 0, 16, 12), { fill: C.steel, lw: 5 }); shape(ell(-196, 0, 36, 16, 16), { fill: C.steel, lw: 5 }); pop(); } } });
@@ -693,7 +693,7 @@ SH.queue = (t, u, d) => {
 SH.liuLast = (t) => {
   light('#ffe0c0', .1);
   const [dx, dy, dw, dh] = SHOP.door;
-  cam(dx + 85, dy + 160, 3.2, 0, 0, t);
+  cam(dx + 95, dy + 132, 3.0, 0, 0, t);
   morningAlley(t, { door: (dx, dy) => { renzheng(dx + 85, dy + 100, .5); } });
   liu({ x: dx + 100, y: dy + dh + 20, s: .62, face: -1, look: [-.9, 0], lid: .52, blink: blinkAt(t, [136.3]), mouth: { sm: -.1 }, brow: { tilt: .05 } });
 };
@@ -711,7 +711,7 @@ SH.endCard = (t, u) => {
   hexCoin(960, 760, .9, { glow: .8 + .2 * Math.sin(t * 3) });
   reset();
   titleArt(t, [140.5, 140.5, 140.5, 140.5], 960, 430, 140);
-  if (t > 141.2) sign('完', 960, 900, 60, '#fff1d6', { outline: 10 });
+  if (t > 141.2) sign('完', 960, 920, 96, '#fff1d6', { outline: 12 });
   rain(t, { n: 60 });
 };
 

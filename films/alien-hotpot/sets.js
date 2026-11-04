@@ -47,7 +47,6 @@ export function city(t, P = NIGHT, { streak = null, train = 0 } = {}) {
   bands(P.sky, -900, 760);
   // far hills
   shape(spline([[-600, 600], [-200, 380], [300, 440], [700, 330], [1100, 420], [1500, 300], [1900, 380], [2500, 520], [2500, 900], [-600, 900]]), { fill: P.far, lw: 5 });
-  if (streak) streak();
   // tall towers on the far hill
   for (let i = 0; i < 9; i++) {
     const x = -100 + i * 250 + hash(i) * 60, h = 340 + hash(i + 3) * 300, w = 110 + hash(i + 6) * 50, y = 520 - h;
@@ -55,6 +54,7 @@ export function city(t, P = NIGHT, { streak = null, train = 0 } = {}) {
     windows(x + 6, y + 14, w - 12, h - 20, 4, Math.floor(h / 40), P, i * 11);
     if (i === 4) { shape(rect(x + w / 2 - 4, y - 60, 8, 60), { fill: P.midS, lw: 4 }); dot(x + w / 2, y - 64, 8, P.neonA); }
   }
+  if (streak) streak();
   // the rail line on its pillars, going through a building
   const ry = 640;
   shape(rect(-300, ry, 2600, 26), { fill: P.nearS, lw: 5 });

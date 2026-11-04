@@ -5,3 +5,4 @@
 - 12:17 UTC · model + expression sheets (stills/), engine, cast, sets, all 49 shots blocked; first still pass clean
 - 12:25 UTC · voices (formant gibberish), score (music/score.py), foley + beds (mix.py), cuecheck ok (20 hits, 0 ms)
 - 12:31 UTC · first full render done (3490 frames, 210 s; −14.2 LUFS); review pass 1
+- 12:33 UTC · review pass 1 fixes (streak hooks, launch follow, Liu morning framing, insert arms, 完 size, CJK glyphs drawn as shapes); second full render
