@@ -7,3 +7,4 @@
 - 12:31 UTC · first full render done (3490 frames, 210 s; −14.2 LUFS); review pass 1
 - 12:33 UTC · review pass 1 fixes (streak hooks, launch follow, Liu morning framing, insert arms, 完 size, CJK glyphs drawn as shapes); second full render
 - 12:42 UTC · review pass 2: 0.2 s strips of key actions OK; fixed the cell crossing Liu's face (fill + experiment shots); final render
+- 12:54 UTC · final render checked (−14.2 LUFS, TP −1.1 dBTP, 0 black frames, cuecheck/readcheck/glyphcheck ok); delivered to deliveries/alien-hotpot/
