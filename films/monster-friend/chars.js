@@ -1,8 +1,8 @@
 // Characters: Dou Dou (豆豆), Ni Ni (妮妮), the purple monster, the yellow monster, the other children and the teacher.
 // A skilled adult imitating a child: round heads about 2.6 heads tall, tube limbs, mitten hands. Eyes are white ovals with an indigo pupil,
 // a top lid that can close, a lower lid for squinting, a brow stroke, and a white-wax catchlight; the expressions are clearly different.
-import { line, fill, dab, ellipse, handCircle, xf, smooth, bez, CAM } from './crayon.js';
-import { part, tube, curve, knock, erase } from './rig.js';
+import { ellipse, handCircle, xf, smooth, bez, CAM } from './crayon.js';
+import { part, tube, curve, knock, erase, DRAW, line, fill, dab } from './rig.js';
 import { PAL } from './pal.js';
 import { hash, clamp, lerp } from '/core/lib.js';
 const K = PAL.crayon;
@@ -168,9 +168,11 @@ export function kid(C, o) {
 // a crayon stick (local coords through P): a short hexagonal stick with a cone tip, paper wrapper band
 export function crayonStick(C, P, x, y, a, s, sd, col) {
   const T = pts => xf(pts, { x, y, r: a, s });
-  const body = [[-26, -6], [16, -6], [26, 0], [16, 6], [-26, 6]];
+  const body = [[-26, -6], [16, -6], [26, 0], [16, 6], [-26, 6], [-26, -6]];
   part(C, P(T(body)), { col, p: .95, gap: 4, w: 6, seed: sd, ang: a + 1.5, over: 1 }, lo(sd + 1, { w: 4 }));
-  line(C.l, P(T([[-10, -6], [-10, 6]])), lo(sd + 2, { w: 3.5, col: K.ink, p: .6 }));
+  // the paper wrapper (most of the length) with two indigo bands
+  part(C, P(T([[-26, -6.5], [8, -6.5], [8, 6.5], [-26, 6.5], [-26, -6.5]])), { col: K.sand, p: .85, gap: 3.5, w: 5, seed: sd + 2, ang: a, over: .5 }, lo(sd + 3, { w: 3.5 }), { occ: true, kn: false });
+  [-20, 2].forEach((u, i) => fill(C.f, P(T([[u, -6.5], [u + 4, -6.5], [u + 4, 6.5], [u, 6.5]])), { col: K.ink, p: .8, gap: 2.5, w: 4, seed: sd + 4 + i, ang: a + 1.5, over: .3 }));
 }
 
 // Head: local origin at the face centre, radius ≈ 62
@@ -244,8 +246,16 @@ export const MEXPR = {
   yawn: MEX({ lid: .9, browY: .4, mouth: 'open', cheek: .5, teeth: 0 }),
 };
 export function mixMex(a, b, u) { return mixEx(a, b, u); }
-function monsterEyes(C, P, x, y, r, sd, look, E = MEXPR.happy, s = 1, col = K.purple) {
-  [-1.1, 1.1].forEach((sg, i) => { eye(C, P, x + sg * r * 1.25, y, r, { ...E, pupil: look }, sd + i * 10, s, 1, col); brow(C, P, x + sg * r * 1.25, y, r, E, sd + 30 + i, sg); });
+function monsterEyes(C, P, x, y, r, sd, look, E = MEXPR.happy, s = 1, col = K.purple, wax = 0, pupils = 1) {
+  [-1.1, 1.1].forEach((sg, i) => {
+    const ex = x + sg * r * 1.25;
+    if (wax) {   // the eyes as the boy draws them: two white-wax circles (invisible on bare paper, they shine under the wash)
+      part(C, P(ellipse(ex, y, r, r * 1.1, 22)), { col: K.white, p: 1, gap: 3, w: 6, over: .5, seed: sd + i * 10, ang: 1.1, draw: wax }, null, { occ: true, kn: false });
+      if (pupils > 0) { const pr_ = r * .5; part(C, P(ellipse(ex + look[0] * r * .4, y + look[1] * r * .4, pr_, pr_ * 1.05, 14)), { col: K.ink, p: 1, gap: 2.8, w: 4.5, over: .4, seed: sd + 2 + i * 10, ang: 1.3, draw: pupils }, null, { occ: false, kn: false }); }
+      return;
+    }
+    eye(C, P, ex, y, r, { ...E, pupil: look }, sd + i * 10, s, 1, col); brow(C, P, ex, y, r, E, sd + 30 + i, sg);
+  });
 }
 export function monster(C, o) {
   const T = T0(o), sd = o.seed || 600, s = o.s || 1, P = pts => T(pts), col = o.col || K.purple, pose = o.pose || 'stand';
@@ -283,16 +293,17 @@ export function monster(C, o) {
   if (pose === 'hug' || pose === 'lift') armDraw(arms[1], sd + 50);   // near arm over the body
   if (pose === 'eat') armDraw(arms[0], sd + 40);                        // the hand at the mouth
   // belly patch (lighter: white wax scribble), horns, ear flaps, tuft
-  if ((o.fillDraw ?? 1) > .6 && !mini) fill(C.f, P(S(ellipse(0, -Hh * .36, Wd * .3, Hh * .2, 20))), { col: K.white, p: .6, gap: 7, w: 9, ang: .3, seed: sd + 9, over: 1 });
+  if ((o.fillDraw ?? 1) * DRAW.f > .6 && !mini) fill(C.f, P(S(ellipse(0, -Hh * .36, Wd * .3, Hh * .2, 20))), { col: K.white, p: .6, gap: 7, w: 9, ang: .3, seed: sd + 9, over: 1 });
   const horns = mini ? [[0, -Hh * 1.0, 0]] : [[-Wd * .3, -Hh * .98, -.3], [Wd * .3, -Hh * .98, .3]];
   horns.forEach(([hx, hy, a], i) => { const hp = smooth(S([[hx - 16, hy + 6], [hx + 16, hy + 6], [hx + 10 + a * 30, hy - 30], [hx + a * 34, hy - 48], [hx - 10 + a * 30, hy - 30]]), 3); part(C, P(hp), { ...F, cross: false, seed: sd + 60 + i }, lw(sd + 62 + i, { w: 6 })); });
   if (!mini) [-1, 1].forEach((sg, i) => { const ex = sg * Wd * .66, ey = -Hh * .74; part(C, P(S(smooth([[ex, ey - 24], [ex + sg * 30, ey - 36], [ex + sg * 40, ey - 8], [ex + sg * 20, ey + 16], [ex, ey + 8]], 4))), { ...F, cross: false, seed: sd + 70 + i }, lw(sd + 72 + i, { w: 6 })); });
   if (mini) line(C.l, P(S(curve([[8, -Hh * 1.0], [20, -Hh * 1.12], [12, -Hh * 1.22], [0, -Hh * 1.16]]))), lw(sd + 75, { w: 5 }));
   else line(C.l, P(S(curve([[0, -Hh * 1.02], [10, -Hh * 1.12], [26, -Hh * 1.14], [22, -Hh * 1.04]]))), lw(sd + 75, { w: 5 }));
   // face: two big eyes, brows, cheeks, a wide mouth with two little teeth
-  if ((o.lineDraw ?? 1) >= 1) {
+  if (o.wax) { const ey = -Hh * .7, er = mini ? 15 : 19; const kf = DRAW.f, kl = DRAW.l; DRAW.f = 1; DRAW.l = 1; monsterEyes(C, P, 0, ey, er, sd + 300, look, E, s, col, o.wax, o.pupils ?? 0); DRAW.f = kf; DRAW.l = kl; }
+  if ((o.lineDraw ?? 1) >= 1 && DRAW.l >= 1) {
     const ey = -Hh * .7, er = mini ? 15 : 19;
-    monsterEyes(C, P, 0, ey, er, sd + 300, look, E, s, col);
+    if (!o.wax) monsterEyes(C, P, 0, ey, er, sd + 300, look, E, s, col);
     [[-Wd * .5, -Hh * .5], [Wd * .5, -Hh * .5]].forEach(([x, y], i) => dab(C.f, ...P(S([[x, y]]))[0], (9 + 7 * (E.cheek || .5)) * s, { col: K.pink, p: .55 + .3 * (E.cheek || .5), seed: sd + 90 + i, sq: .7 }));
     const my = -Hh * .44;
     if (E.mouth === 'smile' || E.mouth === 'wide') {
@@ -313,7 +324,41 @@ export function teacher(C, o) {
   part(C, P(smooth([[-40, -300], [40, -300], [64, -120], [84, -20], [-84, -20], [-64, -120]], 3)), { col: K.green, p: .7, gap: 11, w: 12, ang: .4, seed: sd + 1, over: 3 }, lo(sd + 2, { w: 5 }));
   [[-40, -290], [-70, -230], [-82, -170]].forEach(() => 0);
   part(C, P(tube(curve([[-38, -290], [-70, -230], [-82, -170]], 5), 16)), { col: K.peach, p: .5, gap: 9, w: 10, seed: sd + 3, over: 2 }, lo(sd + 4, { w: 5 }));
-  part(C, P(tube(curve([[38, -290], [80, -330], [90, -400]], 5), 16)), { col: K.peach, p: .5, gap: 9, w: 10, seed: sd + 5, over: 2 }, lo(sd + 6, { w: 5 }));
-  part(C, P(handCircle(92, -404, 12, sd + 7, 0, 16)), { col: K.peach, p: .5, gap: 8, w: 9, seed: sd + 8 }, lo(sd + 9, { w: 4.5 }));
+  const wv = o.wave ? 26 : 0;
+  part(C, P(tube(curve([[38, -290], [80, -330], [90 + wv, -400 + wv * .3]], 5), 16)), { col: K.peach, p: .5, gap: 9, w: 10, seed: sd + 5, over: 2 }, lo(sd + 6, { w: 5 }));
+  part(C, P(handCircle(92 + wv, -404 + wv * .3, 12, sd + 7, 0, 16)), { col: K.peach, p: .5, gap: 8, w: 9, seed: sd + 8 }, lo(sd + 9, { w: 4.5 }));
   head(C, { x: P([[0, -360]])[0][0], y: P([[0, -360]])[0][1], s: s * .9, view: 'front', expr: 'smile', hair: 'bun', hairCol: K.ink, seed: sd + 300 });
+}
+
+// ---------------- the teacher's back (over-the-shoulder foreground): hair, bun, ear, neck, collar, shoulders ----------------
+export function teacherBack(C, o) {
+  const T = T0(o), sd = o.seed || 950, P = pts => T(pts);
+  const hairF = { col: K.ink, p: .85, gap: 9, w: 11, ang: 1.1, seed: sd + 1, over: 3 };
+  // shoulders and the collar of a green dress (the bottom edge runs out of frame)
+  part(C, P(smooth([[-260, -40], [-200, -120], [-90, -170], [0, -180], [90, -170], [200, -120], [260, -40], [280, 200], [-280, 200]], 3)), { col: K.green, p: .7, gap: 11, w: 12, ang: .4, seed: sd + 2, over: 3 }, lo(sd + 3));
+  line(C.l, P([[-70, -172], [-30, -150], [0, -140], [30, -150], [70, -172]]), lo(sd + 4, { w: 6, col: K.white, p: 1 }));   // the collar
+  part(C, P(smooth([[-34, -170], [34, -170], [36, -230], [-36, -230]], 2)), { col: K.peach, p: .55, gap: 9, w: 10, seed: sd + 5, over: 2 }, lo(sd + 6, { w: 6 }));   // neck
+  part(C, P(handCircle(0, -330, 112, sd + 7, .05, 40)), hairF, lo(sd + 8));   // the back of the head: hair
+  part(C, P(handCircle(14, -452, 40, sd + 9, .05, 24)), { ...hairF, seed: sd + 10 }, lo(sd + 11, { w: 6 }));   // the bun
+  part(C, P(ellipse(104, -320, 16, 24, 16)), { col: K.peach, p: .55, gap: 7, w: 9, seed: sd + 12, over: 2 }, lo(sd + 13, { w: 5 }));   // an ear
+  line(C.l, P([[100, -326], [108, -316], [102, -306]]), lo(sd + 14, { w: 4 }));
+  for (let i = 0; i < 5; i++) line(C.l, P([[-60 + i * 30, -420 + 10 * Math.abs(i - 2)], [-50 + i * 30, -250]]), lo(sd + 20 + i, { w: 4, p: .5 }));   // hair strands
+}
+// ---------------- the backpack as a prop (sky blue, a flap, a zip, two straps; eyes peeking from the flap gap) ----------------
+export function backpackProp(C, o) {
+  const T = T0(o), sd = o.seed || 980, P = pts => T(pts), e = o.e || { on: true, pl: 1, pf: 1 };
+  if (!e.on) return;
+  const F = { col: K.sky, p: .8, gap: 8, w: 10, ang: .3, seed: sd, over: 2, draw: e.pf };
+  const body = smooth([[-80, 0], [80, 0], [88, -150], [60, -200], [-60, -200], [-88, -150]], 4);
+  part(C, P(body), F, lo(sd + 1, { draw: e.pl }));
+  const flap = smooth([[-84, -150], [84, -150], [76, -90], [0, -78], [-76, -90]], 3);
+  if (o.peek) monsterEyes(C, P, 0, -118, 10, sd + 40, o.look || [0, 0], MEXPR.happy, o.s || 1, K.sky);
+  part(C, P(flap), { ...F, seed: sd + 2, p: .9 }, lo(sd + 3, { draw: e.pl }));
+  if (o.peek) {   // the gap under the flap: eyes showing in a dark slit
+    part(C, P([[-50, -92], [50, -92], [46, -70], [-46, -70]]), { col: K.ink, p: .6, gap: 5, w: 7, seed: sd + 4, over: 1 }, null, { occ: true, kn: false });
+    monsterEyes(C, P, 0, -82, 9, sd + 40, o.look || [0, 0], MEXPR.happy, o.s || 1, K.ink);
+  }
+  if (o.zip != null) line(C.l, P([[-70, -150], [-70 + 140 * o.zip, -150]]), lo(sd + 5, { w: 5, col: K.white, p: 1 }));   // the zip (drawn as the slider moves)
+  line(C.l, P([[-40, -120], [-40, -30]]), lo(sd + 6, { draw: e.pl, w: 4, p: .6 })); line(C.l, P([[40, -120], [40, -30]]), lo(sd + 7, { draw: e.pl, w: 4, p: .6 }));
+  line(C.l, P([[-20, -200], [-10, -222], [10, -222], [20, -200]]), lo(sd + 8, { draw: e.pl, w: 6 }));   // the handle
 }

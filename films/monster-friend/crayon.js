@@ -151,7 +151,7 @@ function cutPath(pp, len) {
 
 // ——— solid soft fill: small areas (blush, pupils) filled with circular scribbles ———
 export function dab(L, x, y, r, o = {}) {
-  fill(L, handCircle(x, y, r, o.seed ?? 1, 0, 20).map(([px, py]) => [px, y + (py - y) * (o.sq ?? 1)]), { col: o.col || '#ee8ea4', p: o.p ?? 0.7, gap: o.gap ?? 4.5, w: o.w ?? 6, over: o.over ?? 1.5, seed: o.seed ?? 1, ang: o.ang ?? 0.5, boil: o.boil ?? 1 });
+  fill(L, handCircle(x, y, r, o.seed ?? 1, 0, 20).map(([px, py]) => [px, y + (py - y) * (o.sq ?? 1)]), { col: o.col || '#ee8ea4', p: o.p ?? 0.7, gap: o.gap ?? 4.5, w: o.w ?? 6, over: o.over ?? 1.5, seed: o.seed ?? 1, ang: o.ang ?? 0.5, boil: o.boil ?? 1, draw: o.draw ?? 1 });
 }
 
 // ——— shape tools (world coords) ———

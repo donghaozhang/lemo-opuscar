@@ -1,5 +1,11 @@
 // Shared parts for drawing characters: part occlusion (erase lines/colour behind + cut-paper backing), limb tubes, canvas groups
-import { layer, clear, line, fill, CAM, sx, sy } from './crayon.js';
+import { layer, clear, line as line_, fill as fill_, dab as dab_, CAM, sx, sy } from './crayon.js';
+// Draw progress for whole characters (set by the caller before drawing one that is being 'drawn live'): line and fill progress 0..1
+export const DRAW = { l: 1, f: 1 };
+// line / fill / dab that honour DRAW (the global draw progress of a figure being drawn live)
+export const line = (L, pts, o = {}) => line_(L, pts, DRAW.l < 1 ? { ...o, draw: (o.draw ?? 1) * DRAW.l } : o);
+export const fill = (L, poly, o = {}) => fill_(L, poly, DRAW.f < 1 ? { ...o, draw: (o.draw ?? 1) * DRAW.f } : o);
+export const dab = (L, x, y, rad, o = {}) => dab_(L, x, y, rad, DRAW.f < 1 ? { ...o, draw: (o.draw ?? 1) * DRAW.f } : o);
 
 // A "character group": three layers, backing (knock), fill (f), outline (l)
 export function group() { return { k: layer(), f: layer(), l: layer() }; }
@@ -7,7 +13,8 @@ export function clearGroup(C) { clear(C.k); clear(C.f); clear(C.l); }
 
 function pathScreen(g, poly) { g.beginPath(); poly.forEach(([x, y], i) => i ? g.lineTo(sx(x), sy(y)) : g.moveTo(sx(x), sy(y))); g.closePath(); }
 export function erase(L, poly) { const g = L.g; g.save(); g.globalCompositeOperation = 'destination-out'; g.globalAlpha = 1; g.fillStyle = '#000'; pathScreen(g, poly); g.fill(); g.restore(); }
-export function knock(C, poly) { const g = C.k.g; g.save(); g.globalAlpha = 1; g.fillStyle = '#000'; pathScreen(g, poly); g.fill(); g.restore(); }
+// a figure being drawn live knocks the page out only once it is mostly coloured
+export function knock(C, poly) { if (DRAW.f < .6) return; const g = C.k.g; g.save(); g.globalAlpha = 1; g.fillStyle = '#000'; pathScreen(g, poly); g.fill(); g.restore(); }
 
 // Draw one part: it hides the parts drawn before it (erases their lines and colour), then fills and outlines itself
 // fo: fill params (null = no fill), lo: outline params (null = no outline)
@@ -15,7 +22,7 @@ export function part(C, poly, fo, lo, { occ = true, kn = true } = {}) {
   if (occ) { erase(C.l, poly); if (fo) erase(C.f, poly); }
   if (kn) knock(C, poly);
   if (fo) fill(C.f, poly, fo);
-  if (lo) line(C.l, [...poly, poly[1] || poly[0]], lo);
+  if (lo) { const a = poly[0], b = poly[poly.length - 1]; const closed = Math.hypot(a[0] - b[0], a[1] - b[1]) < 1e-6; line(C.l, closed ? [...poly, poly[1] || poly[0]] : [...poly, poly[0], poly[1] || poly[0]], lo); }
 }
 
 // Limb tube: offset both sides of a polyline + round caps, returns a closed polygon

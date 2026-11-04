@@ -143,6 +143,7 @@ function prog(gl, fs) {
   return { p, u };
 }
 
+const FLUSH = new URLSearchParams(location.search).get('flush') === '1';   // force a 2D flush before each upload (a debugging aid; not needed)
 export function makeComp(canvas, w = W, h = H) {
   const gl = canvas.getContext('webgl2', { preserveDrawingBuffer: true, premultipliedAlpha: false, antialias: false, alpha: false });
   if (!gl) throw new Error('no webgl2');
@@ -185,13 +186,15 @@ export function makeComp(canvas, w = W, h = H) {
       use(P.paper, { uPaper: paper, uPoff: poff }); draw();
     },
     knock(cv, paper = [0.957, 0.937, 0.890], poff = [0, 0]) {
+      if (FLUSH) cv.getContext('2d').getImageData(0, 0, 1, 1);
       gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, layerTex);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, cv);
       gl.bindFramebuffer(gl.FRAMEBUFFER, T[cur].f); gl.disable(gl.BLEND);
       use(P.knock, { uPaper: paper, uPoff: poff }); gl.uniform1i(P.knock.u.uL, 0); draw();
     },
-    group(C, o = {}) { this.knock(C.k.c); this.crayon(C.f.c, o); this.crayon(C.l.c, o); },
+    group(C, o = {}) { this.knock(C.k.c, o.paper); this.crayon(C.f.c, o); this.crayon(C.l.c, o); },
     crayon(cv, { goff = [0, 0], gain = 1, soft = 0.07 } = {}) {
+      if (FLUSH) cv.getContext('2d').getImageData(0, 0, 1, 1);
       gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, layerTex);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, cv);
       gl.bindFramebuffer(gl.FRAMEBUFFER, T[cur].f);

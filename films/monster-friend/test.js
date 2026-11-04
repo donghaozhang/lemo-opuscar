@@ -15,6 +15,7 @@ export function test(comp, t, which, Q) {
   CAM.x = 960; CAM.y = 540; CAM.s = 1;
   if (which === 'model') modelPage(Q);
   else if (which === 'faces') facesPage(Q);
+  else if (which === 'hide') { monster(C, { x: 960, y: 700, s: 1.3, pose: 'hide', expr: 'mischief', look: [.5, -.2], seed: 600 }); }
   comp.paperCam(0, 0, 1);
   comp.begin();
   comp.crayon(BG.c);
