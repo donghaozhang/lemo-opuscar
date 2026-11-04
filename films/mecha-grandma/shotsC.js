@@ -76,7 +76,8 @@ export function arrive(S) {
   g.drawImage(S.A.storm.c, -300, -200); e.drawImage(S.A.storm.e, -300, -200);
   const T = S.A.tower, z = 2.2, fy = T.h - 88 * T.fh;
   g.save(); g.translate(-200, 540 - (fy + T.fh / 2) * z); g.scale(z, z); g.drawImage(T.c, 0, 0); g.restore();
-  e.save(); e.translate(-200, 540 - (fy + T.fh / 2) * z); e.scale(z, z); e.drawImage(T.e, 0, 0); e.restore();
+  e.save(); e.globalAlpha = .25; e.translate(-200, 540 - (fy + T.fh / 2) * z); e.scale(z, z); e.drawImage(T.e, 0, 0); e.restore();
+  g.save(); g.fillStyle = rgba('#0a0e24', .35); g.fillRect(0, 0, W, H); g.restore();
   // the lit office window (centre) and the big 88F plate
   const wy = 540 - T.fh * z / 2 + 6;
   g.fillStyle = '#bfe6ff'; g.fillRect(860, wy, 560, T.fh * z - 22); airbrush(e, 1140, wy + 40, 420, 120, '#8fd0ff', .6);

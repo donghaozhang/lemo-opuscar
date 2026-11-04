@@ -172,11 +172,11 @@ export function chat(S) {
   else { vgrad(g, 0, 0, W, H, [[0, '#3a2420'], [1, '#1a0e0c']]); for (let i = 0; i < 10; i++) airbrush(g, hash(i) * W, hash(i + 2) * H, 90, 90, '#ffb860', .2, .2); }
   // her (or his) hand holding the phone
   const handC = two ? pal.jskin : pal.gskin;
-  cel(g, path([[700, 1100], [720, 860], [800, 820], [880, 860], [900, 1100]]), { f: handC.f, s: handC.s, so: [-8, -4], l: handC.l, lw: 3 });
+  const hx0 = two ? -200 : 0; cel(g, path([[700 + hx0, 1100], [720 + hx0, 860], [800 + hx0, 820], [880 + hx0, 860], [900 + hx0, 1100]]), { f: handC.f, s: handC.s, so: [-8, -4], l: handC.l, lw: 3 });
   const B = two ? [{ who: 'me', text: TXT.chat2[0], t: .25 }, { who: 'them', text: TXT.chat2[1], t: .9 }]
     : [{ who: 'me', text: TXT.chat1[0], t: .2 }, { who: 'them', text: TXT.chat1[1], t: 1.0 }, { who: 'them', text: TXT.chat1[2], t: 1.6 }, { who: 'them', text: TXT.chat1[3], t: 2.2 }];
-  const out = phoneChat(g, e, 960, 560, 1.3, two ? '外婆' : '阿杰', B, lt);
-  for (const k of [-1, 1]) cel(g, path([[960 + k * 250, 760], [960 + k * 200, 700], [960 + k * 236, 680], [960 + k * 280, 740]]), { f: handC.f, s: handC.s, so: [-4, -4], l: handC.l, lw: 3 });
+  const out = phoneChat(g, e, two ? 760 : 960, 560, 1.3, two ? '外婆' : '阿杰', B, lt);
+  for (const k of [-1, 1]) cel(g, path([[960 + hx0 + k * 250, 760], [960 + hx0 + k * 200, 700], [960 + hx0 + k * 236, 680], [960 + hx0 + k * 280, 740]]), { f: handC.f, s: handC.s, so: [-4, -4], l: handC.l, lw: 3 });
   return { texts: out };
 }
 export function decide(S) {
