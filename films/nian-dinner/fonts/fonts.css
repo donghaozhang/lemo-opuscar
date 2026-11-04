@@ -1,0 +1,5 @@
+/* Noto Serif SC 700 (OFL 1.1) and Ma Shan Zheng 400 (OFL 1.1), from npm @fontsource/noto-serif-sc and @fontsource/ma-shan-zheng 5.3.1; build.sh re-fetches them */
+@font-face{font-family:'Noto Serif SC';font-style:normal;font-weight:700;font-display:block;src:url(noto-serif-sc-chinese-simplified-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Noto Serif SC';font-style:normal;font-weight:700;font-display:block;src:url(noto-serif-sc-latin-700-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Ma Shan Zheng';font-style:normal;font-weight:400;font-display:block;src:url(ma-shan-zheng-chinese-simplified-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Ma Shan Zheng';font-style:normal;font-weight:400;font-display:block;src:url(ma-shan-zheng-latin-400-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}

@@ -1,0 +1,7 @@
+out/
+stills/tmp/
+music/*.wav
+music/stems/
+*.wav
+*.mp4
+events.json

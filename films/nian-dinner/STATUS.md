@@ -7,3 +7,4 @@ Environment: Node 22, ffmpeg 7+ static build installed to /usr/local/bin (system
 sample libraries karoryfer + vcsl + vsco2ce fetched.
 
 2026-11-04 10:14Z  treatment written (TREATMENT.md), setup done
+2026-11-04 10:52Z  engine, characters, sets, all 43 shots written; model sheets, expression sheet and style frames in stills/
