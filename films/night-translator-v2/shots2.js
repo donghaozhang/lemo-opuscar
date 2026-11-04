@@ -34,16 +34,17 @@ const ret = (cam, focusW, tint = 'blue', tintAmt = .55) => ({ cam, focus: toFilm
 
 // ================================================================ COLD OPEN
 export function coldRoll(g, t, sh) {
-  const u = t - sh.t0, cx = K([[0, 1200], [3.2, 820]], u), cam = { x: cx, y: 860, z: 1.6 };
+  const u = t - sh.t0, cx = K([[0, 1150], [3.2, 820]], u), cam = { x: cx, y: 820, z: 2.0 };
   setCam(g, cam);
   form(g, [[-200, -200], [1800, -200], [1800, 900], [-200, 900]], { v: .17, line: 0, grad: .1 });
   for (let b = 0; b < 8; b++) form(g, [[b * 260 - 40, 300], [b * 260 + 180, 300], [b * 260 + 180, 900], [b * 260 - 40, 900]], { v: .13, line: 1.6 });
   form(g, [[-200, 900], [1800, 900], [1800, 1300], [-200, 1300]], { v: .24, line: 2, grad: .1 });
   for (let i = -8; i < 24; i++) stroke(g, [[i * 90, 904], [i * 90 - 60, 1300]], 1.2, { taper: 0, alpha: .5 });
   g.save(); g.globalAlpha = .22; g.fillStyle = grey(1); g.beginPath(); g.moveTo(700, -200); g.lineTo(980, -200); g.lineTo(1300, 1300); g.lineTo(900, 1300); g.fill(); g.restore();
-  const x = K([[0, 1600], [3.3, 700]], u), r = 46;
+  const x = K([[0, 1500], [3.3, 720]], u), r = 70;
+  SET.firelight(g, x, 860, 260, 0, .35);
   SET.can(g, x, 900 - r + 6, r, .58);
-  g.save(); g.translate(x, 900 - r + 6); g.rotate(-(x - 1600) / r); stroke(g, [[0, -r * .78], [0, -r * .2]], 3, { taper: 0 }); g.restore();
+  g.save(); g.translate(x, 900 - r + 6); g.rotate(-(x - 1500) / r); stroke(g, [[0, -r * .78], [0, -r * .2]], 3, { taper: 0 }); g.restore();
   return ret(cam, [x, 860], 'blue', .7);
 }
 function coldCorner(g, o) {
@@ -177,6 +178,13 @@ export function pageFix(g, t, sh) {
   S2.pageInsert(g, { typed: 1, strike: seg(t, st[0], st[0] + .35), fix: seg(t, st[1], st[1] + .9), creased: true, seed: 3, rot: .015 }, R);
   return ret(cam, [720, 560], 'blue', .4);
 }
+export function ljPop(g, t, sh) {
+  const cam = { x: 935, y: 610, z: 3.0 };
+  blurredSet(g, cam, gg => SET.archive(gg, { pile: pileAt(t), done: doneAt(t), hours: hoursAt(t) }), 4);
+  laoJiao(g, deskLJ(t, { lensOut: K([[HIT.rPop - .05, .3], [HIT.rPop + .3, 1.7, 'spring']], t), glint: K([[HIT.rPop, 0], [HIT.rPop + .1, 1], [HIT.rPop + .5, 0]], t),
+    head: K([[HIT.rPop, 0], [HIT.rPop + .3, .35, 'back']], t), lean: K([[HIT.rPop, 0], [HIT.rPop + .3, -.14]], t) }));
+  return ret(cam, LJ_HEAD, 'blue', .55);
+}
 export function ljRead(g, t, sh) {
   const cam = { x: 935, y: 610, z: 3.0 };
   blurredSet(g, cam, gg => SET.archive(gg, { pile: pileAt(t), done: doneAt(t), hours: hoursAt(t) }), 4);
@@ -214,7 +222,7 @@ export function deskThrow(g, t, sh) {
   return r;
 }
 export function deskFlip(g, t, sh) {
-  const cam = { x: 700, y: 690, z: 1.75 };
+  const cam = sh.opt.wide ? { x: 720, y: 700, z: 1.8 } : { x: 600, y: 745, z: 2.5 };
   const s = XS, flipU = seg(t, HIT.rFlip, HIT.rFlip + .55), topU = seg(t, HIT.rTopple, HIT.rTopple + .5);
   const spin = flipU * Math.PI + topU * Math.PI + (flipU >= 1 && topU <= 0 ? Math.sin((t - HIT.rFlip) * 5) * .09 : 0);
   const dy = K([[HIT.rCrouch, 0], [HIT.rFlip, 6], [HIT.rFlip + .28, -150, 'eo'], [HIT.rFlip + .55, 8 * s, 'ei'], [HIT.rTopple, 8 * s], [HIT.rTopple + .25, -90, 'eo'], [HIT.rTopple + .5, 0, 'ei']], t);
@@ -325,7 +333,7 @@ export function jamInsert(g, t, sh) {
     form(gg, [[-50, -50], [1490, -50], [1490, 1130], [-50, 1130]], { v: .06, line: 0, grad: 0 });
     gg.save(); gg.fillStyle = grey(.9); gg.font = '900 96px "Playfair Display SC"'; gg.textAlign = 'center'; gg.textBaseline = 'middle'; gg.fillText('THE NIGHT', 720, 470); gg.fillText('TRANSLATOR', 720, 600); gg.restore();
     // the burn hole spreading from the gate's heat
-    const r = 30 + u * 200, cx = 900, cy = 420;
+    const r = 14 + u * u * 70, cx = 1180, cy = 230;
     gg.save(); const gr = gg.createRadialGradient(cx, cy, r * .5, cx, cy, r * 1.3); gr.addColorStop(0, grey(1, 1)); gr.addColorStop(.6, grey(.95, .9)); gr.addColorStop(.8, grey(.35, .9)); gr.addColorStop(1, grey(.1, 0));
     gg.fillStyle = gr; gg.beginPath(); for (let i = 0; i < 24; i++) { const a = i / 24 * Math.PI * 2, rr = r * 1.3 * (.8 + hash(i + Math.floor(u * 8)) * .4); i ? gg.lineTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr) : gg.moveTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr); } gg.fill(); gg.restore();
   }, { run: K([[sh.t0, 40], [sh.t0 + .5, 4]], t) });
@@ -378,6 +386,7 @@ export function fireTrack(g, t, sh) {
     squash: (1 + Math.sin(t * 22) * .03) * (1 - duck * .4) };
   const canW = [x - 10, GY - 205 * s * xy.squash];
   xy.armL = { t: loc(xy, [canW[0] - 26, canW[1] + 8]) }; xy.armR = { t: loc(xy, [canW[0] + 26, canW[1] + 8]) };
+  SET.firelight(g, canW[0], canW[1] + 40, 420, t, .5);
   SET.smoke(g, canW[0], canW[1] - 10, 1, t, { n: 10, rise: 130, drift: -7, s: 1.4, speed: 1.4 });
   xiaoYi(g, xy);
   SET.can(g, canW[0], canW[1], 30, .5);
@@ -422,6 +431,7 @@ export function catchWide(g, t, sh) {
   const lj = { x: lx, y: CY - 5, s: 1.4, t, dir: -1, lean: K([[HIT.launch + .3, .25], [HIT.launch + .55, -.12], [HIT.catch, -.05]], t), lensOut: K([[HIT.launch + .5, 0], [HIT.launch + .8, 1]], t),
     head: K([[HIT.launch + .55, -.3], [HIT.catch - .2, -.35], [HIT.catch + .3, 0], [HIT.popUp + .5, .2]], t) };
   lj.pen = loc(lj, [bk[0] + 52, bk[1] + 4]); lj.stamp = loc(lj, [bk[0] - 30, bk[1] + 30]);
+  if (t < HIT.catch) SET.firelight(g, canW[0], canW[1] + 30, 380, t, .45);
   if (t > HIT.launch + .2) { laoJiao(g, lj); SET.bucket(g, bk[0], bk[1], { water: true }); }
   if (t < HIT.catch) { SET.can(g, canW[0], canW[1], 30, .5); S2.flame(g, canW[0], canW[1] - 20, 50, t, 1); SET.smoke(g, canW[0], canW[1] - 10, 1, t, { n: 10, rise: 110, drift: holding ? -5 : -2, s: 1.3, speed: 1.3 }); }
   SET.smoke(g, bk[0], bk[1] - 10, K([[HIT.catch, 0], [HIT.catch + .1, 1.4], [HIT.heal + 1.5, .2]], t), t, { n: 14, rise: 330, s: 2.2, v: .92, speed: .7 });
@@ -448,15 +458,15 @@ export function dryWide(g, t, sh) {
 export function penHandover(g, t, sh) {
   const cam = { x: 720, y: 540, z: 1 }; setCam(g, cam);
   blurredSet(g, { x: 1150, y: 640, z: 3 }, gg => tenderSet(gg, t), 9); setCam(g, cam);
-  const hx = K([[sh.t0, 1240], [HIT.handover - .2, 1020, 'eo'], [HIT.handover + .5, 1020], [sh.t1, 1400, 'ei']], t);
-  const gx = K([[sh.t0, 200], [HIT.handover - .2, 430, 'eo']], t);
+  const hx = K([[sh.t0, 1500], [HIT.handover - .2, 1230, 'eo'], [HIT.handover + .5, 1230], [sh.t1, 1700, 'ei']], t);
+  const gx = K([[sh.t0, 60], [HIT.handover - .2, 300, 'eo']], t);
   const passed = t > HIT.handover;
-  S2.gripHand(g, gx, 600, 3.2, .1, K([[HIT.handover - .1, .9], [HIT.handover + .05, .15]], t));
-  if (!passed) S2.penHand(g, hx, 560, 3.2, -.08);
+  S2.gripHand(g, gx, 600, 4.2, .1, K([[HIT.handover - .1, .9], [HIT.handover + .05, .15]], t));
+  if (!passed) S2.penHand(g, hx, 560, 4.2, -.08);
   else {
-    S2.penHand(g, hx, 560, 3.2, -.08, true);
-    g.save(); g.translate(gx + 90, 610); g.rotate(.1); form(g, [[-20, -16], [480, -18], [480, 18], [-20, 16]], { v: .58, line: 2.4, grad: .2 });
-    red(g, m => { m.beginPath(); m.moveTo(480, -18); m.lineTo(560, 0); m.lineTo(480, 18); m.closePath(); m.fill(); }, .38); g.restore();
+    S2.penHand(g, hx, 560, 4.2, -.08, true);
+    g.save(); g.translate(gx + 120, 612); g.rotate(.1); form(g, [[-20, -21], [620, -23], [620, 23], [-20, 21]], { v: .58, line: 2.6, grad: .2 });
+    red(g, m => { m.beginPath(); m.moveTo(620, -23); m.lineTo(725, 0); m.lineTo(620, 23); m.closePath(); m.fill(); }, .38); g.restore();
   }
   return ret(cam, [720, 580], 'amber', .32);
 }

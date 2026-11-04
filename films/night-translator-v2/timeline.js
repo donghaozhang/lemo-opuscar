@@ -35,7 +35,7 @@ export const SHOTS = [
   ['SAY', 0, 'card'], ['GULP', 0, 'gulp'],
   ['WEST', 0, 'deskGrab', { reel: 'WEST' }], ['WEST', 3, 'viewer', { reel: 'WEST' }], ['WEST', 6, 'reelCard', { reel: 'WEST' }], ['WEST', 12, 'page', { reel: 'WEST' }],
   ['WEST', 18, 'ljRead', { reel: 'WEST' }], ['WEST', 20, 'pageFix', { reel: 'WEST' }], ['WEST', 25, 'deskThrow', { reel: 'WEST' }],
-  ['ROMA', 0, 'viewer', { reel: 'ROMA' }], ['ROMA', 3, 'reelCard', { reel: 'ROMA' }], ['ROMA', 9, 'page', { reel: 'ROMA' }], ['ROMA', 15.5, 'deskFlip'],
+  ['ROMA', 0, 'viewer', { reel: 'ROMA' }], ['ROMA', 3, 'reelCard', { reel: 'ROMA' }], ['ROMA', 9, 'page', { reel: 'ROMA' }], ['ROMA', 15.5, 'deskFlip'], ['ROMA', 18, 'ljPop'], ['ROMA', 19, 'deskFlip', { wide: true }],
   ['ROMA', 21.5, 'pageFix', { reel: 'ROMA' }], ['ROMA', 28.5, 'deskDuck'],
   ['MONS', 0, 'viewer', { reel: 'MONS' }], ['MONS', 3, 'reelCard', { reel: 'MONS' }], ['MONS', 9, 'thinkCats'], ['MONS', 13, 'pageHand', { reel: 'MONS' }], ['MONS', 22, 'deskCatch'],
   ['MONT', 0, 'mClock', { h0: 1.0, h1: 2.4 }], ['MONT', 2.5, 'mKeys'], ['MONT', 5, 'mTube'], ['MONT', 7.5, 'mStamp'], ['MONT', 10, 'mWide'],

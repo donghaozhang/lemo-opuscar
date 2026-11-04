@@ -243,6 +243,19 @@ export function aisleBack(g, x0, x1, o = {}) {
   }
   form(g, rect(x0 - 10, FLOOR, x1 - x0 + 20, 300), { v: .36, line: 2, grad: .1 });
   for (let b = Math.floor(x0 / 90); b <= Math.ceil(x1 / 90); b++) stroke(g, [[b * 90, FLOOR + 6], [b * 90 - 40, 1080]], 1, { taper: 0, alpha: .4 });
+  // pools of light under the aisle lamps: subjects pass from light into dark and back
+  for (let b = Math.floor(x0 / 600) - 1; b <= Math.ceil(x1 / 600); b++) {
+    const lx = b * 600 + 150;
+    g.save(); g.globalAlpha = .38; const gr = g.createLinearGradient(lx, 60, lx, FLOOR + 120); gr.addColorStop(0, grey(1, .9)); gr.addColorStop(1, grey(1, .25)); g.fillStyle = gr;
+    g.beginPath(); g.moveTo(lx - 20, 60); g.lineTo(lx + 20, 60); g.lineTo(lx + 260, FLOOR + 140); g.lineTo(lx - 260, FLOOR + 140); g.closePath(); g.fill(); g.restore();
+    form(g, ellipsePts(lx, 62, 20, 5, 0, 12), { v: 1, line: 0 });
+  }
+}
+// firelight: a flickering warm pool around a burning thing (drawn before the subject)
+export function firelight(g, x, y, r, t, a = .45) {
+  const k = a * (.85 + .15 * Math.sin(t * 31) * Math.sin(t * 17));
+  const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, grey(1, k)); gr.addColorStop(1, grey(1, 0));
+  g.fillStyle = gr; g.fillRect(x - r, y - r, 2 * r, 2 * r);
 }
 // foreground uprights passing in front (drawn with their own parallax by the shot)
 export function aisleFront(g, x0, x1) {

@@ -111,7 +111,7 @@ function drawCard(g, sh, t) {
   if (spec.kind === 'end') return C2.endCard(g, lt, 'END');
   return C2.engineCard(g, spec, lt, sec);
 }
-const IRIS_IN = { coldRoll: 1.3, estWide: .7, dryWide: .8 }, IRIS_OUT = { catchWide: .8 };
+const IRIS_IN = { coldRoll: .8, estWide: .45, dryWide: .5 }, IRIS_OUT = { catchWide: .5 };
 const isCard = sh => sh.name === 'card' || sh.name === 'reelCard';
 
 export function renderFilm(g, t) {
@@ -124,7 +124,7 @@ export function renderFilm(g, t) {
   setFrame(ta, { boil: 1 }); IS.sepLine = .5; IS.lineScale = 1;
   if (sh.name === 'title') {
     setMask(null); titleCard(fg, ta);
-    exposure = K([[sh.t0, .6], [sh.t0 + .2, 1], [sh.t1 - .45, 1], [sh.t1, 0]], t);
+    exposure = K([[sh.t0, .6], [sh.t0 + .2, 1], [sh.t1 - .35, 1], [sh.t1, .45]], t);
   } else if (isCard(sh)) {
     setMask(null); drawCard(fg, sh, t);
     exposure = K([[sh.t0, .5], [sh.t0 + .15, 1], [sh.t1 - .2, 1], [sh.t1, .6]], t);
