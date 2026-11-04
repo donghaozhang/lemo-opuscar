@@ -19,7 +19,10 @@ const film = TEST ? null : await import('./film.js');
 const testMod = TEST ? await import('./test.js') : null;
 
 function clear() { for (const g of [fr, gl2]) { g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H); g.globalAlpha = 1; g.filter = 'none'; g.globalCompositeOperation = 'source-over'; } tr.setTransform(1, 0, 0, 1, 0, 0); tr.globalAlpha = 1; tr.filter = 'none'; tr.globalCompositeOperation = 'source-over'; }
+let POSTER = null;
+if (TEST === 'poster') { POSTER = await testMod.poster(tr, fr, gl2); }
 function render(t) {
+  if (TEST === 'poster') { GL.render(trc, frc, glc, { time: 116.6, ...POSTER }); return; }
   clear();
   if (testMod) {
     let o;

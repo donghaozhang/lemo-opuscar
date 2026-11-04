@@ -6,3 +6,4 @@
 | 10:19 | treatment | TREATMENT.md written: 48 shots, 140 s, cue map, sound table |
 | 11:02 | look | engine (carve, compositor, rigs), five puppets, two sets; model sheet, expression sheet, six style frames in stills/; acting and shots drafted for all 48 shots |
 | 11:22 | score+mix | score.py (gong-and-drum, banhu, suona once, flute, sanxian), mix.py foley; cuecheck 0 ms; first render running: ~13x60 frames of 3360 |
+| 11:26 | render 1 | first full render at 240/1120 of 1120 frames per worker (3 workers); hand-over height and ember fixed for render 2; poster mode added |

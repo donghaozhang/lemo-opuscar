@@ -6,7 +6,7 @@ TL = json.load(open(os.path.join(D, 'timeline.json'))); H = TL['hit']
 EV = json.load(open(os.path.join(D, 'events.json'))); ev = EV.get('ev') or EV.get('events')
 # which event types are the visual hits the music must land on, and the hit they belong to
 MAP = {'match': 'match', 'ignite': 'lampOn', 'clap': ('clap1', 'clap2', 'clap3'), 'presson': ('titleIn', 'mountain', 'pine', 'monkeyIn', 'labelIn', 'maidenIn', 'endIn'),
-       'liftoff': ('titleOut', 'labelOut', 'skullOff'), 'thwack': ('hit1', 'hit2', 'hit3', 'hit4', 'demonBack'), 'land': ('land1', 'land2', 'land3', 'land4'),
+       'liftoff': ('titleOut', 'labelOut', 'skullOff', 'cloudOff'), 'thwack': ('hit1', 'hit2', 'hit3', 'hit4', 'demonBack'), 'land': ('land1', 'land2', 'land3', 'land4'),
        'flare': 'eyeFlare', 'swap': 'headSwap', 'fallflap': 'fall', 'grab': 'grab', 'skull': 'skullHit', 'handtap': 'tap', 'strike': 'strike', 'pfft': 'out', 'click': 'click',
        'torchon': 'torch', 'applause': 'bigGong', 'chain': 'lampLift', 'lamphand': 'taken0', 'gutter': 'gutter', 'rodslip': 'rodsSlip', 'thud': 'clawDown', 'gasp': 'gasp'}
 worst = 0; n = 0; bad = []

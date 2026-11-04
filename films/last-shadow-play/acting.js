@@ -276,9 +276,9 @@ export function masterBody(t) {
     // stands, reaches for the lamp, hands it over, walks off
     const r = E(t, T.lampLift - .6, T.lampLift), dn = E(t, T.lampLift, T.lampOut), rel = E(t, T.taken1, T.taken1 + .6), wk = seg(t, T.walkOff, T.walkEnd);
     p.handF = 'grip'; p.handB = 'open';
-    p.hFw = [lerp(lerp(1240, 1140, r), 1180, dn), lerp(lerp(430, 150, r), 400, dn)];
+    p.hFw = [lerp(lerp(1240, 1140, r), 1180, dn), lerp(lerp(430, 150, r), 500, dn)];
     p.hBw = [1240, 440 - 30 * dn];
-    if (rel > 0) { p.hFw = [lerp(1180, 1250, rel), lerp(400, 470, rel)]; p.handF = 'open'; }
+    if (rel > 0) { p.hFw = [lerp(1180, 1250, rel), lerp(500, 540, rel)]; p.handF = 'open'; }
     p.head = .05 - .1 * E(t, T.look, T.look + .5);
     if (wk > 0) { p.x = lerp(1300, 2100, wk); p.walk = wk; p.hFw = [p.x - 60 + 30 * Math.sin(wk * 30), 480]; p.hBw = [p.x + 20, 500]; p.head = .1; }
   }
@@ -314,8 +314,8 @@ export function boyBody(t) {
     p.hFw = [lerp(1130, 1040, up), lerp(560 + 40 * (1 - out), 470, up)]; p.hBw = null;
     if (t > T.straighten) { p.hBw = [1060, 520]; p.hFw = [1040, 470]; p.head = -.1 * E(t, T.look, T.look + .5); }
     if (t > T.look) p.headFlip = -1;
-    if (tk > 0) { p.handF = 'open'; p.handB = 'open'; p.phone = 1 - tk; p.torch = 1 - tk; p.hFw = [lerp(1040, 1160, tk), lerp(470, 430, tk)]; p.hBw = [lerp(1060, 1190, tk), lerp(520, 450, tk)]; p.head = -.1 + .15 * tk; }
-    if (t > T.taken1 + .3) { p.handF = 'grip'; p.handB = 'grip'; p.hFw = [1160, 430]; p.hBw = [1190, 450]; p.head = .05 + .05 * sinA(t, .5, 1); p.headFlip = t > T.walkOff + 1.5 ? 1 : -1; }
+    if (tk > 0) { p.handF = 'open'; p.handB = 'open'; p.phone = 1 - tk; p.torch = 1 - tk; p.hFw = [lerp(1040, 1160, tk), lerp(470, 500, tk)]; p.hBw = [lerp(1060, 1190, tk), lerp(520, 525, tk)]; p.head = -.1 + .15 * tk; }
+    if (t > T.taken1 + .3) { p.handF = 'grip'; p.handB = 'grip'; p.hFw = [1160, 500]; p.hBw = [1190, 525]; p.head = .12 + .05 * sinA(t, .5, 1); p.headFlip = t > T.walkOff + 1.5 ? 1 : -1; }
   } else {   // dawn: alone with the Monkey King
     p.handF = 'grip'; p.handB = 'grip'; p.hFw = null; p.hBw = null; p.x = 1100; p.rot = -.06; p.head = -.05;
     if (t > T.twist2 - .2 && t < T.flip3 + .3) p.hFa = seg(t, T.twist2, T.flip3 + .2) * TAU;
@@ -327,8 +327,8 @@ export function lights(t) {
   const fl = 1 + .06 * (vnoise(t * 7) - .5) * 2 + .03 * Math.sin(t * 23);
   let lamp = 0;
   if (t >= T.lampOn) { const u = t - T.lampOn; lamp = (u < .45 ? lerp(.1, 1, eo(u / .45)) + .35 * Math.sin(u / .45 * Math.PI) : 1) * fl; }
-  if (t >= T.gutter) { const g = seg(t, T.gutter, T.out); lamp = lerp(1, .2, g) * (1 - .55 * g * Math.abs(Math.sin(t * 43)) ) * fl; }
-  if (t >= T.out) lamp = .2 * fl * (1 + .5 * (vnoise(t * 11) - .5));
+  if (t >= T.gutter) { const g = seg(t, T.gutter, T.out); lamp = lerp(1, .3, g) * (1 - .55 * g * Math.abs(Math.sin(t * 43)) ) * fl; }
+  if (t >= T.out) lamp = .3 * fl * (1 + .5 * (vnoise(t * 11) - .5));
   if (t >= T.walkOff) lamp *= 1 - E(t, T.cricketsOut, T.walkEnd);
   if (t >= T.tilt0) lamp = 0;
   let match = 0;

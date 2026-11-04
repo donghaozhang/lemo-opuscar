@@ -146,7 +146,7 @@ function renderBack(t, cam, o) {
   drawRods(tr, rl.map(r => r[0]), rl.map(r => r[1]), 1.6 * K, .72, 3.2 * K);
   // the oil lamp (front + glow) at its hook, or in the hands at the hand-over
   let lampPos = LAMP;
-  if (t >= T.lampLift) { const dn = E(t, T.lampLift, T.lampOut), tk = E(t, T.taken0, T.taken1); lampPos = [lerp(LAMP[0], 1180, dn), lerp(LAMP[1], 400, dn)]; if (tk > 0) lampPos = [lerp(1180, 1170, tk), lerp(400, 440, tk)]; }
+  if (t >= T.lampLift) { const dn = E(t, T.lampLift, T.lampOut), tk = E(t, T.taken0, T.taken1); lampPos = [lerp(LAMP[0], 1180, dn), lerp(LAMP[1], 500, dn)]; if (tk > 0) lampPos = [lerp(1180, 1172, tk), lerp(500, 530, tk)]; }
   if (t >= T.tilt1) lampPos = LAMP;
   const held = t >= T.lampLift && t < T.tilt1;
   drawLamp(fr, gl, C, lampPos[0], lampPos[1], 1.1, t, L.lamp * (t >= T.out && t < T.tilt1 ? .35 : 1), held ? 26 : 90, { gutter: seg(t, T.gutter, T.out) * (t < T.out ? 1 : 0) });
@@ -156,7 +156,7 @@ function renderBack(t, cam, o) {
   // lamps for the compositor
   const lamps = [];
   const hot = cloth2B(820, 420);
-  lamps.push({ x: lampPos[0] + 44, y: lampPos[1] - 14, I: L.lamp * (held ? 1.4 : .55), hot: .35, sigB: held ? 520 : 640, sigC: 110, col: WARM });
+  lamps.push({ x: lampPos[0] + 44, y: lampPos[1] - 14, I: L.lamp * (held ? 2.2 : .55), hot: .35, sigB: held ? 520 : 640, sigC: 110, col: WARM });
   lamps.push({ x: held ? lampPos[0] : hot[0], y: held ? lampPos[1] : hot[1], I: L.lamp * (held ? .5 : .95), hot: .5, sigB: 430, sigC: 160, col: WARM, box: RECT_B, soft: 26 });
   if (L.match > 0 && o.matchTip) lamps.push({ x: o.matchTip[0], y: o.matchTip[1], I: L.match * .55, hot: 2.2, sigB: 120, sigC: 26, col: [1, .62, .32] });
   if (o.phonePos && bb.phoneOn) { if (bb.torch) lamps.push({ x: o.phonePos[0], y: o.phonePos[1], I: L.torch * 1.0, hot: 1.4, sigB: 300, sigC: 70, col: COOL }); else lamps.push({ x: o.phonePos[0], y: o.phonePos[1] - 10, I: .32, hot: 1.2, sigB: 120, sigC: 32, col: COOL }); }
@@ -314,7 +314,7 @@ export function events() {
   add('cloth', T.pocket); add('rodtap', T.rodGiven); add('clap', T.clap1); add('clap', T.clap2); add('clap', T.clap3);
   add('presson', T.mountain, { v: .8 }); add('presson', T.pine, { v: .6 }); add('rodtap', T.cloudIn, { v: .5 }); add('flap', T.cloudFlip); add('rodtap', T.cloudFlip + .4, { v: .4 });
   add('presson', T.monkeyIn, { v: 1 }); add('presson', T.labelIn, { v: .5 }); add('liftoff', T.labelOut, { v: .6 });
-  add('creak', T.twist, { d: .2 }); add('flap', T.flip1, { v: .7 }); add('land', T.land1); add('twirl', T.twirl1, { d: 1.0 }); add('liftoff', T.land1 + .5, { v: .5 });
+  add('creak', T.twist, { d: .2 }); add('flap', T.flip1, { v: .7 }); add('land', T.land1); add('twirl', T.twirl1, { d: 1.0 }); add('liftoff', T.cloudOff, { v: .5 });
   add('presson', T.maidenIn, { v: .8 }); for (let k = 0; k < 6; k++) add('step', T.maidenIn + .3 + k * .25, { v: .4 });
   add('laugh', T.laugh, { d: 2.4 }); add('rodtap', T.headTurn, { v: .4 }); add('flare', T.eyeFlare); add('scrape', T.eyeFlare + .05);
   add('swap', T.headSwap); add('flap', T.headSwap + .3, { v: .6 }); add('flap', T.boyO + 1.1, { v: .5 });

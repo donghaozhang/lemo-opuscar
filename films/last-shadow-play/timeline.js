@@ -19,7 +19,7 @@ export const HIT = {
   clap1: B('square', 22), clap2: B('square', 22.8), clap3: B('square', 23.6),
   mountain: B('show1', 0.5), pine: B('show1', 1.5), cloudIn: B('show1', 2.6), cloudFlip: B('show1', 4.4), pushIn: B('show1', 4.4),
   monkeyIn: B('show1', 7.7), freeze1: B('show1', 8.8), labelIn: B('show1', 8.4), labelOut: B('show1', 15.4),
-  twist: B('show1', 19.4), flip1: B('show1', 19.8), land1: B('show1', 22), twirl1: B('show1', 22.6),
+  twist: B('show1', 19.4), flip1: B('show1', 19.8), land1: B('show1', 22), cloudOff: +(B('show1', 22) + .5).toFixed(3), twirl1: B('show1', 22.6),
   maidenIn: B('show1', 26), headTurn: B('show1', 30.8), laugh: B('show1', 33.9), eyeFlare: B('show1', 40.7), whip1: B('show1', 44),
   headSwap: B('show1', 46.2), boyO: B('show1', 51.5), headDown: B('show1', 53.9),
   hit1: B('show1', 58.3), hit2: B('show1', 60.3), freeze2: B('show1', 62.3), hit3: B('show1', 64.3), hit4: B('show1', 66), tremble1: B('show1', 69.5),

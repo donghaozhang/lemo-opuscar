@@ -33,6 +33,17 @@ export function modelSheet(tr, fr, v = '1') {
   label(fr, '色板（透光染色）', 1420, 72, 22);
   return { ...EVEN };
 }
+// poster: the stage lit again by the phone with the crowd cheering, the title plaque pressed on the cloth
+export async function poster(tr, fr, gl) {
+  const film = await import('./film.js');
+  const o = film.frame(116.6, tr, fr, gl);
+  const { buildSets, cloth2F } = await import('./sets.js');
+  const SETS = buildSets(); const C = [o.cam[2], 0, 0, o.cam[2], 960 - o.cam[0] * o.cam[2], 540 - o.cam[1] * o.cam[2]];
+  const p = cloth2F(960, 230), K = o.cam[2] * .41667 * .62;
+  tr.save(); tr.globalCompositeOperation = 'multiply'; tr.setTransform(K, 0, 0, K, C[0] * p[0] + C[4], C[3] * p[1] + C[5]); tr.drawImage(SETS.title.c, SETS.title.x0, SETS.title.y0, SETS.title.w, SETS.title.h); tr.restore();
+  label(fr, '皮影戏 · 最后一场皮影戏', 960, 1040, 30, '#e9cf9c');
+  return o;
+}
 export function exprSheet(tr, fr) {
   tr.setTransform(1, 0, 0, 1, 0, 0); tr.fillStyle = '#fff'; tr.fillRect(0, 0, W, H);
   const M = [['平静', { brow: 0, browY: 0, lid: .15, pupil: [0, 0], mouth: 'line' }, 0, 0],
