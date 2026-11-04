@@ -2,7 +2,7 @@
 // The face is cut: eyes with a paper pupil, lids, brow slits, a mouth; expressions are different cuts, swapped on a blink.
 import { clamp, lerp, TAU, ss } from '/core/lib.js';
 import { cut, piece } from './paper.js';
-import { rabbit, lantern, LANTERN_COL } from './world.js';
+import { rabbit, rabbitGlow, lantern, lanternGlow, LANTERN_COL } from './world.js';
 
 export const EXPR = {
   neutral: { eye: 'open', brow: 0, browY: 0, mouth: 'line' },
@@ -126,7 +126,7 @@ export function figure(S, L, spec) {
     });
   } });
   // limbs: anchored at the upper joint, pointing down (−y)
-  const limb = (L, w0, w1, name, foot) => mk({ w: Math.max(w0, w1) * 3 + (foot ? L * .5 : 0), h: L * 1.4, ax: 0, ay: L * .5, name, draw: x => {
+  const limb = (L, w0, w1, name, foot) => mk({ w: Math.max(w0, w1) * 3 + (foot ? L * .5 : 0), h: L * 2.6, ax: 0, ay: 0, name, draw: x => {
     x.beginPath(); x.moveTo(-w0 / 2, 0); x.lineTo(w0 / 2, 0); x.lineTo(w1 / 2, -L); x.lineTo(-w1 / 2, -L); x.closePath(); x.fill();
     x.beginPath(); x.arc(0, 0, w0 / 2, 0, TAU); x.fill();
     if (foot === 'hand') { x.beginPath(); x.ellipse(0, -L - w1 * .3, w1 * .75, w1 * .95, 0, 0, TAU); x.fill(); cut(x, () => { x.lineWidth = w1 * .12; x.beginPath(); x.moveTo(-w1 * .05, -L - w1 * .5); x.lineTo(w1 * .25, -L - w1 * 1.0); x.stroke(); }); }
@@ -146,7 +146,7 @@ export function figure(S, L, spec) {
     const p = { x: 0, y: 0, body: 0, head: 0, shN: 0, elN: 0, shF: 0, elF: 0, hipN: 0, kneeN: 0, hipF: 0, kneeF: 0, expr: 'neutral', blink: 0, facing: facing0, alpha: 1, ...P };
     F.pose = p; const f = p.facing, bend = K.bent || 0;
     const rot = (ang, vx, vy) => [vx * Math.cos(ang) - vy * Math.sin(ang), vx * Math.sin(ang) + vy * Math.cos(ang)];
-    const place = (it, x, y, ang, pz) => { it.x = p.x + f * x; it.y = p.y + y; it.rot = f * ang; it.sx = f; it.sy = 1; it.alpha = p.alpha; if (pz) it.p = pz; };
+    const place = (it, x, y, ang, pz) => { it.x = p.x + f * x; it.y = p.y + y; it.rot = f * ang; it.sx = f; it.sy = 1; it.alpha = p.alpha; it.vis = p.vis !== false; if (pz) it.p = pz; };
     // legs from the hip
     for (const side of ['near', 'far']) {
       const hdx = side === 'near' ? hipDx : -hipDx, hA = side === 'near' ? p.hipN : p.hipF, kA = side === 'near' ? p.kneeN : p.kneeF;
@@ -168,7 +168,7 @@ export function figure(S, L, spec) {
       const [ex, ey] = rot(lean + sA, 0, -La); place(parts[side + 'Fore'], sx + ex, sy + ey, lean + sA + eA);
       const [hx, hy] = rot(lean + sA + eA, 0, -Lf - torsoW * .1); F.hands[side] = [p.x + f * (sx + ex + hx), p.y + sy + ey + hy, lean + sA + eA];
     }
-    if (F.held) { const [hx, hy] = F.hands[F.held.side]; F.held.it.x = hx; F.held.it.y = hy; F.held.it.rot = F.held.rot(p, hx, hy); F.held.it.alpha = p.alpha; }
+    if (F.held) { const [hx, hy] = F.hands[F.held.side]; F.held.it.x = hx; F.held.it.y = hy; F.held.it.rot = F.held.rot(p, hx, hy); F.held.it.alpha = p.alpha; if (F.held.auto !== false) F.held.it.vis = p.vis !== false; }
     return F;
   };
   F.show = v => { for (const n of order) parts[n].vis = v; if (F.held) F.held.it.vis = v; };
@@ -180,7 +180,7 @@ export function rabbitLantern(S, L, F, side, r, o = {}) {
   const str = o.string ?? r * 1.6, ppm = o.ppm || F.spec.ppm || 6000;
   const p = piece({ w: r * 4, h: r * 3.6 + str, ppm, color: '#c8261e', ax: 0, ay: (r * 3.6 + str) / 2, name: 'rabbit',
     draw: x => { x.fillStyle = '#2a1008'; x.fillRect(-r * .025, -str, r * .05, str); x.fillStyle = '#c8261e'; x.save(); x.translate(0, -str); rabbit(x, r, { earR: o.earR || 0 }); x.restore(); },
-    glow: x => { x.save(); x.translate(0, -str); rabbit(x, r, { earR: o.earR || 0, col: '#ffa050' })(x); x.restore(); }, finish: { px: Math.max(1.5, ppm * .0004), rim: .35, under: .2 } });
+    glow: x => { x.save(); x.translate(0, -str); rabbitGlow(x, r, { earR: o.earR || 0, col: '#ffa050' }); x.restore(); }, finish: { px: Math.max(1.5, ppm * .0004), rim: .35, under: .2 } });
   const it = S.add(L, p, { gate: 1 });
   F.held = { it, side, rot: o.rot || (() => 0) };
   return it;
@@ -190,7 +190,7 @@ export function poleLantern(S, L, F, side, kind, r, o = {}) {
   const pole = o.pole ?? r * 2.6, ppm = o.ppm || F.spec.ppm || 6000, col = LANTERN_COL[kind];
   const p = piece({ w: r * 3.4, h: pole + r * 2.4, ppm, color: '#120a06', ax: 0, ay: (pole + r * 2.4) / 2, name: 'lantern-' + kind,
     draw: x => { x.fillRect(-r * .04, -pole * .2, r * .08, pole * .45); x.save(); x.translate(0, pole * .25 + r); x.fillStyle = '#120a06'; x.fillRect(-r * .03, -r * .9, r * .06, r * .6); lantern(x, kind, r, { col }); x.restore(); x.fillRect(-r * .06, -pole, r * .12, pole * .85); },
-    glow: x => { x.save(); x.translate(0, pole * .25 + r); lantern(x, kind, r, { col })(x); x.restore(); }, finish: { px: Math.max(1.5, ppm * .0004), rim: .3, under: .2 } });
+    glow: x => { x.save(); x.translate(0, pole * .25 + r); lanternGlow(x, kind, r, col); x.restore(); }, finish: { px: Math.max(1.5, ppm * .0004), rim: .3, under: .2 } });
   const it = S.add(L, p, { gate: 0 });
   F.held = { it, side, rot: o.rot || (() => 0) };
   return it;

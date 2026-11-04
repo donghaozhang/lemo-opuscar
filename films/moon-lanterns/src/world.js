@@ -67,7 +67,7 @@ export function house(x, o) {
 }
 // the glow of a house's holes
 export function houseGlow(g, holes, col = '#ffb862', k = 1) {
-  g.fillStyle = col; for (const h of holes) { if (h.k === 'win') g.fillRect(h.x, h.y, h.w, h.h); else { g.fillStyle = '#ff9a50'; g.fillRect(h.x, h.y, h.w, h.h); g.fillStyle = col; } }
+  g.fillStyle = col; for (const h of holes) { if (h.k === 'win') g.fillRect(h.x, h.y, h.w, h.h); else { g.fillStyle = '#c87a40'; g.fillRect(h.x, h.y + h.h * .55, h.w, h.h * .45); g.fillStyle = col; } }
 }
 // —— the lighthouse: tapering tower, gallery, lamp-room, dome; slit windows up the tower (returned) ——
 export function lighthouse(x, o) {
@@ -124,6 +124,9 @@ export function lantern(x, kind, r, o = {}) {
     carp: () => { x.beginPath(); x.moveTo(-r * 1.1, 0); x.quadraticCurveTo(-r * .6, r * .75, r * .3, r * .55); x.quadraticCurveTo(r * .9, r * .35, r * 1.3, r * .7); x.lineTo(r * 1.15, 0); x.lineTo(r * 1.3, -r * .7); x.quadraticCurveTo(r * .9, -r * .35, r * .3, -r * .55); x.quadraticCurveTo(-r * .6, -r * .75, -r * 1.1, 0); x.closePath(); x.fill(); cut(x, () => { x.beginPath(); x.moveTo(-r * .95, 0); x.quadraticCurveTo(-r * .55, r * .58, r * .3, r * .4); x.quadraticCurveTo(r * .85, r * .2, r * 1.12, r * .45); x.lineTo(r * 1.0, 0); x.lineTo(r * 1.12, -r * .45); x.quadraticCurveTo(r * .85, -r * .2, r * .3, -r * .4); x.quadraticCurveTo(-r * .55, -r * .58, -r * .95, 0); x.closePath(); x.fill(); }); x.beginPath(); x.arc(-r * .62, r * .1, r * .1, 0, TAU); x.fill(); x.lineWidth = r * .05; for (let i = 0; i < 4; i++) { x.beginPath(); x.arc(-r * .3 + i * r * .28, 0, r * .25, Math.PI * .25, Math.PI * .75); x.stroke(); x.beginPath(); x.arc(-r * .3 + i * r * .28, 0, r * .25, -Math.PI * .75, -Math.PI * .25); x.stroke(); } },
   };
   (shapes[kind] || shapes.round)();
+  return g => { g.fillStyle = col; LANTERN_GLOWS(g, kind, r); };
+}
+function LANTERN_GLOWS(g, kind, r) {
   const glows = {
     round: g => { g.beginPath(); g.ellipse(0, 0, r * .86, r * .72, 0, 0, TAU); g.fill(); },
     lotus: g => { for (let i = 0; i < 7; i++) { const a = i * Math.PI * 1.2 / 6 - Math.PI * .6 + Math.PI * .5, px = Math.cos(a) * r * .9, py = -r * .3 + Math.sin(a) * r * .55; g.beginPath(); g.moveTo(0, -r * .4); g.quadraticCurveTo(px - r * .08, py + r * .5, px * .95, py + r * .78); g.quadraticCurveTo(px + r * .08, py + r * .5, 0, -r * .4); g.fill(); } },
@@ -133,6 +136,7 @@ export function lantern(x, kind, r, o = {}) {
   };
   return g => { g.fillStyle = col; (glows[kind] || glows.round)(g); };
 }
+export function lanternGlow(g, kind, r, col) { const tmp = {}; const saveFill = g.fillStyle; g.fillStyle = col || LANTERN_COL[kind]; LANTERN_GLOWS(g, kind, r); g.fillStyle = saveFill; }
 export const LANTERN_COL = { round: '#ffb862', lotus: '#ffc08a', fish: '#ffb060', star: '#ffd890', carp: '#ff9a58' };
 // —— the rabbit lantern: red paper, long ears, a cut eye, a candle hole in the belly; origin at the top of the head (where the string ties) ——
 export function rabbit(x, r, o = {}) {
@@ -152,6 +156,12 @@ export function rabbit(x, r, o = {}) {
   x.fillRect(-r * .04, -r * 2.5, r * .08, r * .5);
   return g => { g.fillStyle = o.col || '#ffa050'; g.beginPath(); g.ellipse(0, -r * 2.1, r * .75, r * .6, 0, 0, TAU); g.fill(); g.fillStyle = '#ffd0a0'; g.beginPath(); g.ellipse(r * .32, -r * .65, r * .13, r * .17, 0, 0, TAU); g.fill(); const e = (dx, tilt) => { g.save(); g.translate(dx, -r * .25); g.rotate(tilt); g.fillStyle = '#ffb0a0'; g.beginPath(); g.ellipse(0, r * .75, r * .11, r * .6, 0, 0, TAU); g.fill(); g.restore(); }; e(-r * .32, .18); e(r * .32, -.18 + earR); };
 }
+export function rabbitGlow(g, r, o = {}) {
+  const earR = o.earR || 0;
+  g.fillStyle = o.col || '#ffa050'; g.beginPath(); g.ellipse(0, -r * 2.1, r * .75, r * .6, 0, 0, TAU); g.fill();
+  g.fillStyle = '#ffd0a0'; g.beginPath(); g.ellipse(r * .32, -r * .65, r * .13, r * .17, 0, 0, TAU); g.fill();
+  const e = (dx, tilt) => { g.save(); g.translate(dx, -r * .25); g.rotate(tilt); g.fillStyle = '#ffb0a0'; g.beginPath(); g.ellipse(0, r * .75, r * .11, r * .6, 0, 0, TAU); g.fill(); g.restore(); }; e(-r * .32, .18); e(r * .32, -.18 + earR);
+}
 // —— a fog sheet: a wide band with a torn, drifting top edge and a soft bottom (vellum, drawn at partial alpha by the layer) ——
 export function fogSheet(x, o) {
   const { w, h, seed = 5, top = 1 } = o, R = mulberry(seed);
@@ -159,7 +169,7 @@ export function fogSheet(x, o) {
   for (let u = -w / 2; u <= w / 2 + 1e-6; u += w / 160) { const n = (u + w / 2) / w; x.lineTo(u, h / 2 - h * top * (.18 * vnoise(n * 7 + seed) + .12 * vnoise(n * 23 + seed * 2) + .05 * vnoise(n * 71))); }
   x.lineTo(w / 2, -h / 2); x.closePath(); x.fill();
   // holes torn in the fog
-  cut(x, () => { for (let i = 0; i < 10; i++) { const px = (R() - .5) * w * .9, py = (R() - .6) * h * .5, rr = h * (.03 + R() * .08); x.beginPath(); x.ellipse(px, py, rr * 1.8, rr, R(), 0, TAU); x.fill(); } });
+  cut(x, () => { for (let i = 0; i < 4; i++) { const px = (R() - .5) * w * .9, py = (R() - .3) * h * .4, rr = h * (.015 + R() * .03); x.beginPath(); x.ellipse(px, py, rr * 2.2, rr, R(), 0, TAU); x.fill(); } });
 }
 // —— the pier: a deck on posts ——
 export function pier(x, o) {
@@ -187,7 +197,7 @@ export function stars(x, o) { const { w, h, n = 120, seed = 9, minY = -1 } = o, 
 export function pines(x, o) {
   const { x0, x1, base, h, gap, seed = 3 } = o, R = mulberry(seed);
   for (let u = x0 + R() * gap; u < x1; u += gap * (.6 + R() * .8)) {
-    const hh = h * (.6 + R() * .6), w = hh * .36, by = base;
+    const hh = h * (.6 + R() * .6), w = hh * .36, by = typeof base === 'function' ? base(u) : base;
     x.beginPath(); x.moveTo(u, by + hh);
     for (let k = 0; k < 4; k++) { const t1 = (k + 1) / 4; x.lineTo(u + w * (.3 + .7 * t1), by + hh * (1 - t1)); x.lineTo(u + w * .25 * (1 - t1) + w * .1, by + hh * (1 - t1) + hh * .05); }
     x.lineTo(u + hh * .03, by - hh * .06); x.lineTo(u - hh * .03, by - hh * .06);

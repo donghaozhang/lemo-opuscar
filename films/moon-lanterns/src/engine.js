@@ -28,8 +28,10 @@ export class Scene {
     this.extra = [];            // per-frame point lights: { x, y, z, r, col, k }
     this.bg = o.bg || '#000';
   }
-  layer(o) { const L = { z: 0, trans: .3, alpha: 1, items: [], shadow: true, recv: true, fog: false, lit: 1, ...o }; this.layers.push(L); this.layers.sort((a, b) => a.z - b.z); return L; }
-  add(L, p, o = {}) { const it = { p, x: 0, y: 0, rot: 0, sx: 1, sy: 1, gate: 1, alpha: 1, vis: true, reveal: null, ...o }; L.items.push(it); return it; }
+  layer(o) { const L = { z: 0, trans: .3, alpha: 1, items: [], shadow: true, recv: true, fog: false, lit: 1, ox: 0, oy: 0, ...o }; this.layers.push(L); this.layers.sort((a, b) => a.z - b.z); return L; }
+  add(L, p, o = {}) { const it = { p, x: 0, y: 0, rot: 0, sx: 1, sy: 1, gate: 1, alpha: 1, vis: true, reveal: null, tag: this.tag, ...o }; L.items.push(it); return it; }
+  // hide every item another shot created (so a frame looks the same whichever worker rendered the shots before it)
+  showOnly(tags) { for (const L of this.layers) for (const it of L.items) if (it.tag && !tags.includes(it.tag)) it.vis = false; }
 
   // world → screen for a sheet at depth z (the camera looks down −z; sheets are parallel to the box front)
   proj(z, cam = this.cam) { const s = F / (cam.z - z); return { s, ox: W / 2 - cam.x * s, oy: H / 2 + cam.y * s }; }
@@ -37,10 +39,10 @@ export class Scene {
   camAt(t) { const c = this.cam, k = c.hand * .0006; return { ...c, x: c.x + (vnoise(t * .9 + 3) - .5) * 2 * k, y: c.y + (vnoise(t * 1.1 + 17) - .5) * 2 * k }; }
 
   // draw one item (piece canvas or silhouette) under a projection
-  item(x, it, pr, sil = false, dy = 0) {
+  item(x, it, pr, sil = false, dy = 0, sc = 1) {
     const p = it.p, img = sil ? p.s : p.c; if (!img) return;
     const k = pr.s / p.ppm;
-    x.setTransform(1, 0, 0, 1, pr.ox + it.x * pr.s, pr.oy - (it.y + dy) * pr.s);
+    x.setTransform(sc, 0, 0, sc, sc * (pr.ox + it.x * pr.s), sc * (pr.oy - (it.y + dy) * pr.s));
     x.rotate(-it.rot); x.scale(it.sx * k, it.sy * k);
     if (it.reveal) {   // a strip growing from an edge: clip, never squash
       const r = clamp(it.reveal.k), w = img.width, h = img.height; x.beginPath();
@@ -50,10 +52,10 @@ export class Scene {
     }
     x.drawImage(img, -p.ax * p.ppm - img.width / 2, p.ay * p.ppm - img.height / 2);
   }
-  glowItem(x, it, pr) {
+  glowItem(x, it, pr, sc = 1) {
     const p = it.p, img = p.g; if (!img) return;
     const k = pr.s / p.ppm;
-    x.setTransform(1, 0, 0, 1, pr.ox + it.x * pr.s, pr.oy - it.y * pr.s);
+    x.setTransform(sc, 0, 0, sc, sc * (pr.ox + it.x * pr.s), sc * (pr.oy - it.y * pr.s));
     x.rotate(-it.rot); x.scale(it.sx * k, it.sy * k);
     x.drawImage(img, -p.ax * p.ppm - img.width / 2, p.ay * p.ppm - img.height / 2);
   }
@@ -62,7 +64,7 @@ export class Scene {
     let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
     for (const it of L.items) { if (!it.vis || it.alpha <= 0) continue; const p = it.p, r = Math.hypot(p.w * it.sx, p.h * it.sy) / 2 + Math.hypot(p.ax, p.ay); const cx = pr.ox + it.x * pr.s, cy = pr.oy - it.y * pr.s, rs = r * pr.s; x0 = Math.min(x0, cx - rs); y0 = Math.min(y0, cy - rs); x1 = Math.max(x1, cx + rs); y1 = Math.max(y1, cy + rs); }
     if (x0 > x1) return null;
-    x0 = Math.max(0, Math.floor(x0) - 40); y0 = Math.max(0, Math.floor(y0) - 40); x1 = Math.min(W, Math.ceil(x1) + 40); y1 = Math.min(H, Math.ceil(y1) + 40);
+    x0 = Math.max(0, Math.floor(x0) - 64); y0 = Math.max(0, Math.floor(y0) - 64); x1 = Math.min(W, Math.ceil(x1) + 64); y1 = Math.min(H, Math.ceil(y1) + 64);
     if (x1 <= x0 || y1 <= y0) return null;
     return [x0, y0, x1 - x0, y1 - y0];
   }
@@ -81,7 +83,8 @@ export class Scene {
     const lit = this.light.lit, lcol = hex(this.light.col);
     for (let k = 0; k < this.layers.length; k++) {
       const Ly = this.layers[k]; if (Ly.alpha <= 0) continue;
-      const pr = this.proj(Ly.z, cam), bb = this.bbox(Ly, pr); if (!bb) continue;
+      const pr = this.proj(Ly.z, cam); if (Ly.ox) pr.ox += Ly.ox * pr.s; if (Ly.oy) pr.oy -= Ly.oy * pr.s;
+      const bb = this.bbox(Ly, pr); if (!bb) continue;
       const [bx, by, bw, bh] = bb;
       // 1. content
       C.setTransform(1, 0, 0, 1, 0, 0); C.globalCompositeOperation = 'source-over'; C.globalAlpha = 1; C.filter = 'none'; C.clearRect(bx, by, bw, bh);
@@ -104,7 +107,7 @@ export class Scene {
       Li.globalCompositeOperation = 'lighter';
       const amb = (Ly.amb ?? this.amb) * 255; Li.fillStyle = rgb([amb, amb * .96, amb * .9]); Li.fillRect(bx, by, bw, bh);
       for (const pl of this.extra) {   // lanterns and lamps: a warm pool on the sheets near them (behind and, weaker, in front)
-        const dz = pl.z - Ly.z, w = dz >= -0.002 ? 1 / (1 + dz * 60) : .35 / (1 - dz * 80); if (w * pl.k < .01) continue;
+        const dz = pl.z - Ly.z, w = Ly.room ? 1 : dz >= -0.002 ? 1 / (1 + dz * 60) : .35 / (1 - dz * 80); if (w * pl.k < .01) continue;
         const px = lp.ox + pl.x * lp.s, py = lp.oy - pl.y * lp.s, rr = pl.r * lp.s * (1 + Math.abs(dz) * 6);
         const pg = Li.createRadialGradient(px, py, 0, px, py, rr); const pc = hex(pl.col, pl.k * w * (Ly.room ? 1 : .35 + Ly.trans));
         pg.addColorStop(0, rgb(pc)); pg.addColorStop(.3, rgb(pc, .55)); pg.addColorStop(1, rgb(pc, 0)); Li.fillStyle = pg; Li.fillRect(Math.max(bx, px - rr), Math.max(by, py - rr), Math.min(bw, rr * 2), Math.min(bh, rr * 2));
@@ -130,16 +133,16 @@ export class Scene {
       // 5. lit holes: the light inside windows and lanterns, gated per item
       L.globalCompositeOperation = 'source-over';
       G.setTransform(.5, 0, 0, .5, 0, 0);
-      for (const it of Ly.items) { if (!it.vis || !it.p.g || it.gate <= 0) continue; L.globalAlpha = it.gate * it.alpha; this.glowItem(L, it, pr); G.globalAlpha = it.gate * it.alpha * Ly.alpha * (it.bloom ?? 1); if (G.globalAlpha > .01) this.glowItem(G, it, pr); }
+      for (const it of Ly.items) { if (!it.vis || !it.p.g || it.gate <= 0) continue; L.globalAlpha = it.gate * it.alpha; this.glowItem(L, it, pr); G.globalAlpha = it.gate * it.alpha * Ly.alpha * (it.bloom ?? 1); if (G.globalAlpha > .01) this.glowItem(G, it, pr, .5); }
       L.globalAlpha = 1; G.globalAlpha = 1;
-      if (Ly.fog) { G.globalCompositeOperation = 'source-over'; G.globalAlpha = Ly.alpha * .6; for (const it of Ly.items) if (it.vis) this.item(G, it, pr, true); G.globalAlpha = 1; }
+      if (Ly.fog) { G.globalCompositeOperation = 'source-over'; G.globalAlpha = Ly.alpha * .6; for (const it of Ly.items) if (it.vis) this.item(G, it, pr, true, 0, .5); G.globalAlpha = 1; }
       G.setTransform(1, 0, 0, 1, 0, 0);
       // 6. composite with depth of field (and the cavity clip in box framing)
       const d = cam.z - Ly.z, coc = clamp(Math.abs(cam.aper * (1 / cam.focus - 1 / d)) * 9, 0, cam.maxCoc);
       ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
       if (this.box && !Ly.room) { const r = this.cavityRect(Ly.z, cam); ctx.beginPath(); ctx.rect(Math.max(r[0], front[0]), Math.max(r[1], front[1]), Math.min(r[0] + r[2], front[0] + front[2]) - Math.max(r[0], front[0]), Math.min(r[1] + r[3], front[1] + front[3]) - Math.max(r[1], front[1])); ctx.clip(); }
       ctx.globalAlpha = Ly.alpha; if (coc > .35) ctx.filter = `blur(${coc.toFixed(1)}px)`;
-      ctx.drawImage(Lc, bx - 40, by - 40, bw + 80, bh + 80, bx - 40, by - 40, bw + 80, bh + 80);
+      ctx.drawImage(Lc, bx, by, bw, bh, bx, by, bw, bh);
       ctx.restore();
     }
     // 7. bloom from the glow buffer, two radii
