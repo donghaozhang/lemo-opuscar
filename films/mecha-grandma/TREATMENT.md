@@ -155,3 +155,21 @@ smack again when the drone jams her radio; the bubble level (start-up) → the l
 - HUD and signs: Noto Sans SC Black; neon signs in ZCOOL QingKe HuangYou with emissive glow; generic words only
   (「台风预警」「面馆」「营业中」「大厦」).
 - End card: chrome 《机甲外婆》 + 「完」.
+
+## 9. Cue map as built (`timeline.js`)
+
+| Section | Tempo | Bars | Start (s) | Shots |
+|---|---|---|---|---|
+| OPEN | 104 | 5 | 0.0 | crane (power-on), title |
+| HOME | 84 | 7 | 11.5 | apartment, photo, phone buzz, chat, decide, kitchen, knot, lift box |
+| GARAGE | 100 | 6 | 31.5 | garage wide, unveil, cockpit in, level (plant), cough + smack, eyes on, step out |
+| DRIVE | 132 | 8 | 45.9 | side track, light bands, charge, box insert, overhead, side track 2 |
+| BILL | 132 | 6 | 60.5 | billboard, rider, gasp, lunge, impact frame, catch held, set down, nod |
+| DRONE | 132 | 8 | 71.4 | drone in, HUD threat (tracking noise), smack (pay-off), show box, HUD 「外婆」, escort |
+| CLIMB | 92 | 5 | 86.0 | tower low angle, climb, gust, level (pay-off), climb face, arrive 88F |
+| WINDOW | 70 | 5 | 99.0 | desk, close-up, tap, the hand, ECU eyes in silence, wave, laugh |
+| DAWN | 96 | 7 | 116.1 | palm, dumpling, grandma laughs, sunrise pull-back, snap, old photo (match cut), chat 「吃了。」 |
+| END | 96 | 2 | 133.6 | end card |
+
+Every cut is on a bar or a half bar of its section; the score is written to the same grid (`music/score.py`).
+Holds over 4 s all change continuously: the crane (camera moving), the title (letters flicker on, light sweep), the chat (messages arrive), the sunrise pull-back (camera moving) and the end card.
