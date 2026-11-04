@@ -15,3 +15,4 @@ sample libraries karoryfer + vcsl + vsco2ce fetched.
 2026-11-04 11:57Z  final render (v3, after review pass 2) finished (exit=0)
 2026-11-04 12:12Z  final render (v4, 147.75 s, credits fix) finished (exit=0)
 2026-11-04 12:28Z  final render (v5, end-shot camera fix) finished (exit=0)
+2026-11-04 12:35Z  final render v5 muxed; all checks OK (−14.0 LUFS / −1.3 dBTP, no black frames, readcheck OK, CJK glyphs OK); delivered to deliveries/nian-dinner/

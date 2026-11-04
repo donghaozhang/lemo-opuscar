@@ -292,7 +292,7 @@ ev(TT.paste, 'pat'); ev(TT.paste + .1, 'pat'); ev(TT.sneeze2, 'sneezesmall'); ev
 const EC = {};
 function endBits() { if (EC.l) return EC; EC.l = [...END].map((c, i) => textPiece(c, 140, PAL.red, 'Ma Shan Zheng', 400, 80 + i)); EC.w = EC.l.reduce((s, p) => s + p.w - 24 + 14, 0); EC.top = strip(900, 25); EC.seal = seal('福', 90, 27); return EC; }
 export function shotOutsideEnd(g, t, sh) {
-  const V = kit(), ec = endBits(), u = seg(t, TT.outside, TT.endCard + 1.0), C = cam(HERO.x - 140 - 160 * eio(u), GROUND - 160 + 30 * eio(u), lerp(1.25, .82, eio(u)));
+  const V = kit(), ec = endBits(), u = seg(t, TT.outside, TT.endCard + 1.0), C = cam(HERO.x - 140 - 160 * eio(u), GROUND - 200, lerp(1.25, .96, eio(u)));
   const hp = V.houses[HERO.i], h = HOUSES[HERO.i];
   const texts = [];
   const WM = mul(mul(C, mul(T(h.x, GROUND + h.g), S(h.s))), T(hp.win.x, hp.win.y)), wc = pt(WM, [0, 0]), p = cutPieces().full, sc = hp.win.h / (2 * CR) * 1.3;

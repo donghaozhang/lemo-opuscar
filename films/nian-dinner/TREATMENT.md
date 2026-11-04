@@ -1,6 +1,6 @@
 # 《年兽来吃年夜饭》 — Treatment
 
-Style: Red Paper-cut (`styles/papercut-red`). 1920×1080, 24 fps, about 144 s. All on-screen text in Simplified Chinese. No voice-over: the storyteller's few lines are paper banners (横批 strips) in the world, exported as `.srt`.
+Style: Red Paper-cut (`styles/papercut-red`). 1920×1080, 24 fps, 147.75 s (the end card holds 3.5 s past the last cue). All on-screen text in Simplified Chinese. No voice-over: the storyteller's few lines are paper banners (横批 strips) in the world, exported as `.srt`.
 
 ## 0. Brief, as decided (nobody to ask)
 
