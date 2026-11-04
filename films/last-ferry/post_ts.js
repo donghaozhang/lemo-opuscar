@@ -38,7 +38,7 @@ const gatherShader = {
       vec4 c0 = texture2D(tIn, vUv); float a0 = abs(c0.a);
       if (maxCoc < .5) { gl_FragColor = vec4(c0.rgb, 1.); return; }
       vec3 acc = c0.rgb / (a0*a0 + 1.); float wsum = 1. / (a0*a0 + 1.);
-      const int N = 96;
+      const int N = 48;
       for (int i = 0; i < N; i++) {
         float r = maxCoc * sqrt((float(i) + .5) / float(N));
         float th = float(i) * 2.39996;

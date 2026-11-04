@@ -191,6 +191,19 @@ export function drawFace(pen, o) {
 // p: {step, arm, sit, kneel, lean, bob, look, expr, blink, hat ('on'|'off'|'cup'), umb ('closed'|'half'|'open'|'flip'), carry, drum, item}
 function drawAdult(pen, c, p) {
   const S = pen.S, by = (p.bob || 0), lean = p.lean || 0;
+  if (p.hands) {   // insert: two hands gripping the stern oar, sleeves, knuckles white (the storm crossing)
+    const top = c.top, skin = c.skin;
+    pen.line(3, 52, 37, 8, PAL.wood(.75, 0, 0), 3.2); pen.line(5, 50, 36, 10, PAL.wood(.95, 0, 0), .8);
+    for (const [hx, hy, k] of [[13, 37, 0], [25, 22, 1]]) {
+      pen.poly([[hx - 9, hy + 2], [hx - 3, hy - 2], [hx - 2, hy + 7], [hx - 10, hy + 9]], (x, y) => top(.5 - (y - hy) * .02, x, y));   // sleeve cuff
+      pen.ell(hx, hy + 1, 5.2, 4.2, (x, y, dx, dy) => skin(.6 - dy * .25 - dx * .1 + (p.cold ? -.1 : 0), x, y));                      // fist
+      for (let i = 0; i < 4; i++) pen.rect(hx - 3 + i * 2.2, hy - 2.2 + (i === 0 || i === 3 ? .6 : 0), 1.6, 1.4, skin(.9, 0, 0));     // knuckles
+      for (let i = 0; i < 3; i++) pen.rect(hx - 2.2 + i * 2.2, hy - .6, .7, 3.8, skin(.25, 0, 0));                                     // finger gaps
+      pen.ell(hx + 3.2, hy + 2.4, 1.6, 1.3, (x, y, dx, dy) => skin(.5 - dy * .2, x, y));                                               // thumb
+    }
+    if (S >= 2) for (let i = 0; i < 9; i++) pen.rect(4 + i * 4 + (i % 3), 4 + (i * 7) % 40, .5, 2.2, hex('#a8c0e0'));                   // rain streaks
+    return;
+  }
   const top = c.top, bot = c.bot, skin = c.skin;
   const stoop = c.stoop || 0;
   const sit = !!p.sit, kneel = !!p.kneel;
@@ -289,6 +302,12 @@ function drawAdult(pen, c, p) {
 // —— Child body (3/4 view facing right). Frame 40×58, feet at y=56; 40 units tall ——
 function drawChild(pen, c, p) {
   const S = pen.S, by = p.bob || 0, sit = !!p.sit;
+  if (p.bundle) {   // only the head, wrapped in the grey blanket (the fevered close-up in the mother's arms)
+    pen.ell(20, 30, 15, 12, (x, y, dx, dy) => PAL.blanket(.6 - dy * .3 - dx * .1, x, y));
+    pen.ell(20, 32, 10, 8, (x, y, dx, dy) => PAL.blanket(.35 - dy * .2, x, y));
+    drawFace(pen, { cx: 19, cy: 29, r: 7.5, skin: c.skin, hair: c.hair, hat: c.hat, kid: true, expr: p.expr || 'fever', look: 0 });
+    return;
+  }
   const top = c.top, bot = c.bot, skin = c.skin;
   const hipY = sit ? 46 : 42, torsoTop = (sit ? 34 : 30) + by, hx = 18, hy = torsoTop - 7.5;
   if (sit) { pen.poly([[12, hipY], [24, hipY], [26, hipY + 6], [14, hipY + 7]], (x, y) => bot(.55, x, y)); pen.rect(23, hipY + 5, 3.5, 4, bot(.5, 0, 0)); pen.rect(17, hipY + 6, 3.5, 4, bot(.4, 0, 0)); pen.rect(23, hipY + 9, 4.5, 1.6, c.shoe(.5, 0, 0)); pen.rect(17, hipY + 10, 4.5, 1.6, c.shoe(.4, 0, 0)); }
@@ -402,7 +421,7 @@ export const POSES = {
     cup: { arm: 'cup', hat: 'cup', expr: 'firm', lean: 2 }, cupRelief: { arm: 'cup', hat: 'cup', expr: 'tender', lean: 1 },
     standBreath0: { expr: 'tired', lean: 1 }, standBreath1: { expr: 'tired', lean: 2, bob: 1 },
     kneel: { kneel: 1, arm: 'hold', expr: 'tender', look: -1 }, kneelSet: { kneel: 1, arm: 'point', expr: 'tender', look: -1 },
-    hold: { arm: 'hold', expr: 'tender' },
+    hold: { arm: 'hold', expr: 'tender' }, hands: { hands: 1, cold: 1 },
     ...WALK(),
   },
   xs: {
@@ -434,7 +453,7 @@ export function makeChar(id, posesId, S = 1, extra = {}) {
   const FW = cfg.kind === 'goose' ? 30 : 40, FH = cfg.kind === 'goose' ? 30 : 58;
   const A = atlasOf(draw, cfg, table, S, FW, FH);
   const mesh = billboard(A.tex, FW * SPX, FH * SPX, { em: A.em, emCol: '#ffffff', emI: 2.4 });
-  mesh.material.onBeforeCompile = sh => { sh.fragmentShader = sh.fragmentShader.replace('#include <output_fragment>', 'outgoingLight = min(outgoingLight, diffuseColor.rgb * 1.45 + totalEmissiveRadiance);\n#include <output_fragment>'); };
+  mesh.material.onBeforeCompile = sh => { sh.fragmentShader = sh.fragmentShader.replace('#include <opaque_fragment>', 'outgoingLight = min(outgoingLight, diffuseColor.rgb * 1.45 + totalEmissiveRadiance);\n#include <opaque_fragment>'); };
   const root = new THREE.Group(); root.add(mesh); root.userData.char = id;
   const sh = blob(cfg.kind === 'goose' ? .22 : .4, .5); sh.position.y = .015; root.add(sh);
   const self = {
@@ -443,7 +462,7 @@ export function makeChar(id, posesId, S = 1, extra = {}) {
     face(cam, flip = false) { root.rotation.y = Math.atan2(cam.position.x - root.position.x, cam.position.z - root.position.z); mesh.scale.x = flip ? -1 : 1; },
     // world position of a point given in frame units (x from the left edge, y from the top)
     at(ux, uy, flip = false) { const v = new THREE.Vector3((ux - FW / 2) * SPX * (flip ? -1 : 1), (FH - uy) * SPX, .06); v.applyAxisAngle(new THREE.Vector3(0, 1, 0), root.rotation.y); return v.add(root.position); },
-    headPos(flip = false) { return self.at(cfg.kind === 'child' ? 18 : 18, cfg.kind === 'child' ? 23 : 9, flip); },
+    headPos(flip = false) { const p = table[self.cur] || {}; const uy = cfg.kind === 'child' ? (p.bundle ? 29 : p.sit ? 26.5 : 22.5) : (p.sit ? 18 : p.kneel ? 24 : 9) + (cfg.stoop || 0) * 1.2; return self.at(18 + (p.lean || 0) * 1.5, uy, flip); },
   };
   return self;
 }

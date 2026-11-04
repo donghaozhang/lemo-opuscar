@@ -83,7 +83,7 @@ function dialog(t, L) {
 // —— Fades: into and out of every chapter card, and the end ——
 function blackout(t) {
   let a = 0;
-  for (const s of SHOTS) if (s.card) { a = Math.max(a, ss(seg(t, s.a - .45, s.a))); a = Math.max(a, 1 - ss(seg(t, s.b, s.b + .6))); }
+  for (const s of SHOTS) if (s.card) { if (t < s.a && t > s.a - .45) a = Math.max(a, ss(seg(t, s.a - .45, s.a))); if (t >= s.b && t < s.b + .6) a = Math.max(a, 1 - ss(seg(t, s.b, s.b + .6))); }
   a = Math.max(a, ss(seg(t, T.fade, DUR - .1)));
   if (a > 0) { g.fillStyle = `rgba(12,7,5,${a})`; g.fillRect(0, 0, W, H); }
 }
