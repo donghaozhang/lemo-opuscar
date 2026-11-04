@@ -1,0 +1,43 @@
+{
+ "dur": 140,
+ "key": "G huan-yin (G A B D E); ku-yin fa↑ +5.4 / si↓ +10.5 semitones",
+ "stems": [
+  "luogu",
+  "banhu",
+  "suona",
+  "flute",
+  "sanxian"
+ ],
+ "accents": {
+  "titleIn": 10.8,
+  "squareIn": 16,
+  "monkeyIn": 31.5,
+  "freeze1": 32,
+  "flip1": 37,
+  "land1": 38,
+  "headSwap": 49,
+  "hit1": 54.5,
+  "hit2": 55.409,
+  "freeze2": 56.318,
+  "hit3": 57.227,
+  "hit4": 58,
+  "leap": 61.818,
+  "land2": 62.591,
+  "hardCut": 67.005,
+  "clawDown": 82.555,
+  "grab": 86.263,
+  "skullHit": 90.513,
+  "tap": 94.18,
+  "flip2": 95.013,
+  "land3": 96.013,
+  "suona": 100.013,
+  "strike": 102.513,
+  "victory": 105.513,
+  "out": 109.26,
+  "torch": 113.5,
+  "bigGong": 115.6,
+  "musicDrop": 120,
+  "flip3": 135.2,
+  "pluck": 138.2
+ }
+}
