@@ -17,3 +17,4 @@
 | 13:03 | render 2 done | muxed: -14.0 LUFS, peak -1.8 dBFS; review pass 2 on stills/contact2_*.jpg: crowd two-shots, entrance, hand-over fixed; walk-off fade still blackdetected → softened; final render 3 next |
 | 13:04 | render 2 | frames done ≈ 30780 / 3360 |
 | 13:14 | render 2 | frames done ≈ 30780 / 3360 |
+| 13:15 | render 3 (final) | frames done ≈ 2100 / 3360 |
