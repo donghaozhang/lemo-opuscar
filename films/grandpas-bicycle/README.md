@@ -1,0 +1,7 @@
+# 《外公的单车》 Grandpa's Bicycle
+
+A watercolour journal kept by a girl, Xiao He, over many years. Summer, age six: in the lane behind the house her grandpa teaches her to ride his old black 28-inch bicycle, holds the back of the saddle, says 「我扶着呢」, and quietly lets go. The pages turn through the years: she rides to school past him at the corner, rides off to the city for university, the bicycle leans unused in the snow while his walking stick appears. Spring: she comes home, lifts him onto the back seat, rings the bell, rides him down the same lane under the blossom and says 「外公，我扶着您呢」. Last page: the two of them small at the end of the lane, 「骑了 50 米，和那年一样」. Watercolor Brush style, 1920×1080, 24 fps, 134 s, Simplified Chinese, no voice-over.
+
+How it was made: everything is drawn in code (Canvas 2D brush strokes on generated paper: a stroke engine, a 2.5D figure rig with IK and painted faces, a bicycle rig, a lane painted in profile and in one-point perspective), composed on one timeline (`timeline.js`: sections, tempos, hits) that also drives an original sampled score (`score.py`: nylon guitar, clarinet, flute, oboe, strings, felt piano, glockenspiel) and procedural foley (`mix.py`). `build.sh` rebuilds the whole film. `CREDITS` lists every third-party asset and its licence.
+
+Checks run: see `deliveries/grandpas-bicycle/README.md` for the results.

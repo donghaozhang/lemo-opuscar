@@ -293,13 +293,13 @@ function buildFilm() {
     drawStrokes(ctx, S);
     // the measured 50 m along the lane
     const [ax, ay] = deepPt(V, 3.2, .6), [bx2, by2] = deepPt(V, d, -.1);
-    const dp = seg(t, T0 + 1.1, T0 + 2.3);
-    ctx.save(); ctx.globalAlpha = 1 - ss(seg(t, SE - 1.1, SE - .5)); dimL(ctx, ax, ay, bx2, by2, dp); ctx.restore();
+    const dp = seg(t, T0 + .5, T0 + 1.5);
+    ctx.save(); dimL(ctx, ax, ay, bx2, by2, dp); ctx.restore();
     mistDraw(ctx, seg(t, SE - 1.5, SE - .05));
   } });
-  ev(SB(23) + .5, 'wave', { v: .2 }); ev(SB(23) + 1.1, 'pen', { dur: 1.2 }); ev(SB(23) + 2.3, 'pencil', { dur: 1.2 }); ev(SE - 1.5, 'mist', { dur: 1.6 });
-  note({ page: 'summer', id: 'n50', txt: '50 m', t0: SB(23) + 2.0, t1: SE - .6, x: 1130, y: 600, font: 'mono', size: 30 });
-  note({ page: 'summer', id: 'n50z', txt: '骑了 50 米！', t0: SB(23) + 2.3, t1: SE - .6, x: 1300, y: 150, size: 52 });
+  ev(SB(23) + .5, 'wave', { v: .2 }); ev(SB(23) + .5, 'pen', { dur: 1.0 }); ev(SE - 1.5, 'mist', { dur: 1.6 });
+  note({ page: 'summer', id: 'n50', txt: '50 m', t0: SB(23) + .7, t1: SE, x: 1130, y: 600, font: 'mono', size: 30 });
+  note({ page: 'summer', id: 'n50z', txt: '骑了 50 米！', t0: SB(23) + .75, t1: SE, x: 1300, y: 150, size: 52 });
 
   // ======== page 2: autumn, age ten, to school (48.14 – 64.14) ========
   const K0 = ST.school.t, KE = ST.school.end, KB = (b, k = 0) => TB('school', b, k);
@@ -632,18 +632,18 @@ function buildFilm() {
   // ======== page 6: the last page, the two of them small (124.29 – 134.29) ========
   const N0 = ST.lane.t, NE = TL.DUR;
   page('lane', N0, NE, 'spring');
-  ev(N0, 'page', { hit: 'pageLane' }); ev(N0 + .1, 'brush', { dur: 2.2, pan: -.8, pan1: .8, v: .5 }); ev(N0 + 1.8, 'pen', { dur: 1.3 }); ev(N0 + 3.0, 'pencil', { dur: 1.8 });
+  ev(N0, 'page', { hit: 'pageLane' }); ev(N0 + .1, 'brush', { dur: 2.2, pan: -.8, pan1: .8, v: .5 }); ev(N0 + 1.4, 'pen', { dur: 1.0 });
   shot({ id: 's32', t0: N0, t1: NE - 2.0, page: 'lane', trans: 'turn', draw(ctx, t) {
     const V = { vx: 1040, vy: 450, f: 1750, h: 1.25 }, lt = t - N0;
     drawDeepLane(ctx, 'spring', V, t, { near: 1.4, reveal: seg(t, N0, N0 + 1.6) });
     const d = 24 + 3.2 * lt; if (d < 56) { const cam = deepCam(V, d, -.15, 0); const Bk = { x: 0, y: 0, dir: 1, dist: d * 100, crank: d * 100 / (2.75 * BIKE.R) }; const k = clamp((t - N0 - 1.2) / .8); drawBike(ctx, cam, Bk, { seed: 21, spokes: 6, p: k }); const rP = ridePose(he25, Bk, { expr: E('warm'), turn: .05 }), R = solve(he25, rP); drawFigure(ctx, gp79, passengerPose(gp79, Bk, R, { expr: E('warm'), turn: .3 }), cam, { seed: 37, p: k }); drawFigure(ctx, he25, rP, cam, { seed: 38, p: k }); }
     drawWeather(ctx, 'spring', t, { x: 0, y: 0, z: .8 }, .8);
     const [ax, ay] = deepPt(V, 3.2, .6), [bx2, by2] = deepPt(V, 50, -.1);
-    ctx.save(); ctx.globalAlpha = 1 - ss(seg(t, NE - 2.8, NE - 2.2)); dimL(ctx, ax, ay, bx2, by2, seg(t, N0 + 1.8, N0 + 3.0)); ctx.restore();
+    ctx.save(); dimL(ctx, ax, ay, bx2, by2, seg(t, N0 + 1.4, N0 + 2.4)); ctx.restore();
   } });
   ev(N0 + 1.2, 'chain', { dur: 6, v: .15, fade: 1 });
-  note({ page: 'lane', id: 'n50b', txt: '50 m', t0: N0 + 2.6, t1: NE - 2.2, x: 1130, y: 600, font: 'mono', size: 30 });
-  note({ page: 'lane', id: 'n50bz', txt: '骑了 50 米，和那年一样', t0: N0 + 3.0, t1: NE - 2.2, x: 1810, y: 150, size: 52, align: 'right' });
+  note({ page: 'lane', id: 'n50b', txt: '50 m', t0: N0 + 2.0, t1: NE - 1.6, x: 1130, y: 600, font: 'mono', size: 30 });
+  note({ page: 'lane', id: 'n50bz', txt: '骑了 50 米，和那年一样', t0: N0 + 2.3, t1: NE - 1.6, x: 1810, y: 150, size: 52, align: 'right' });
   // shot 33: the brush lifts; mist to paper; the stamp
   shot({ id: 's33', t0: NE - 2.0, t1: NE, page: 'lane', trans: 'none', draw(ctx, t) {
     SHOTS.find(s => s.id === 's32').draw(ctx, t);
