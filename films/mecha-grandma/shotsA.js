@@ -18,7 +18,7 @@ const P = PAL;
 // ================================================================ OPEN
 export function crane(S) {
   const { g, e, A, t, u } = S, k = ss(u);
-  const fy = -lerp(0, A.far.h - H, k), ny = -lerp(0, A.near.h - H, k * 1.04);
+  const fy = -lerp(0, A.far.h - H, k), ny = -lerp(0, A.near.h - H, Math.min(1, k * 1.04));
   g.drawImage(A.far.c, 0, fy); e.drawImage(A.far.e, 0, fy);
   flash(S, at('OPEN', 1.1), .12, .8);
   g.drawImage(A.near.c, 0, ny); e.drawImage(A.near.e, 0, ny);
@@ -151,6 +151,7 @@ export function sepia(P0) {
 export function phoneBuzz(S) {
   const { g, e, t, lt } = S, tq = q12(t);
   room(g, e, t);
+  g.save(); g.translate(960, 760); g.scale(1.35, 1.35); g.translate(-960, -760);
   armchair(g, 760, 1080, 1.5);
   const look = K([[HIT.buzz, 0], [HIT.buzz + .25, 1]], tq), reach = K([[HIT.buzz + .5, 0], [HIT.buzz + 1.1, 1, 'eio']], tq);
   g.save(); g.translate(720, 1180); g.scale(.95, .95);
@@ -161,6 +162,7 @@ export function phoneBuzz(S) {
   g.fillStyle = '#3a2216'; g.fillRect(1180, 820, 260, 20);
   if (reach < .9) { g.fillStyle = '#16161e'; g.fillRect(1250 + buzz, 796, 120, 28); g.fillStyle = '#8fe07a'; g.fillRect(1262 + buzz, 800, 96, 20); e.fillStyle = rgba('#8fe07a', .6); e.fillRect(1262, 800, 96, 20);
     if (t > HIT.buzz) for (const k of [-1, 1]) { line(g, [[1310 + k * 80, 790], [1310 + k * 96, 776]], '#ffe0a0', 4); line(g, [[1310 + k * 86, 808], [1310 + k * 108, 806]], '#ffe0a0', 4); } }
+  g.restore();
   return {};
 }
 export function chat(S) {

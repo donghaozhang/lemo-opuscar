@@ -70,17 +70,23 @@ export function climbFace(S) {
   return {};
 }
 export function arrive(S) {
-  const { g, e, t, lt } = S, tq = q12(t);
-  const { tx, y, T } = towerView(S, 3500 + lt * 30);
-  // the 88th floor: one office lit blue, a tiny 阿杰 at his desk inside; 大黄's head rises into view
-  const fy = y + T.h - 88 * T.fh;
-  g.fillStyle = '#bfe6ff'; g.fillRect(tx + 500, fy + 4, 300, T.fh - 10);
-  airbrush(e, tx + 650, fy + 20, 200, 60, '#8fd0ff', .7);
-  g.save(); g.translate(tx + 640, fy + 40); g.scale(.07, .07); figure(g, MO, 'j', { pose: 'sit', expr: 'dull' }); g.restore();
+  const { g, e, t, lt, u } = S, tq = q12(t);
+  // close on the facade at the 88th floor: the yellow 88F plate, one office lit blue with 阿杰 inside; 大黄's head and
+  // hand rise into frame beside it
+  g.drawImage(S.A.storm.c, -300, -200); e.drawImage(S.A.storm.e, -300, -200);
+  const T = S.A.tower, z = 2.2, fy = T.h - 88 * T.fh;
+  g.save(); g.translate(-200, 540 - (fy + T.fh / 2) * z); g.scale(z, z); g.drawImage(T.c, 0, 0); g.restore();
+  e.save(); e.translate(-200, 540 - (fy + T.fh / 2) * z); e.scale(z, z); e.drawImage(T.e, 0, 0); e.restore();
+  // the lit office window (centre) and the big 88F plate
+  const wy = 540 - T.fh * z / 2 + 6;
+  g.fillStyle = '#bfe6ff'; g.fillRect(860, wy, 560, T.fh * z - 22); airbrush(e, 1140, wy + 40, 420, 120, '#8fd0ff', .6);
+  g.save(); g.translate(1060, wy + T.fh * z - 22); g.scale(.13, .13); figure(g, MO, 'j', { pose: 'sit', expr: 'dull' }); g.restore();
+  g.save(); g.fillStyle = '#ffd23f'; g.fillRect(1500, wy - 4, 230, 100); g.font = '900 86px "Noto Sans SC"'; g.fillStyle = '#1a1424'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(TXT.floor, 1615, wy + 48); g.restore();
+  airbrush(e, 1615, wy + 46, 160, 70, '#ffd23f', .35);
   const rise = ss(seg(t, S.sh.t0, HIT.arrive));
-  mech(g, e, ST, { x: tx + 650, y: fy + 640 + lerp(500, 0, rise), s: .9, eyes: 1, beacon: 1, armL: { a1: -2.9, a2: -.1, pose: 'fist' }, armR: { a1: 2.9, a2: .1, pose: 'fist' }, rim: '#8ab0ff' });
+  mech(g, e, ST, { x: 560, y: lerp(1900, 1420, rise), s: 1.2, eyes: 1, beacon: 1, armL: { a1: -2.9, a2: -.1, pose: 'fist' }, armR: { a1: 2.5, a2: .3, pose: 'open' }, rim: '#8ab0ff' });
   rainOn(S, { n: 280, ang: .9, a: .32 });
-  return {};
+  return { texts: [{ id: 'floor', text: TXT.floor, x0: 1500, y0: wy, x1: 1730, y1: wy + 96 }] };
 }
 
 // ================================================================ WINDOW (阿杰's office, monitor light)
@@ -109,13 +115,21 @@ function office(g, e, t, o = {}) {
 }
 export function desk(S) {
   const { g, e, t, lt, u } = S, tq = q12(t);
-  const z = lerp(1, 1.08, u); g.save(); g.translate(960, 540); g.scale(z, z); g.translate(-960, -540);
-  office(g, e, t);
-  // 阿杰 from behind-3/4 at the keyboard, typing (hands on twos)
-  g.save(); g.translate(560, 1260); g.scale(.95, .95);
+  const z = lerp(1, 1.06, u); g.save(); g.translate(960, 540); g.scale(z, z); g.translate(-960, -540);
+  office(g, e, t, { wx: 1020, ww: 860, monitors: false });
+  // three monitors on the right, code scrolling
+  for (let m = 0; m < 2; m++) { const mx = 1080 + m * 380, my = 420; g.fillStyle = '#0a0c14'; g.fillRect(mx, my, 360, 240); g.fillStyle = '#0e1e30'; g.fillRect(mx + 10, my + 10, 340, 220);
+    for (let l = 0; l < 11; l++) { const lw = 50 + hash(l * 7 + m + Math.floor(t * 4)) * 220; g.fillStyle = ['#4dd0ff', '#ffd23f', '#ff6ab0', '#9aff9a'][(l + m) % 4]; g.fillRect(mx + 20 + (l % 3) * 12, my + 22 + l * 18, lw, 8); }
+    e.fillStyle = rgba('#5ab0ff', .45); e.fillRect(mx, my, 360, 240); }
+  // 阿杰: bust, 3/4 toward the screens, hunched, typing
   const tap = Math.floor(tq * 12) % 2;
-  figure(g, MO, 'j', { pose: 'sit', expr: 'dull', look: [-.5, 0], circles: 1, armL: [1.2, .3 + tap * .15], armR: [1.1, .4 - tap * .15] });
-  g.restore();
+  g.save(); g.translate(640, 560 + tap * 3); g.scale(2.0, 2.0); LWK.k = .8;
+  head(g, MO, 'j', { view: 'q', expr: 'dull', circles: 1, look: [.6, .2], E: { reflect: '#5ab0ff', shoulders: 10 } });
+  LWK.k = 1; g.restore();
+  // hands on the keyboard
+  g.fillStyle = '#1a1e2c'; g.fillRect(760, 960, 520, 50);
+  for (const [hx, k] of [[860, 0], [1080, 1]]) cel(g, path([[hx - 50, 980 - (tap === k ? 10 : 0)], [hx + 40, 970 - (tap === k ? 10 : 0)], [hx + 50, 1020], [hx - 50, 1030]]), { f: MO.jskin.f, s: MO.jskin.s, so: [-4, -4], l: MO.jskin.l, lw: 2.4 });
+  g.save(); g.globalCompositeOperation = 'source-atop'; for (let l = 0; l < 3; l++) { const y = ((t * 90 + l * 200) % 700) + 300; g.fillStyle = rgba('#8fd0ff', .07); g.fillRect(0, y, W, 24); } g.restore();
   g.restore();
   return {};
 }
@@ -239,7 +253,9 @@ export function palm(S) {
   dawnCity(S, { sunY: lerp(140, 100, u) });
   // the storm clearing: last clouds drifting off
   g.save(); g.globalAlpha = lerp(.6, .2, u); vgrad(g, 0, 0, W, 300, [[0, '#4a3a6a'], [1, 'rgba(74,58,106,0)']]); g.restore();
+  const z = lerp(1, 1.3, ss(u)); g.save(); g.translate(960, 760); g.scale(z, z); g.translate(-960, -760);
   palmScene(g, e, t, 1.0, { y: 860 });
+  g.restore();
   return {};
 }
 export function dumplingShot(S) {
