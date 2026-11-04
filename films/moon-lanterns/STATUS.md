@@ -37,3 +37,6 @@
 - 2026-11-04 15:15 pass-1 fixes done (curtain softer, end subtitle band, brighter chain, closer two-shot, cut into s07); second full render started
 - 2026-11-04 15:25 full render running: frames 1080/3396 (per-worker progress, logged every 60 frames)
 - 2026-11-04 15:36 full render running: frames 2220/3396 (per-worker progress, logged every 60 frames)
+- 2026-11-04 15:46 full render finished (render exit 0)
+- 2026-11-04 15:55 second render done (30 min), mastered; pass 2 reviewed (contact_pass2.jpg): all checks pass; poster, srt, deliveries written
+- 2026-11-04 15:57 delivered: deliveries/moon-lanterns/ (final.mp4 46.7 MB, final-720p.mp4 11.9 MB, poster.jpg, subtitles.srt, README.md)

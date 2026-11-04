@@ -24,6 +24,6 @@ node core/render/video.mjs "$HERE" --fps $FPS --workers $WORKERS --out "$HERE/ou
 "$PY" "$HERE/mix.py"
 "$PY" "$HERE/tools/cuecheck.py"
 sh core/render/mux.sh "$HERE/out/video.mp4" "$HERE/out/mix.wav" "$HERE/moon-lanterns.mp4" $FPS 1
-node core/render/still.mjs "$HERE" 109.0 --q "nosub=1" --out "$HERE/out/stills"
-ffmpeg -loglevel error -y -i "$HERE/out/stills/t_109.jpg" -q:v 3 "$HERE/poster.jpg"
+node core/render/still.mjs "$HERE" 29.0 --q "nosub=1" --out "$HERE/out/stills"
+ffmpeg -loglevel error -y -i "$HERE/out/stills/t_29.0.jpg" -q:v 3 "$HERE/poster.jpg"
 echo "→ $HERE/moon-lanterns.mp4  $HERE/moon-lanterns.srt  $HERE/poster.jpg"
