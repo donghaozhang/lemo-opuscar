@@ -24,3 +24,4 @@ Sample libraries: vsco2ce, vcsl (fetched earlier), freepats (ukulele, nylon guit
 15:20 UTC · render 1 done (3360 frames, 87 min), muxed −14.0 LUFS; review pass 1 on 1 fps sheets (stills/r1_sheet1-6.jpg): 4 small staging fixes (crayon-box insert framing, hands over the mouth, 你好 bubble, balloon in the close two-shot); render 2 next
 | 15:43 | render 2 | frames 360 / 3360 |
 | 15:53 | render 2 | frames 720 / 3360 |
+| 16:03 | render 2 | frames 1260 / 3360 |
