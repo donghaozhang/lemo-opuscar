@@ -133,6 +133,8 @@ export const EXPR = {
   sneer: { brow: .5, open: .45, mouth: 'smile', look: [0, .2] },
   shock: { brow: -.9, open: 1.15, mouth: 'open', jaw: 1 },
   up: { brow: -.4, open: 1, mouth: 'open', jaw: .3, look: [.2, -1] },
+  smug: { brow: .5, open: .45, mouth: 'smile', look: [0, .2] },
+  happy: { brow: -.3, open: .05, mouth: 'grin', jaw: .5 },
 };
 function face(g, D, e) {
   const k = D.hr, ex = .5 * k, ey = -.12 * k;
@@ -215,6 +217,17 @@ export function drawFig(g, M, who, pose = {}, t = 1e9, o = {}) {
   if (P.hat) H.push([hd, P.hat]);
   const bd = mul(hd, about(.4 * D.hr, .3 * D.hr, p.beard ?? 0));
   const A = [[nu, P.upper, 1], [nf, P.fore, 1], [nh, P.hand, 1]];
+  if (o.sil) {   // tiny figures in wides: solid silhouette + a white keep-line of fixed screen width (o.sil = width in local units)
+    const all = [...L, ...H, ...A, ...(P.beard ? [[bd, P.beard]] : [])];
+    g.strokeStyle = '#fff'; g.lineWidth = o.sil; g.lineJoin = 'round';
+    for (const [Mx, Pt] of all) put(g, tm(Mx), () => { g.beginPath(); WC.pathOf(g, Pt.outline); g.stroke(); });
+    if (o.under) o.under(g, out);
+    if (o.farProp) put(g, tm(fh), () => o.farProp(g, out));
+    for (const [Mx, Pt] of all) put(g, tm(Mx), () => WC.fillPoly(g, [Pt.outline], Pt.def.white ? '#fff' : '#000'));
+    if (o.prop) put(g, tm(nh), () => o.prop(g, out));
+    if (o.front) o.front(g, out);
+    return out;
+  }
   // pass 1: halos
   for (const [Mx, Pt] of [...L, ...H, ...A, ...(P.beard ? [[bd, P.beard]] : [])]) put(g, tm(Mx), () => { if (Pt.S && Pt.S.halo.length) WC.drawStrokes(g, Pt.S.halo, { t, color: '#fff' }); });
   if (o.under) o.under(g, out);

@@ -165,7 +165,7 @@ export function mapPlate() {
     const range = (cx, cy, n, s) => { for (let i = 0; i < n; i++) { const x = cx + (i - n / 2) * s * .9 + (r() - .5) * 30, y = cy + (r() - .5) * 60 + Math.abs(i - n / 2) * 10, h = s * (1.1 + r() * .5) * (1 - Math.abs(i - n / 2) / n * .6); peaks.push({ x, y, h, w: s }); } };
     range(560, 420, 7, 120); range(1180, 450, 7, 110);
     const pk = peaks.sort((a, b) => a.y - b.y).map((p, i) => WC.shape([[[p.x - p.w * .8, p.y], [p.x - p.w * .2, p.y - p.h * .8], [p.x, p.y - p.h], [p.x + p.w * .3, p.y - p.h * .7], [p.x + p.w * .8, p.y]]], { white: true, tone: () => (x, y) => x > p.x ? .95 : .35, dir: (x, y) => x > p.x ? .9 : PI - .9, sp: 7, lo: .3, halo: 6, seed: 80 + i, res: 2, reveal: RV(() => i / 14 * .9, 1000) }));
-    const field = sky('map', [-200, -200, PW + 400, PH + 400], (x, y) => .3 + .12 * Math.sin(x * .01) * Math.sin(y * .013), { sp: 15, wmax: 6, seed: 23 });
+    const field = sky('map', [-200, -200, PW + 400, PH + 400], (x, y) => .26 + .06 * Math.sin(x * .003 + y * .002), { sp: 15, wmax: 6, seed: 23 });
     // the river along the east, white
     const river = WC.cutAlong(WC.spline([[1700, -40], [1640, 200], [1720, 420], [1620, 640], [1700, 930]], 6), { w: 22, kind: 'u', seg: [200, 500], gap: [0, 2], seed: 3, reveal: { t0: 0, t1: .5, speed: 1600 } });
     // the detour: house → east around the mountains → south → west to the market
